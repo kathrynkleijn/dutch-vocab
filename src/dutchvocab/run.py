@@ -8,7 +8,7 @@ import pdf_constructor
 from datetime import date, timedelta
 
 
-if __name__ == "__main__":
+def main():
 
     playing = True
     log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
