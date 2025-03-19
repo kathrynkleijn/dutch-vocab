@@ -128,7 +128,7 @@ core = [
         "paar": "couple",
         "Op het nachtkastje staan een paar vergeelde wenskkaarten": "Several yellowed greetings cards are on the bedside table",
         "moment": "time, moment",
-        "Op andere momenten kon ze ook niet trainen": "At other times she couln't train either",
+        "Op andere momenten kon ze ook niet trainen": "At other times she couldn't train either",
         "manier": "way, manner",
         "Ik vond een andere manier om je te helpen": "I found another way to help you",
         "zeer": "very (written)",
