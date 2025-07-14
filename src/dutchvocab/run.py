@@ -138,3 +138,7 @@ def main():
             "F",
         )
         print("Progress report completed.")
+
+
+if __name__ == "__main__":
+    main()
