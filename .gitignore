@@ -5,5 +5,5 @@
 /plots
 /ideas.txt
 *.pyc
-/dutchvocab.egg-info
+/src/dutchvocab.egg-info
 
