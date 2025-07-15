@@ -1,7 +1,7 @@
 import random
 import pandas as pd
 from datetime import date
-import lessons
+from dutchvocab import lessons
 from collections import Counter
 import copy
 from matplotlib import pyplot as plt

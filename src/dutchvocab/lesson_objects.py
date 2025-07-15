@@ -1,4 +1,4 @@
-import lessons
+from dutchvocab import lessons
 
 
 class Lesson:

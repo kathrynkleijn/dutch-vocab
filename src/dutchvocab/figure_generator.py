@@ -16,7 +16,7 @@ from plotnine import (
     scale_color_manual,
 )
 from datetime import date, timedelta
-import lesson_objects
+from dutchvocab import lesson_objects
 import numpy as np
 from mizani.palettes import brewer_pal, gradient_n_pal
 
