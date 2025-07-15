@@ -7,3 +7,4 @@
 *.pyc
 /src/dutchvocab.egg-info
 /src/learning_log.csv
+/Bugs.xlsx
