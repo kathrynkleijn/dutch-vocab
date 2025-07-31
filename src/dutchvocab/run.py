@@ -1,14 +1,14 @@
 import random
-import lessons
+from dutchvocab import lessons as lessons
 import copy
-import vocab_functions as vf
+from dutchvocab import vocab_functions as vf
 import pandas as pd
-import lesson_objects as lo
-import pdf_constructor
+from dutchvocab import lesson_objects as lo
+from dutchvocab import pdf_constructor
 from datetime import date, timedelta
 
 
-if __name__ == "__main__":
+def main():
 
     playing = True
     log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
@@ -138,3 +138,7 @@ if __name__ == "__main__":
             "F",
         )
         print("Progress report completed.")
+
+
+if __name__ == "__main__":
+    main()

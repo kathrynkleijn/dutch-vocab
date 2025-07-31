@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dutchvocab"
+version = "0.2.0"
+description = "Lessons for learning Dutch vocabulary."
+authors = [{name="Kathryn Kleijn"}]
+license = "MIT"
+readme = "README.md"
+
+[project.scripts]
+dutchlesson = "dutchvocab.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

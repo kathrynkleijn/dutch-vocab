@@ -1,6 +1,6 @@
 import os
-import pdf_generator
-import figure_generator
+from dutchvocab import pdf_generator
+from dutchvocab import figure_generator
 
 
 def construct(report_title):
