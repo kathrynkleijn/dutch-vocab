@@ -6,6 +6,7 @@ import pandas as pd
 from dutchvocab import lesson_objects as lo
 from dutchvocab import pdf_constructor
 from datetime import date, timedelta
+import os
 
 
 def main():
@@ -114,7 +115,10 @@ def main():
             playing = False
             print("\nEnd of lessons")
 
-    log.to_csv("learning_log.csv", mode="a", header=False)
+    if os.path.isfile("learning_log.csv"):
+        log.to_csv("learning_log.csv", mode="a", header=False)
+    else:
+        log.to_csv("learning_log.csv", mode="a", header=True, index=True, index_label="Date")
     vf.visualisation_today()
     # generate weekly/monthly report, ask about progress report
     # print("\nUpdating reports...")
