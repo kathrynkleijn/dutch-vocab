@@ -909,4 +909,14 @@ alternatives = {
     "government (ministers)": "government",
     "Managers who have not performed well must get no golden handshake": "Managers who have not performed well should get no golden handshake",
     "to prepare": "to get ready",
+    "(point of/in) time": "point in time",
+    "(point of/in) time": "point of time",
+    "William goes home with his father to fetch some things": "William goes home with his father to fetch some stuff",
+    "The provinces and municipalities have founded schools in numerous places": "The provinces and the municipalities have founded schools in numerous places",
+    "A limited number of surgeons can perform these operations": "A limited number of surgeons are able to perform these operations",
+    "We kept silent because it didn't make sense for anyone to tell it round": "We stayed silent because it didn't make sense for anyone to tell it round",
+    "Daan quickly gets his writing from his bag": "Daan quickly gets his writing out of his bag",
+    "Even so I thought I would quickly connect to the last lesson": "Even so I thought that I would quickly connect to the last lesson",
+    "Dekker was hardly in action this season because of a knee injury": "Dekker was rarely in action this season because of a knee injury",
+    "It sounded like a decision that had long been considered": "It sounded like a decision which was long thought over"
 }
