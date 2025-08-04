@@ -37,7 +37,7 @@ def select_lesson(topic):
 
 def select_questions(lesson):
     questions = input(
-        f"\nThere are {len(lesson.questions)} questions avilable. How many questions would you like?        "
+        f"\nThere are {len(lesson.questions)} questions available. How many questions would you like?        "
     )
     if questions == "random":
         questions = random.randrange(5, len(lesson.questions))
