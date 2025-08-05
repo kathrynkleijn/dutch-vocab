@@ -81,6 +81,9 @@ test_lesson_14.add_question("willen het liefst", "to prefer")
 test_lesson_15 = lesson_objects.Lesson(15, "web")
 test_lesson_15.add_question("aangezien", "since")
 
+test_lesson_16 = lesson_objects.Lesson(15, "newspapers")
+test_lesson_16.add_question("De hypotheekrente is momenteel aan het stijgen", "Mortgage rates are currently climbing")
+
 
 core = lesson_objects.Topic("core")
 core.add_lesson(test_lesson_1)
@@ -324,6 +327,16 @@ class Test(TestCase):
 
         output = fake_output.getvalue()
         self.assertIn("That's not right!", output)
+
+    # test for empty answer
+    @mock.patch("vocab_functions.input", create=True)
+    def test_empty(self, mocked_input):
+        mocked_input.side_effect = [""]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_16), 1, testing=1
+        )
+        expected_result = 0
+        self.assertEqual(result, expected_result)
 
 
 if __name__ == "__main__":
