@@ -37,7 +37,7 @@ def select_lesson(topic):
 
 def select_questions(lesson):
     questions = input(
-        f"\nThere are {len(lesson.questions)} questions avilable. How many questions would you like?        "
+        f"\nThere are {len(lesson.questions)} questions available. How many questions would you like?        "
     )
     if questions == "random":
         questions = random.randrange(5, len(lesson.questions))
@@ -120,47 +120,51 @@ def randomly_generated_lesson(lesson, questions, testing=None):
             test = random.choice(list(lesson.questions.keys()))
             # get answer from user
             answer = input(f"{test}         ")
-            # return answer to user
-            answer_formatted = answer_formatting(answer, test, lesson, language)
-
-            if any(True for char in answer_formatted if char in ","):
-                answer_meanings = answer_formatted.split(", ")
-                test_meanings = lesson.questions[test].split(", ")
-                if Counter(answer_meanings) == Counter(test_meanings):
-                    print("Correct!\n")
-                    correct += 1
-                else:
-                    print("That's not right!")
-                    print(f"{lesson.questions[test]}\n")
+            if not answer:
+                print("That's not right!")
+                print(f"{correct_answer}\n")
             else:
-                if answer_formatted == lesson.questions[test]:
-                    print("Correct!\n")
-                    correct += 1
-                elif lesson.questions[test] in lessons.alternatives.keys():
-                    if isinstance(lessons.alternatives[lesson.questions[test]], list):
-                        if (
-                            answer_formatted
-                            in lessons.alternatives[lesson.questions[test]]
-                        ):
-                            print("Correct!\n")
-                            correct += 1
-                        else:
-                            print("That's not right!")
-                            print(f"{lesson.questions[test]}\n")
-                    else:
-                        if (
-                            answer_formatted
-                            == lessons.alternatives[lesson.questions[test]]
-                        ):
-                            print("Correct!\n")
-                            correct += 1
-                        else:
-                            print("That's not right!")
-                            print(f"{lesson.questions[test]}\n")
+                # return answer to user
+                answer_formatted = answer_formatting(answer, test, lesson, language)
 
+                if any(True for char in answer_formatted if char in ","):
+                    answer_meanings = answer_formatted.split(", ")
+                    test_meanings = lesson.questions[test].split(", ")
+                    if Counter(answer_meanings) == Counter(test_meanings):
+                        print("Correct!\n")
+                        correct += 1
+                    else:
+                        print("That's not right!")
+                        print(f"{lesson.questions[test]}\n")
                 else:
-                    print("That's not right!")
-                    print(f"{lesson.questions[test]}\n")
+                    if answer_formatted == lesson.questions[test]:
+                        print("Correct!\n")
+                        correct += 1
+                    elif lesson.questions[test] in lessons.alternatives.keys():
+                        if isinstance(lessons.alternatives[lesson.questions[test]], list):
+                            if (
+                                answer_formatted
+                                in lessons.alternatives[lesson.questions[test]]
+                            ):
+                                print("Correct!\n")
+                                correct += 1
+                            else:
+                                print("That's not right!")
+                                print(f"{lesson.questions[test]}\n")
+                        else:
+                            if (
+                                answer_formatted
+                                == lessons.alternatives[lesson.questions[test]]
+                            ):
+                                print("Correct!\n")
+                                correct += 1
+                            else:
+                                print("That's not right!")
+                                print(f"{lesson.questions[test]}\n")
+
+                    else:
+                        print("That's not right!")
+                        print(f"{lesson.questions[test]}\n")
             if not testing:
                 lesson.questions.pop(test)
 
@@ -168,28 +172,32 @@ def randomly_generated_lesson(lesson, questions, testing=None):
             correct_answer, test = random.choice(list(lesson.questions.items()))
             # get answer from user
             answer = input(f"{test}         ")
-            answer_formatted = answer_formatting(
-                answer, test, lesson.questions, language, correct_answer
-            )
-            # check for wij/we, zij/ze, jij/je
-            answer = accept_alternatives(correct_answer, answer_formatted)
-            # return answer to user
-            try:
-                if lesson.questions[answer] == test:
-                    print("Correct!\n")
-                    correct += 1
-
-            except:
-                if correct_answer in lessons.alternatives.keys():
-                    if answer in lessons.alternatives[correct_answer]:
+            if not answer:
+                print("That's not right!")
+                print(f"{correct_answer}\n")
+            else:
+                answer_formatted = answer_formatting(
+                    answer, test, lesson.questions, language, correct_answer
+                )
+                # check for wij/we, zij/ze, jij/je
+                answer = accept_alternatives(correct_answer, answer_formatted)
+                # return answer to user
+                try:
+                    if lesson.questions[answer] == test:
                         print("Correct!\n")
                         correct += 1
+
+                except:
+                    if correct_answer in lessons.alternatives.keys():
+                        if answer in lessons.alternatives[correct_answer]:
+                            print("Correct!\n")
+                            correct += 1
+                        else:
+                            print("That's not right!")
+                            print(f"{correct_answer}\n")
                     else:
                         print("That's not right!")
                         print(f"{correct_answer}\n")
-                else:
-                    print("That's not right!")
-                    print(f"{correct_answer}\n")
             if not testing:
                 lesson.questions.pop(correct_answer)
 

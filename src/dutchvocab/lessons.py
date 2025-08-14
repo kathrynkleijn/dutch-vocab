@@ -295,7 +295,7 @@ fiction = [lesson for lesson in fiction if len(lesson) >= 15]
 
 newspapers = [
     {
-        "aldus": "thus",
+        "aldus": "thus, according to",
         "Een stormvloed spoelde de hele stad in een keer weg, aldus de overlevering": "A storm surge washed away the whole city in one go, according to legend",
         "de ploeg": "team",
         "De ploeg met de beste winnaarsmentaliteit zal zegeviernen": "The team with the best winner's mentality will prevail",
@@ -337,8 +337,8 @@ newspapers = [
         "de bestuurder": "manager",
         "Bestuurders die niet goed hebben gefunctioneerd moeten geen gouden handdruk krijgen": "Managers who have not performed well must get no golden handshake",
         "aankondigen": "to announce",
-        "Het kabinet kondigt die maatregel aan op Prinsjesdag": "The cabinet announces that measure on Prince's Day",
-        "de bewoner": "occupant",
+        "Het kabinet kondigt die maatregel aan op Prinsjesdag": "The cabinet announces that measure on Prince's day",
+        "de bewoner": "occupant, resident",
         "De huizen van de bewoners worden door middel van lijnen op een plattegrond aangegeven": "Residents' houses are indicated by lines on a map",
         "de dader": "perpetrator, offender",
         "Aan de hand van verklaringen kon de politie een signalement van de dader opstellen": "Based on statements the police were able to establish a description of the perpetrator",
@@ -511,7 +511,7 @@ spoken = [
         "ernaast": "next to it, beside it",
         "Er staat een oude schrijfmachine en ernaast ligt een stapel wit papier": "There is an old typewriter and next to it is a pile of white paper",
         "weeral": "again",
-        "Vaderdag ligt weeral vergeten achter de rug": "Father's day is forgotten once again",
+        "Vaderdag ligt weeral vergeten achter de rug": "Father's day is already behind us",
         "plezierig": "pleasant",
         "Ik vind dat toch zo plezierig": "I find that so pleasant",
         "klaarmaken": "to prepare",
@@ -736,7 +736,7 @@ proper_nouns_eng = [
     "Riet",
     "Anja",
     "Flemish",
-    "Prince's Day",  # this won't work...
+    "Prince's",
     "Aboriginals",
     "Australia",
 ]
@@ -909,4 +909,18 @@ alternatives = {
     "government (ministers)": "government",
     "Managers who have not performed well must get no golden handshake": "Managers who have not performed well should get no golden handshake",
     "to prepare": "to get ready",
+    "(point of/in) time": "point in time",
+    "(point of/in) time": "point of time",
+    "William goes home with his father to fetch some things": "William goes home with his father to fetch some stuff",
+    "The provinces and municipalities have founded schools in numerous places": "The provinces and the municipalities have founded schools in numerous places",
+    "A limited number of surgeons can perform these operations": "A limited number of surgeons are able to perform these operations",
+    "We kept silent because it didn't make sense for anyone to tell it round": "We stayed silent because it didn't make sense for anyone to tell it round",
+    "Daan quickly gets his writing from his bag": "Daan quickly gets his writing out of his bag",
+    "Even so I thought I would quickly connect to the last lesson": "Even so I thought that I would quickly connect to the last lesson",
+    "Dekker was hardly in action this season because of a knee injury": "Dekker was rarely in action this season because of a knee injury",
+    "It sounded like a decision that had long been considered": "It sounded like a decision which was long thought over",
+    "She looks up at the sky as though seeing it for the first time": "She looks up at the sky as if seeing it for the first time",
+    "careful": "cautious",
+    "In each book in this series there is a short interview with the author of the novel in the back": "In each book from this series there is a short interview with the author of the novel in the back",
+    "to keep silent about": ["to stay silent", "to keep silent"]
 }
