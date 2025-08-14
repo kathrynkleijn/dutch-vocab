@@ -1,5 +1,6 @@
 # Dutch Vocabulary Lessons 0.2.1
 
+
 Package to aid in learning Dutch vocabulary using a mixture of words and sentences for context. The lessons are based on the
 Routledge Frequency Dictionary of Dutch (Carole Tiberius, Tanneke Schoonheim, <i>A Frequency Dictionary of Dutch</i>, Routledge: 2013).
 
