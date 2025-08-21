@@ -176,9 +176,7 @@ def monthly_log(log):
 def log_maker(report_title, log, debug=False, debug_week=False):
     logs = []
     if report_title == "Weekly":
-        week_beginning = week_beginning = date.today() - timedelta(
-            days=date.today().weekday()
-        )
+        week_beginning = date.today() - timedelta(days=date.today().weekday())
         if debug:
             week_beginning = debug_week
         log_1 = weekly_log_module(log)
@@ -642,5 +640,5 @@ def text_generator(report_title, logs):
 if __name__ == "__main__":
 
     log = pd.read_csv("testing_log.csv")
-    logs = log_maker("Weekly", log, debug=True, debug_week=date(2025, 2, 17))
+    logs = log_maker("Weekly", log, debug=True, debug_week=date(2025, 8, 18))
     print(text_generator("Weekly", logs))
