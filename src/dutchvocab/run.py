@@ -82,33 +82,28 @@ def main():
             questions = 1
 
         if topic != "all":
-            if (correct / questions) * 100 < 50:
+            while (correct / questions) * 100 < 50:
                 again = input("\nScore less than 50% - try again?  (Y/N)       ")
                 print("\n")
-                if again == "Y":
-                    print(f"Retrying lesson {lesson.number} from {topic} ...\n")
-                    if topic == "core":
-                        lesson = copy.deepcopy(lo.core.lessons[int(lesson.number) - 1])
-                    elif topic == "fiction":
-                        lesson = copy.deepcopy(
-                            lo.fiction.lessons[int(lesson.number) - 1]
-                        )
-                    elif topic == "newspapers":
-                        lesson = copy.deepcopy(
-                            lo.newspapers.lessons[int(lesson.number) - 1]
-                        )
-                    elif topic == "spoken":
-                        lesson = copy.deepcopy(
-                            lo.spoken.lessons[int(lesson.number) - 1]
-                        )
-                    elif topic == "web":
-                        lesson = copy.deepcopy(lo.web.lessons[int(lesson.number) - 1])
-                    elif topic == "general":
-                        lesson = copy.deepcopy(
-                            lo.general.lessons[int(lesson.number) - 1]
-                        )
-                    correct = vf.randomly_generated_lesson(lesson, questions)
-                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if again.upper() != "Y":
+                    break
+                print(f"Retrying lesson {lesson.number} from {topic} ...\n")
+                if topic == "core":
+                    lesson = copy.deepcopy(lo.core.lessons[int(lesson.number) - 1])
+                elif topic == "fiction":
+                    lesson = copy.deepcopy(lo.fiction.lessons[int(lesson.number) - 1])
+                elif topic == "newspapers":
+                    lesson = copy.deepcopy(
+                        lo.newspapers.lessons[int(lesson.number) - 1]
+                    )
+                elif topic == "spoken":
+                    lesson = copy.deepcopy(lo.spoken.lessons[int(lesson.number) - 1])
+                elif topic == "web":
+                    lesson = copy.deepcopy(lo.web.lessons[int(lesson.number) - 1])
+                elif topic == "general":
+                    lesson = copy.deepcopy(lo.general.lessons[int(lesson.number) - 1])
+                correct = vf.randomly_generated_lesson(lesson, questions)
+                log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         again = input("\nWould you like to do another lesson?  (Y/N)       ")
         if again.upper() != "Y":
