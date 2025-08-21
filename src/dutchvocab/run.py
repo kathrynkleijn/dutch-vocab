@@ -111,14 +111,16 @@ def main():
                     log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         again = input("\nWould you like to do another lesson?  (Y/N)       ")
-        if again == "N":
+        if again.upper() == "N":
             playing = False
             print("\nEnd of lessons")
 
     if os.path.isfile("learning_log.csv"):
         log.to_csv("learning_log.csv", mode="a", header=False)
     else:
-        log.to_csv("learning_log.csv", mode="a", header=True, index=True, index_label="Date")
+        log.to_csv(
+            "learning_log.csv", mode="a", header=True, index=True, index_label="Date"
+        )
     vf.visualisation_today()
     # generate weekly/monthly report, ask about progress report
     # print("\nUpdating reports...")
