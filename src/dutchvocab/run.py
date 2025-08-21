@@ -111,7 +111,7 @@ def main():
                     log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         again = input("\nWould you like to do another lesson?  (Y/N)       ")
-        if again.upper() == "N":
+        if again.upper() != "Y":
             playing = False
             print("\nEnd of lessons")
 
