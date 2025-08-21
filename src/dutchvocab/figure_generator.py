@@ -19,6 +19,7 @@ from datetime import date, timedelta
 from dutchvocab import lesson_objects
 import numpy as np
 from mizani.palettes import brewer_pal, gradient_n_pal
+import re
 
 
 # create colour palette
@@ -172,12 +173,14 @@ def monthly_log(log):
     return log
 
 
-def log_maker(report_title, log):
+def log_maker(report_title, log, debug=False, debug_week=False):
     logs = []
     if report_title == "Weekly":
         week_beginning = week_beginning = date.today() - timedelta(
             days=date.today().weekday()
         )
+        if debug:
+            week_beginning = debug_week
         log_1 = weekly_log_module(log)
         log_2 = weekly_log_lesson(log)
         logs.extend(
@@ -621,7 +624,7 @@ def text_generator(report_title, logs):
         if module != "all":
             log_module = logs[1][logs[1]["Module"] == module]
             best_lesson_idx = log_module["Percentage"].idxmax()
-            best_lesson = log_module["Lesson"][best_lesson_idx][-1]
+            best_lesson = re.findall(r"\d+", log_module["Lesson"][best_lesson_idx])[0]
             lesson_percentage = log_module["Percentage"][best_lesson_idx]
             line1 = f"   {module.capitalize()}"
             line2 = f"{best_lesson}       {lesson_percentage}%"
@@ -636,3 +639,8 @@ def text_generator(report_title, logs):
 
 
 """ order categoricals """
+if __name__ == "__main__":
+
+    log = pd.read_csv("testing_log.csv")
+    logs = log_maker("Weekly", log, debug=True, debug_week=date(2025, 2, 17))
+    print(text_generator("Weekly", logs))
