@@ -12,6 +12,7 @@ readme = "README.md"
 
 [project.scripts]
 dutchlesson = "dutchvocab.run:main"
+dutchsettings = "dutchvocab.settings:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
