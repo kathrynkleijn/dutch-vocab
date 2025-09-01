@@ -8,16 +8,22 @@ def main():
 
     # default settings if not preset
     report_path = ""  # save to working Path
+    plot_path = ""  # save to working Path
     output = "Yes"  # output reports after each session
 
     if os.path.isfile("settings.txt"):
         with open("settings.txt", "r") as file:
             settings = file.read().splitlines()
         report_path = settings[0].rstrip("/")
-        output = settings[1]
+        plot_path = settings[1].rstrip("/")
+        output = settings[2]
 
     print(
-        f"\nCurrent settings:\nReport Save Path      {report_path}\nReport Output       {output}"
+        "\nOptional settings:\nPath to save learning reports\nPath to save temporary plots for building reports\nAutomatic output of weekly and monthly reports\n"
+    )
+
+    print(
+        f"\nCurrent settings:\nReport Save Path      {report_path}\nPlots Save Path      {plot_path}\nReport Output       {output}"
     )
 
     edit_settings = input("\nDo you want to edit any settings? (Y/N) ")
@@ -38,6 +44,10 @@ def main():
         if selected["setting"] == "Report Save Path":
             report_path = input("Insert path for saving reports: ")
             print(f"\nReports will be saved in {report_path.rstrip('/')}/Reports")
+
+        elif selected["setting"] == "Plots Save Path":
+            plot_path = input("Insert path for saving plots: ")
+            print(f"\nPlots will be saved in {plot_path.rstrip('/')}/plots")
 
         elif selected["setting"] == "Report Output":
             select_output = [
@@ -61,6 +71,8 @@ def main():
 
     with open("settings.txt", "w") as file:
         file.write(report_path)
+        file.write("\n")
+        file.write(plot_path)
         file.write("\n")
         file.write(output)
 
