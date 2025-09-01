@@ -43,7 +43,9 @@ def select_questions(lesson):
         questions = random.randrange(5, len(lesson.questions))
     else:
         questions = int(questions)
-    print(f"\nYou will have {questions} questions.\n\n")
+    print(
+        f"\nYou will have {questions} questions. Type 'exit' at any time to end the lesson.\n\n"
+    )
     return questions
 
 
@@ -120,6 +122,10 @@ def randomly_generated_lesson(lesson, questions, testing=None):
             test = random.choice(list(lesson.questions.keys()))
             # get answer from user
             answer = input(f"{test}         ")
+            if answer.lower() == "exit":
+                print("Exiting lesson...")
+                questions = question_number - 1
+                break
             if not answer:
                 print("That's not right!")
                 print(f"{correct_answer}\n")
@@ -141,7 +147,9 @@ def randomly_generated_lesson(lesson, questions, testing=None):
                         print("Correct!\n")
                         correct += 1
                     elif lesson.questions[test] in lessons.alternatives.keys():
-                        if isinstance(lessons.alternatives[lesson.questions[test]], list):
+                        if isinstance(
+                            lessons.alternatives[lesson.questions[test]], list
+                        ):
                             if (
                                 answer_formatted
                                 in lessons.alternatives[lesson.questions[test]]
@@ -172,6 +180,10 @@ def randomly_generated_lesson(lesson, questions, testing=None):
             correct_answer, test = random.choice(list(lesson.questions.items()))
             # get answer from user
             answer = input(f"{test}         ")
+            if answer.lower() == "exit":
+                print("Exiting lesson...")
+                questions = question_number - 1
+                break
             if not answer:
                 print("That's not right!")
                 print(f"{correct_answer}\n")
@@ -205,7 +217,7 @@ def randomly_generated_lesson(lesson, questions, testing=None):
         question_number += 1
 
     print(f"Lesson finished. You got {correct}/{questions} correct.")
-    return correct
+    return correct, questions
 
 
 def update_log(log, topic, lesson, questions, correct):

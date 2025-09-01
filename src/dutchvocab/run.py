@@ -41,49 +41,49 @@ def main():
             lesson = vf.select_lesson(lo.core)
             questions = vf.select_questions(lesson)
 
-            correct = vf.randomly_generated_lesson(lesson, questions)
+            correct, questions = vf.randomly_generated_lesson(lesson, questions)
             log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "fiction":
             lesson = vf.select_lesson(lo.fiction)
             questions = vf.select_questions(lesson)
 
-            correct = vf.randomly_generated_lesson(lesson, questions)
+            correct, questions = vf.randomly_generated_lesson(lesson, questions)
             log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "newspapers":
             lesson = vf.select_lesson(lo.newspapers)
             questions = vf.select_questions(lesson)
 
-            correct = vf.randomly_generated_lesson(lesson, questions)
+            correct, questions = vf.randomly_generated_lesson(lesson, questions)
             log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "spoken":
             lesson = vf.select_lesson(lo.spoken)
             questions = vf.select_questions(lesson)
 
-            correct = vf.randomly_generated_lesson(lesson, questions)
+            correct, questions = vf.randomly_generated_lesson(lesson, questions)
             log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "web":
             lesson = vf.select_lesson(lo.web)
             questions = vf.select_questions(lesson)
 
-            correct = vf.randomly_generated_lesson(lesson, questions)
+            correct, questions = vf.randomly_generated_lesson(lesson, questions)
             log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "general":
             lesson = vf.select_lesson(lo.general)
             questions = vf.select_questions(lesson)
 
-            correct = vf.randomly_generated_lesson(lesson, questions)
+            correct, questions = vf.randomly_generated_lesson(lesson, questions)
             log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "all":
             lesson = lo.overall.all
             questions = vf.select_questions(lesson)
 
-            correct = vf.randomly_generated_lesson(lesson, questions)
+            correct, questions = vf.randomly_generated_lesson(lesson, questions)
             log = vf.update_log(log, topic, "all", questions, correct)
         else:
             print("Topic not recognised, please try again")
@@ -111,7 +111,7 @@ def main():
                     lesson = copy.deepcopy(lo.web.lessons[int(lesson.number) - 1])
                 elif topic == "general":
                     lesson = copy.deepcopy(lo.general.lessons[int(lesson.number) - 1])
-                correct = vf.randomly_generated_lesson(lesson, questions)
+                correct, questions = vf.randomly_generated_lesson(lesson, questions)
                 log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         again = input("\nWould you like to do another lesson?  (Y/N)       ")
