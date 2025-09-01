@@ -215,11 +215,14 @@ def generate_figures(report_title, logs):
 
     with open("settings.txt", "r") as file:
         settings = file.read().splitlines()
-    plot_path = settings[1].rstrip("/")
+    plot_path = settings[1]
 
-    os.makedirs(f"{plot_path}/plots/weekly", exist_ok=True)
-    os.makedirs(f"{plot_path}/plots/monthly", exist_ok=True)
-    os.makedirs(f"{plot_path}/plots/progress", exist_ok=True)
+    if plot_path and not plot_path.endswith("/"):
+        plot_path = plot_path + "/"
+
+    os.makedirs(f"{plot_path}plots/weekly", exist_ok=True)
+    os.makedirs(f"{plot_path}plots/monthly", exist_ok=True)
+    os.makedirs(f"{plot_path}plots/progress", exist_ok=True)
 
     if report_title == "Weekly":
 
@@ -287,11 +290,11 @@ def generate_figures(report_title, logs):
             + theme(figure_size=(10, 6), axis_text_x=element_text(rotation=45, hjust=1))
         )
 
-        plot1.save(f"{plot_path}/plots/weekly/1.png", verbose=False)
-        plot1a.save(f"{plot_path}/plots/weekly/1a.png", verbose=False)
-        plot2.save(f"{plot_path}/plots/weekly/2.png", verbose=False)
-        plot3.save(f"{plot_path}/plots/weekly/3.png", verbose=False)
-        plot4.save(f"{plot_path}/plots/weekly/4.png", verbose=False)
+        plot1.save(f"{plot_path}plots/weekly/1.png", verbose=False)
+        plot1a.save(f"{plot_path}plots/weekly/1a.png", verbose=False)
+        plot2.save(f"{plot_path}plots/weekly/2.png", verbose=False)
+        plot3.save(f"{plot_path}plots/weekly/3.png", verbose=False)
+        plot4.save(f"{plot_path}plots/weekly/4.png", verbose=False)
 
         plot5 = (
             ggplot(
@@ -310,7 +313,7 @@ def generate_figures(report_title, logs):
             + scale_x_datetime(breaks="1 days")
         )
 
-        plot5.save(f"{plot_path}/plots/weekly/5.png", verbose=False)
+        plot5.save(f"{plot_path}plots/weekly/5.png", verbose=False)
 
     elif report_title == "Monthly":
         logs[0] = logs[0][logs[0].Year == date.today().strftime("%Y")]
@@ -389,11 +392,11 @@ def generate_figures(report_title, logs):
             + theme(figure_size=(10, 6), axis_text_x=element_text(rotation=45, hjust=1))
         )
 
-        plot1.save(f"{plot_path}/plots/monthly/1.png", verbose=False)
-        plot1a.save(f"{plot_path}/plots/monthly/1a.png", verbose=False)
-        plot2.save(f"{plot_path}/plots/monthly/2.png", verbose=False)
-        plot3.save(f"{plot_path}/plots/monthly/3.png", verbose=False)
-        plot4.save(f"{plot_path}/plots/monthly/4.png", verbose=False)
+        plot1.save(f"{plot_path}plots/monthly/1.png", verbose=False)
+        plot1a.save(f"{plot_path}plots/monthly/1a.png", verbose=False)
+        plot2.save(f"{plot_path}plots/monthly/2.png", verbose=False)
+        plot3.save(f"{plot_path}plots/monthly/3.png", verbose=False)
+        plot4.save(f"{plot_path}plots/monthly/4.png", verbose=False)
 
     elif report_title == "Progress":
         plot1 = (
@@ -493,12 +496,12 @@ def generate_figures(report_title, logs):
             + scale_x_datetime(breaks=breaks)
         )
 
-        plot1.save(f"{plot_path}/plots/progress/1.png", verbose=False)
-        plot1a.save(f"{plot_path}/plots/progress/1a.png", verbose=False)
-        plot2.save(f"{plot_path}/plots/progress/2.png", verbose=False)
-        plot3.save(f"{plot_path}/plots/progress/3.png", verbose=False)
-        plot4.save(f"{plot_path}/plots/progress/4.png", verbose=False)
-        plot4a.save(f"{plot_path}/plots/progress/4a.png", verbose=False)
+        plot1.save(f"{plot_path}plots/progress/1.png", verbose=False)
+        plot1a.save(f"{plot_path}plots/progress/1a.png", verbose=False)
+        plot2.save(f"{plot_path}plots/progress/2.png", verbose=False)
+        plot3.save(f"{plot_path}plots/progress/3.png", verbose=False)
+        plot4.save(f"{plot_path}plots/progress/4.png", verbose=False)
+        plot4a.save(f"{plot_path}plots/progress/4a.png", verbose=False)
 
         plot5 = (
             ggplot(logs[3], aes(x="Module", y="Questions", fill="Module"))
@@ -573,11 +576,11 @@ def generate_figures(report_title, logs):
             )
         )
 
-        plot5.save(f"{plot_path}/plots/progress/5.png", verbose=False)
-        plot5a.save(f"{plot_path}/plots/progress/5a.png", verbose=False)
-        plot6.save(f"{plot_path}/plots/progress/6.png", verbose=False)
-        plot7.save(f"{plot_path}/plots/progress/7.png", verbose=False)
-        plot8.save(f"{plot_path}/plots/progress/8.png", verbose=False)
+        plot5.save(f"{plot_path}plots/progress/5.png", verbose=False)
+        plot5a.save(f"{plot_path}plots/progress/5a.png", verbose=False)
+        plot6.save(f"{plot_path}plots/progress/6.png", verbose=False)
+        plot7.save(f"{plot_path}plots/progress/7.png", verbose=False)
+        plot8.save(f"{plot_path}plots/progress/8.png", verbose=False)
 
         plot9 = (
             ggplot(
@@ -610,7 +613,7 @@ def generate_figures(report_title, logs):
         #     + theme(figure_size=(10, 6))
         # )
 
-        plot9.save(f"{plot_path}/plots/progress/9.png", verbose=False)
+        plot9.save(f"{plot_path}plots/progress/9.png", verbose=False)
 
 
 def text_generator(report_title, logs):

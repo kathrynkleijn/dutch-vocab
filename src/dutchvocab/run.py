@@ -14,8 +14,11 @@ def main():
     # get settings
     with open("settings.txt", "r") as file:
         settings = file.read().splitlines()
-    report_path = settings[0].rstrip("/")
-    report_output = settings[1]
+    report_path = settings[0]
+    report_output = settings[2]
+
+    if report_path and not report_path.endswith("/"):
+        report_path = report_path + "/"
 
     playing = True
     log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
@@ -129,19 +132,19 @@ def main():
         print("\nUpdating reports...")
 
         # make directories if non-existent
-        os.makedirs(f"{report_path}/Reports/Weekly_Reports", exist_ok=True)
-        os.makedirs(f"{report_path}/Reports/Monthly_Reports", exist_ok=True)
+        os.makedirs(f"{report_path}Reports/Weekly_Reports", exist_ok=True)
+        os.makedirs(f"{report_path}Reports/Monthly_Reports", exist_ok=True)
 
         log_full = pd.read_csv("learning_log.csv")
         weekly_pdf = pdf_constructor.build_pdf(log_full, "Weekly")
         weekly_pdf.output(
-            f"{report_path}/Reports/Weekly_Reports/{(date.today() - timedelta(days=date.today().weekday())).strftime('%Y%m%d')}_Report.pdf",
+            f"{report_path}Reports/Weekly_Reports/{(date.today() - timedelta(days=date.today().weekday())).strftime('%Y%m%d')}_Report.pdf",
             "F",
         )
         monthly_pdf = pdf_constructor.build_pdf(log_full, "Monthly")
 
         monthly_pdf.output(
-            f"{report_path}/Reports/Monthly_Reports/{date.today().strftime('%Y_%B')}_Report.pdf",
+            f"{report_path}Reports/Monthly_Reports/{date.today().strftime('%Y_%B')}_Report.pdf",
             "F",
         )
 
