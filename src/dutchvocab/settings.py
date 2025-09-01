@@ -22,8 +22,18 @@ def main():
         "\nOptional settings:\nPath to save learning reports\nPath to save temporary plots for building reports\nAutomatic output of weekly and monthly reports\n"
     )
 
+    if not report_path:
+        report_path_out = "current directory"
+    else:
+        report_path_out = report_path
+
+    if not plot_path:
+        plot_path_out = "current directory"
+    else:
+        plot_path_out = plot_path
+
     print(
-        f"\nCurrent settings:\nReport Save Path      {report_path}\nPlots Save Path      {plot_path}\nReport Output       {output}"
+        f"\nCurrent settings:\nReport Save Path      {report_path_out}\nPlots Save Path       {plot_path_out}\nReport Output         {output}"
     )
 
     edit_settings = input("\nDo you want to edit any settings? (Y/N) ")
