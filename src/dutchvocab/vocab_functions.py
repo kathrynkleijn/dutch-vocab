@@ -6,6 +6,7 @@ from collections import Counter
 import copy
 from matplotlib import pyplot as plt
 import numpy as np
+from fuzzywuzzy import fuzz
 
 
 def select_lesson(topic):
@@ -108,6 +109,26 @@ def answer_formatting(answer, test, lesson, language, correct_answer=""):
     return " ".join(word for word in answer_words)
 
 
+def typos_and_word_order(answer, test):
+
+    if len(test.split()) != len(answer.split()):
+        return False
+
+    score = fuzz.token_sort_ratio(test, answer)
+    length = max(len(test), len(answer))
+
+    if length <= 4:
+        threshold = 90
+    elif length <= 8:
+        threshold = 85
+    elif length <= 15:
+        threshold = 80
+    else:
+        threshold = 75
+
+    return score >= threshold
+
+
 def randomly_generated_lesson(lesson, questions, testing=None):
 
     question_number = 1
@@ -119,6 +140,7 @@ def randomly_generated_lesson(lesson, questions, testing=None):
         else:
             language = testing
         if language == 0:
+            # Dutch question
             test = random.choice(list(lesson.questions.keys()))
             # get answer from user
             answer = input(f"{test}         ")
@@ -146,15 +168,24 @@ def randomly_generated_lesson(lesson, questions, testing=None):
                     if answer_formatted == lesson.questions[test]:
                         print("Correct!\n")
                         correct += 1
+                    elif typos_and_word_order(answer_formatted, lesson.questions[test]):
+                        print("Correct! (You have a typo or different word order)\n")
+                        correct += 1
                     elif lesson.questions[test] in lessons.alternatives.keys():
                         if isinstance(
                             lessons.alternatives[lesson.questions[test]], list
                         ):
-                            if (
-                                answer_formatted
-                                in lessons.alternatives[lesson.questions[test]]
-                            ):
+                            alternatives = lessons.alternatives[lesson.questions[test]]
+                            if answer_formatted in alternatives:
                                 print("Correct!\n")
+                                correct += 1
+                            elif any(
+                                typos_and_word_order(answer_formatted, alt)
+                                for alt in alternatives
+                            ):
+                                print(
+                                    "Correct! (You have a typo or different word order)\n"
+                                )
                                 correct += 1
                             else:
                                 print("That's not right!")
@@ -165,6 +196,14 @@ def randomly_generated_lesson(lesson, questions, testing=None):
                                 == lessons.alternatives[lesson.questions[test]]
                             ):
                                 print("Correct!\n")
+                                correct += 1
+                            elif typos_and_word_order(
+                                answer_formatted,
+                                lessons.alternatives[lesson.questions[test]],
+                            ):
+                                print(
+                                    "Correct! (You have a typo or different word order)\n"
+                                )
                                 correct += 1
                             else:
                                 print("That's not right!")
@@ -177,6 +216,7 @@ def randomly_generated_lesson(lesson, questions, testing=None):
                 lesson.questions.pop(test)
 
         else:
+            # English question
             correct_answer, test = random.choice(list(lesson.questions.items()))
             # get answer from user
             answer = input(f"{test}         ")
