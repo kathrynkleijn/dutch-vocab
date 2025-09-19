@@ -29,7 +29,7 @@ pal = brewer_pal("qual", "Paired")
 colors = pal(12)
 np.random.shuffle(colors)
 
-all_colors = gradient_n_pal(colors)(np.linspace(0, 1, 30))
+all_colors = gradient_n_pal(colors)(np.linspace(0, 1, 50))
 
 
 months = [
