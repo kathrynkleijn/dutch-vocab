@@ -399,7 +399,7 @@ spoken = [
         "Ik vind dat zelf niet zo'n probleem, alhoewel ik het wel jammer vind": "I don't find that such a problem myself, although I think it's a shame",
         "opschrijven": "to write down",
         "Wat hij zegt, moet je niet allemaal opschrijven": "You musn't write down all of what he is saying",
-        "rap": "fast, quickly",
+        "rap": "fast, quickly (FL)",
         "Dan is dat rap gedaan": "Then that's quickly done",
         "voormalig": "former",
         "tijdelijk": "temporarily",
@@ -922,5 +922,5 @@ alternatives = {
     "She looks up at the sky as though seeing it for the first time": "She looks up at the sky as if seeing it for the first time",
     "careful": "cautious",
     "In each book in this series there is a short interview with the author of the novel in the back": "In each book from this series there is a short interview with the author of the novel in the back",
-    "to keep silent about": ["to stay silent", "to keep silent"]
+    "to keep silent about": ["to stay silent", "to keep silent"],
 }
