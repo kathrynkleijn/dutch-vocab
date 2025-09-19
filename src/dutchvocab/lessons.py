@@ -923,4 +923,5 @@ alternatives = {
     "careful": "cautious",
     "In each book in this series there is a short interview with the author of the novel in the back": "In each book from this series there is a short interview with the author of the novel in the back",
     "to keep silent about": ["to stay silent", "to keep silent"],
+    "I got along with everyone quickly": "I got on quickly with everyone",
 }
