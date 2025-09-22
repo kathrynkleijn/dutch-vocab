@@ -318,6 +318,55 @@ def repeated_lesson(lesson, questions, all_questions=[]):
     return correct, questions, all_questions
 
 
+def test(lesson):
+
+    all_questions = list(lesson.questions.items())
+
+    random.shuffle(all_questions)
+
+    for dutch, english in all_questions:
+        answer = input(f"{dutch}         ")
+        if answer.lower() == "exit":
+            print(
+                "Exiting test. All progress will be lost. Are you sure you wish to exit?"
+            )
+            exit = input("Are you sure you wish to exit?   ")
+            if exit.upper() != "Y":
+                print("Continuing with test")
+                continue
+            else:
+                print("Exiting...")
+                break
+        if not answer:
+            print("That's not right!")
+            print(f"{english}\n")
+        else:
+            correct = dutch_question(answer, correct, dutch, english, lesson)
+
+    random.shuffle(all_questions)
+
+    for dutch, english in all_questions:
+        answer = input(f"{english}         ")
+        if answer.lower() == "exit":
+            print(
+                "Exiting test. All progress will be lost. Are you sure you wish to exit?"
+            )
+            exit = input("Are you sure you wish to exit?   ")
+            if exit.upper() != "Y":
+                print("Continuing with test")
+                continue
+            else:
+                print("Exiting...")
+                break
+        if not answer:
+            print("That's not right!")
+            print(f"{dutch}\n")
+        else:
+            correct = english_question(answer, correct, dutch, english, lesson)
+
+    return correct
+
+
 def update_log(log, topic, lesson, questions, correct):
 
     log_today = {
