@@ -37,7 +37,9 @@ def select_lesson(topic, test=False):
                 continue
         else:
             try:
-                lesson_enquiry = input("Select a lesson to be tested on").lower()
+                lesson_enquiry = input(
+                    "Select a lesson to be tested on         "
+                ).lower()
 
                 lesson = copy.deepcopy(topic.lessons[int(lesson_enquiry) - 1])
                 print(

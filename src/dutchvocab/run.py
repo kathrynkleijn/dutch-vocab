@@ -236,32 +236,38 @@ def main():
         print(f"You have selected {topic.capitalize()}.")
 
         if topic == "core":
-            lesson = vf.select_lesson(lo.core)
+            lesson = vf.select_lesson(lo.core, test=True)
+            print("\nBeginning test...\n")
             correct, complete = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "fiction":
-            lesson = vf.select_lesson(lo.fiction)
+            lesson = vf.select_lesson(lo.fiction, test=True)
+            print("\nBeginning test...\n")
             correct, complete = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "newspapers":
-            lesson = vf.select_lesson(lo.newspapers)
+            lesson = vf.select_lesson(lo.newspapers, test=True)
+            print("\nBeginning test...\n")
             correct, complete = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "spoken":
-            lesson = vf.select_lesson(lo.spoken)
+            lesson = vf.select_lesson(lo.spoken, test=True)
+            print("\nBeginning test...\n")
             correct, complete = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "web":
-            lesson = vf.select_lesson(lo.web)
+            lesson = vf.select_lesson(lo.web, test=True)
+            print("\nBeginning test...\n")
             correct, complete = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "general":
-            lesson = vf.select_lesson(lo.general)
+            lesson = vf.select_lesson(lo.general, test=True)
+            print("\nBeginning test...\n")
             correct, complete = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
