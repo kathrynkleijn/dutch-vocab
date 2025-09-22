@@ -10,30 +10,42 @@ import numpy as np
 from fuzzywuzzy import fuzz
 
 
-def select_lesson(topic):
+def select_lesson(topic, test=False):
     trying = True
     while trying:
-        try:
-            lesson_enquiry = input(
-                "Select a lesson, choose random or choose 'all'          "
-            ).lower()
-            if lesson_enquiry == "random":
-                lesson_num = random.randrange((len(topic.lessons) - 1))
-                lesson = copy.deepcopy(topic.lessons[int(lesson_num) - 1])
-                print(
-                    f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
-                )
-            elif lesson_enquiry == "all":
-                lesson = copy.deepcopy(topic.all)
-                print(f"\nYou have chosen all of {topic.name.capitalize()}.")
-            else:
+        if not test:
+            try:
+                lesson_enquiry = input(
+                    "Select a lesson, choose random for a random choice of lesson, or choose all for an assortment of questions from all lessons          "
+                ).lower()
+                if lesson_enquiry == "random":
+                    lesson_num = random.randrange((len(topic.lessons) - 1))
+                    lesson = copy.deepcopy(topic.lessons[int(lesson_num) - 1])
+                    print(
+                        f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
+                    )
+                elif lesson_enquiry == "all":
+                    lesson = copy.deepcopy(topic.all)
+                    print(f"\nYou have chosen all of {topic.name.capitalize()}.")
+                else:
+                    lesson = copy.deepcopy(topic.lessons[int(lesson_enquiry) - 1])
+                    print(
+                        f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
+                    )
+                trying = False
+            except:
+                continue
+        else:
+            try:
+                lesson_enquiry = input("Select a lesson to be tested on").lower()
+
                 lesson = copy.deepcopy(topic.lessons[int(lesson_enquiry) - 1])
                 print(
                     f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                 )
-            trying = False
-        except:
-            continue
+                trying = False
+            except:
+                continue
     return lesson
 
 
@@ -320,6 +332,8 @@ def repeated_lesson(lesson, questions, all_questions=[]):
 
 def test(lesson):
 
+    complete = False
+
     all_questions = list(lesson.questions.items())
 
     random.shuffle(all_questions)
@@ -329,16 +343,15 @@ def test(lesson):
     for dutch, english in all_questions:
         answer = input(f"{english}         ")
         if answer.lower() == "exit":
-            print(
-                "Exiting test. All progress will be lost. Are you sure you wish to exit?"
+            exit_confirm = input(
+                "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
             )
-            exit = input("Are you sure you wish to exit?   ")
-            if exit.upper() != "Y":
-                print("Continuing with test")
+            if exit_confirm.strip().lower() != "y":
+                print("\nContinuing with test\n")
                 continue
             else:
-                print("Exiting...")
-                break
+                print("\nExiting...\n")
+                return correct, complete
         if not answer:
             print("That's not right!")
             print(f"{dutch}\n")
@@ -350,23 +363,24 @@ def test(lesson):
     for dutch, english in all_questions:
         answer = input(f"{dutch}         ")
         if answer.lower() == "exit":
-            print(
-                "Exiting test. All progress will be lost. Are you sure you wish to exit?"
+            exit_confirm = input(
+                "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
             )
-            exit = input("Are you sure you wish to exit?   ")
-            if exit.upper() != "Y":
-                print("Continuing with test")
+            if exit_confirm.strip().lower() != "y":
+                print("\nContinuing with test\n")
                 continue
             else:
-                print("Exiting...")
-                break
+                print("\nExiting...\n")
+                return correct, complete
         if not answer:
             print("That's not right!")
             print(f"{english}\n")
         else:
             correct = dutch_question(answer, correct, dutch, english, lesson)
 
-    return correct
+    complete = True
+
+    return correct, complete
 
 
 def update_log(log, topic, lesson, questions, correct):
