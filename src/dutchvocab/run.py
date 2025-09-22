@@ -41,7 +41,7 @@ def main():
             lesson = vf.select_lesson(lo.core)
             questions = vf.select_questions(lesson)
 
-            correct, questions, all_questions = vf.randomly_generated_lesson(
+            correct, questions, asked_questions = vf.randomly_generated_lesson(
                 lesson, questions
             )
             log = vf.update_log(log, topic, lesson.name, questions, correct)
@@ -50,7 +50,7 @@ def main():
             lesson = vf.select_lesson(lo.fiction)
             questions = vf.select_questions(lesson)
 
-            correct, questions, all_questions = vf.randomly_generated_lesson(
+            correct, questions, asked_questions = vf.randomly_generated_lesson(
                 lesson, questions
             )
             log = vf.update_log(log, topic, lesson.name, questions, correct)
@@ -59,7 +59,7 @@ def main():
             lesson = vf.select_lesson(lo.newspapers)
             questions = vf.select_questions(lesson)
 
-            correct, questions, all_questions = vf.randomly_generated_lesson(
+            correct, questions, asked_questions = vf.randomly_generated_lesson(
                 lesson, questions
             )
             log = vf.update_log(log, topic, lesson.name, questions, correct)
@@ -68,7 +68,7 @@ def main():
             lesson = vf.select_lesson(lo.spoken)
             questions = vf.select_questions(lesson)
 
-            correct, questions, all_questions = vf.randomly_generated_lesson(
+            correct, questions, asked_questions = vf.randomly_generated_lesson(
                 lesson, questions
             )
             log = vf.update_log(log, topic, lesson.name, questions, correct)
@@ -77,7 +77,7 @@ def main():
             lesson = vf.select_lesson(lo.web)
             questions = vf.select_questions(lesson)
 
-            correct, questions, all_questions = vf.randomly_generated_lesson(
+            correct, questions, asked_questions = vf.randomly_generated_lesson(
                 lesson, questions
             )
             log = vf.update_log(log, topic, lesson.name, questions, correct)
@@ -86,7 +86,7 @@ def main():
             lesson = vf.select_lesson(lo.general)
             questions = vf.select_questions(lesson)
 
-            correct, questions, all_questions = vf.randomly_generated_lesson(
+            correct, questions, asked_questions = vf.randomly_generated_lesson(
                 lesson, questions
             )
             log = vf.update_log(log, topic, lesson.name, questions, correct)
@@ -95,7 +95,7 @@ def main():
             lesson = lo.overall.all
             questions = vf.select_questions(lesson)
 
-            correct, questions, all_questions = vf.randomly_generated_lesson(
+            correct, questions, asked_questions = vf.randomly_generated_lesson(
                 lesson, questions
             )
             log = vf.update_log(log, topic, "all", questions, correct)
@@ -125,8 +125,8 @@ def main():
                     lesson = copy.deepcopy(lo.web.lessons[int(lesson.number) - 1])
                 elif topic == "general":
                     lesson = copy.deepcopy(lo.general.lessons[int(lesson.number) - 1])
-                correct, questions, all_questions = vf.randomly_generated_lesson(
-                    lesson, questions, repeat=True, all_questions=all_questions
+                correct, questions, asked_questions = vf.repeated_lesson(
+                    lesson, questions, all_questions=asked_questions
                 )
                 log = vf.update_log(log, topic, lesson.name, questions, correct)
 
