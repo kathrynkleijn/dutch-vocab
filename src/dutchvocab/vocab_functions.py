@@ -1,4 +1,5 @@
 import random
+import math
 import pandas as pd
 from datetime import date
 from dutchvocab import lessons
@@ -129,53 +130,69 @@ def typos_and_word_order(answer, test):
     return score >= threshold
 
 
-def randomly_generated_lesson(lesson, questions, testing=None):
+def randomly_generated_lesson(
+    lesson, questions, repeat=False, all_questions=[], testing=None
+):
 
-    question_number = 1
+    if not repeat:
+        all_questions = list(lesson.questions.items())
+
+        random.shuffle(all_questions)
+
+        if questions < len(all_questions):
+            all_questions = all_questions[:questions]
+        elif questions > len(all_questions):
+            extra = math.ceil(questions / len(all_questions)) - 1
+            for i in range(extra):
+                extra_questions = list(lesson.questions.items())
+                all_questions.extend(random.shuffle(extra_questions))
+
+    if repeat:
+        random.shuffle(all_questions)
+
     correct = 0
-    while question_number <= questions:
-        # generate random language
+    question_number = 1
+    for dutch, english in all_questions:
+        # choose language: 0 = Dutch->English, 1 = English->Dutch
         if testing is None:
             language = random.randrange(2)
         else:
             language = testing
+
         if language == 0:
             # Dutch question
-            test = random.choice(list(lesson.questions.keys()))
-            # get answer from user
-            answer = input(f"{test}         ")
+            answer = input(f"{dutch}         ")
             if answer.lower() == "exit":
                 print("Exiting lesson...")
                 questions = question_number - 1
                 break
             if not answer:
                 print("That's not right!")
-                print(f"{correct_answer}\n")
+                print(f"{english}\n")
             else:
                 # return answer to user
-                answer_formatted = answer_formatting(answer, test, lesson, language)
+
+                answer_formatted = answer_formatting(answer, dutch, lesson, language)
 
                 if any(True for char in answer_formatted if char in ","):
                     answer_meanings = answer_formatted.split(", ")
-                    test_meanings = lesson.questions[test].split(", ")
+                    test_meanings = english.split(", ")
                     if Counter(answer_meanings) == Counter(test_meanings):
                         print("Correct!\n")
                         correct += 1
                     else:
                         print("That's not right!")
-                        print(f"{lesson.questions[test]}\n")
+                        print(f"{english}\n")
                 else:
-                    if answer_formatted == lesson.questions[test]:
+                    if answer_formatted == english:
                         print("Correct!\n")
                         correct += 1
-                    elif typos_and_word_order(answer_formatted, lesson.questions[test]):
+                    elif typos_and_word_order(answer_formatted, english):
                         print("Correct! (You have a typo or different word order)\n")
                         correct += 1
-                    elif lesson.questions[test] in lessons.alternatives.keys():
-                        if isinstance(
-                            lessons.alternatives[lesson.questions[test]], list
-                        ):
-                            alternatives = lessons.alternatives[lesson.questions[test]]
+                    elif english in lessons.alternatives.keys():
+                        alternatives = lessons.alternatives[english]
+                        if isinstance(alternatives, list):
                             if answer_formatted in alternatives:
                                 print("Correct!\n")
                                 correct += 1
@@ -189,17 +206,14 @@ def randomly_generated_lesson(lesson, questions, testing=None):
                                 correct += 1
                             else:
                                 print("That's not right!")
-                                print(f"{lesson.questions[test]}\n")
+                                print(f"{english}\n")
                         else:
-                            if (
-                                answer_formatted
-                                == lessons.alternatives[lesson.questions[test]]
-                            ):
+                            if answer_formatted == alternatives:
                                 print("Correct!\n")
                                 correct += 1
                             elif typos_and_word_order(
                                 answer_formatted,
-                                lessons.alternatives[lesson.questions[test]],
+                                alternatives,
                             ):
                                 print(
                                     "Correct! (You have a typo or different word order)\n"
@@ -207,57 +221,52 @@ def randomly_generated_lesson(lesson, questions, testing=None):
                                 correct += 1
                             else:
                                 print("That's not right!")
-                                print(f"{lesson.questions[test]}\n")
+                                print(f"{english}\n")
 
                     else:
                         print("That's not right!")
-                        print(f"{lesson.questions[test]}\n")
-            if not testing:
-                lesson.questions.pop(test)
+                        print(f"{english}\n")
 
         else:
             # English question
-            correct_answer, test = random.choice(list(lesson.questions.items()))
-            # get answer from user
-            answer = input(f"{test}         ")
+            answer = input(f"{english}         ")
             if answer.lower() == "exit":
                 print("Exiting lesson...")
                 questions = question_number - 1
                 break
             if not answer:
                 print("That's not right!")
-                print(f"{correct_answer}\n")
+                print(f"{dutch}\n")
             else:
                 answer_formatted = answer_formatting(
-                    answer, test, lesson.questions, language, correct_answer
+                    answer, english, lesson.questions, language, dutch
                 )
                 # check for wij/we, zij/ze, jij/je
-                answer = accept_alternatives(correct_answer, answer_formatted)
+                answer = accept_alternatives(dutch, answer_formatted)
                 # return answer to user
                 try:
-                    if lesson.questions[answer] == test:
+                    if lesson.questions[answer] == english:
                         print("Correct!\n")
                         correct += 1
 
                 except:
-                    if correct_answer in lessons.alternatives.keys():
-                        if answer in lessons.alternatives[correct_answer]:
+                    if dutch in lessons.alternatives.keys():
+                        if answer in lessons.alternatives[dutch]:
                             print("Correct!\n")
                             correct += 1
                         else:
                             print("That's not right!")
-                            print(f"{correct_answer}\n")
+                            print(f"{dutch}\n")
                     else:
                         print("That's not right!")
-                        print(f"{correct_answer}\n")
-            if not testing:
-                lesson.questions.pop(correct_answer)
+                        print(f"{dutch}\n")
 
-        # repeat until all asked
+        # count questions
         question_number += 1
 
     print(f"Lesson finished. You got {correct}/{questions} correct.")
-    return correct, questions
+
+    return correct, questions, all_questions
 
 
 def update_log(log, topic, lesson, questions, correct):

@@ -1,4 +1,5 @@
 from dutchvocab import lessons
+from collections import OrderedDict
 
 
 class Lesson:
@@ -6,7 +7,7 @@ class Lesson:
     def __init__(self, number, topic):
         self.number = number
         self.name = topic + str(number)
-        self.questions = {}
+        self.questions = OrderedDict()
 
     def __str__(self):
         return f"{self.name}"
