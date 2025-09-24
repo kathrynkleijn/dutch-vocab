@@ -77,16 +77,22 @@ def main():
             selected_type = inquirer.prompt(lesson_enquiry)
 
             if topic == "core":
+                lesson = vf.select_lesson(lo.core)
+
                 if selected_type["lesson_type"] == "phrases":
-                    lesson = vf.select_lesson(lo.core)
                     questions = vf.select_questions(lesson)
 
                     correct, questions, asked_questions = vf.randomly_generated_lesson(
                         lesson, questions
                     )
                     log = vf.update_log(log, topic, lesson.name, questions, correct)
+
                 elif selected_type["lesson_type"] == "vocabulary":
-                    raise NotImplementedError
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
 
             elif topic == "fiction":
                 lesson = vf.select_lesson(lo.fiction)

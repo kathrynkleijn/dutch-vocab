@@ -59,13 +59,18 @@ overall = Topic("all")
 
 topics = [core, fiction, newspapers, spoken, web, general]
 
+
 for topic in topics:
-    for value, lesson in enumerate(lessons.available_lessons[topic.name]):
+    phrase_lessons = lessons.available_lessons[topic.name][0]
+    vocab_lessons = lessons.available_lessons[topic.name][1]
+    zipped_lessons = [(a, b) for a, b in zip(phrase_lessons, vocab_lessons)]
+    for value, lesson in enumerate(zipped_lessons):
+        phrases, words = lesson
         new_lesson = Lesson(value + 1, topic.name)
-        new_lesson.add_questions(**lesson)
+        new_lesson.add_questions(**phrases)
+        new_lesson.add_words(**words)
         topic.add_lesson(new_lesson)
     overall.add_lesson(topic.all)
-
 
 available = ""
 for num, topic in enumerate(topics):

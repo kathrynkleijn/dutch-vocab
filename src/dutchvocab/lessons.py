@@ -185,7 +185,43 @@ core = [
     },
 ]
 
+core_vocab = [
+    {
+        "voor": "for, in front of",
+        "aan": "to",
+        "als": "when",
+        "om": "around",
+        "het plantsoen": "park",
+        "nog": "still",
+        "bij": "near",
+        "uit": "from",
+    },
+    {
+        "zullen": "will",
+        "of": "or",
+        "over": "over, about",
+        "wel": "rather",
+        "wat": "what",
+        "heel": "whole",
+        "fluiten": "to whistle",
+        "toch": "yet",
+        "troosten": "to comfort",
+    },
+    {
+        "maken": "to make, to repair",
+        "de beweging": "motion, movement",
+        "ons": "us, our",
+        "logeren": "to stay, to lodge",
+        "dan": "than",
+        "de mens": "human",
+        "innig": "intimate",
+        "alleen": "alone",
+        "lang": "long, tall",
+    },
+]
+
 core = [lesson for lesson in core if len(lesson) >= 15]
+core_vocab = [lesson for lesson in core_vocab]
 
 # Fiction
 
@@ -289,7 +325,10 @@ fiction = [
         # 5
     },
 ]
+fiction_vocab = []
+
 fiction = [lesson for lesson in fiction if len(lesson) >= 15]
+fiction_vocab = [lesson for lesson in fiction_vocab]
 
 # Newspapers
 
@@ -349,7 +388,10 @@ newspapers = [
     {"hout": "wood"},
     {"houten": "wooden"},
 ]
+newspapers_vocab = []
+
 newspapers = [lesson for lesson in newspapers if len(lesson) >= 15]
+newspapers_vocab = [lesson for lesson in newspapers_vocab]
 
 # Spoken
 
@@ -525,7 +567,10 @@ spoken = [
         "de zin": "fancy (NL)",
     },
 ]
+spoken_vocab = []
+
 spoken = [lesson for lesson in spoken if len(lesson) >= 15]
+spoken_vocab = [lesson for lesson in spoken_vocab]
 
 # Web
 
@@ -580,7 +625,10 @@ web = [
         # 3*""
     },
 ]
+web_vocab = []
+
 web = [lesson for lesson in web if len(lesson) >= 15]
+web_vocab = [lesson for lesson in web_vocab]
 
 # General
 
@@ -713,8 +761,10 @@ general = [
     #   "ongeduldig":"impatient"
     # },
 ]
-general = [lesson for lesson in general if len(lesson) >= 15]
+general_vocab = []
 
+general = [lesson for lesson in general if len(lesson) >= 15]
+general_vocab = [lesson for lesson in general_vocab]
 
 proper_nouns_eng = [
     "Amsterdam",
@@ -763,12 +813,12 @@ proper_nouns_ned = [
 
 
 available_lessons = {
-    "core": core,
-    "fiction": fiction,
-    "newspapers": newspapers,
-    "spoken": spoken,
-    "web": web,
-    "general": general,
+    "core": [core, core_vocab],
+    "fiction": [fiction, fiction_vocab],
+    "newspapers": [newspapers, newspapers_vocab],
+    "spoken": [spoken, spoken_vocab],
+    "web": [web, web_vocab],
+    "general": [general, general_vocab],
 }
 
 
