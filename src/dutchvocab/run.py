@@ -48,6 +48,7 @@ def main():
                 "web",
                 "general",
                 "all",
+                "random",
             ]
             topic_enquiry = [
                 inquirer.List(
@@ -65,14 +66,27 @@ def main():
 
             print(f"You have selected {topic.capitalize()}.")
 
-            if topic == "core":
-                lesson = vf.select_lesson(lo.core)
-                questions = vf.select_questions(lesson)
-
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
+            lesson_types = ["vocabulary", "phrases"]
+            lesson_enquiry = [
+                inquirer.List(
+                    "lesson_type",
+                    message="What type of lesson do you want?",
+                    choices=lesson_types,
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+            ]
+            selected_type = inquirer.prompt(lesson_enquiry)
+
+            if topic == "core":
+                if selected_type["lesson_type"] == "phrases":
+                    lesson = vf.select_lesson(lo.core)
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+                elif selected_type["lesson_type"] == "vocabulary":
+                    raise NotImplementedError
 
             elif topic == "fiction":
                 lesson = vf.select_lesson(lo.fiction)
