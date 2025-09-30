@@ -90,6 +90,18 @@ test_lesson_16.add_question(
 test_lesson_17 = lesson_objects.Lesson(17, "core")
 test_lesson_17.add_question("nog", "still")
 
+test_lesson_18 = lesson_objects.Lesson(18, "core")
+test_lesson_18.add_question(
+    "Op het pleintje bij de kerk waren kinderen aan het spelen",
+    "Children were playing on the square near the church",
+)
+
+test_lesson_19 = lesson_objects.Lesson(19, "core")
+test_lesson_19.add_question(
+    "Een stormvloed spoelde de hele stad in een keer weg, aldus de overlevering",
+    "A storm surge washed away the whole city in one go, according to legend",
+)
+
 
 core = lesson_objects.Topic("core")
 core.add_lesson(test_lesson_1)
@@ -275,6 +287,49 @@ class Test(TestCase):
         self.assertEqual(
             (result1[0], result2[0], result3[0]),
             (expected_result, expected_result, expected_result),
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_alternative_answer_eng_multi2(self, mocked_input):
+        mocked_input.side_effect = [
+            "Children were playing on the square near the church",
+            "On the square near the church children were playing",
+        ]
+        result1 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_18), 1, testing=0
+        )
+        result2 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_18), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(
+            (result1[0], result2[0]),
+            (expected_result, expected_result),
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_alternative_answer_eng_multi3(self, mocked_input):
+        mocked_input.side_effect = [
+            "A storm surge washed away the whole town in one go, according to legend",
+            "A storm surge washed the whole town away in one go, according to legend",
+            "A storm surge washed the whole city away in one go, according to legend",
+        ]
+        result1 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        result2 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        result3 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        result4 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(
+            (result1[0], result2[0], result3[0], result4[0]),
+            (expected_result, expected_result, expected_result, expected_result),
         )
 
     @mock.patch("vocab_functions.input", create=True)
