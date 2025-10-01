@@ -660,7 +660,7 @@ spoken = [
         "zat": "plenty",
         "Ilse is rijk zat": "Ilse is plenty rich",
         "tussendoor": "in between",
-        "Dat fietsen was maar even tussendoor": "That cycling was just a quick break",
+        "Dat fietsen was maar even tussendoor": "That cycling was only briefly in between things",
         "erachter": "behind (it/them)",
         "Je moet dit gewoon afsluiten, punt erachter": "You just have to shut this down, full stop",
         "Hoe kom je erachter of dat waar is?": "How do you find out if that's true?",
@@ -1193,7 +1193,10 @@ alternatives = {
         "William goes home with his father to fetch some stuff",
     ],
     "I found another way to help you": "I have found another way to help you",
-    "The connection will be broken off in thirty seconds": "The connection will be disconnected in thirty seconds",
+    "The connection will be broken off in thirty seconds": [
+        "The connection will be disconnected in thirty seconds",
+        "The connection will be broken in thirty seconds",
+    ],
     "Behind it the swamp starts": [
         "Behind it starts the swamp",
         "Behind it the swamp begins",
