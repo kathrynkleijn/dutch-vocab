@@ -1076,7 +1076,68 @@ general = [
     #   "ongeduldig":"impatient"
     # },
 ]
-general_vocab = []
+general_vocab = [
+    {
+        "echter": "however",
+        "immers": "indeed",
+        "de overheid": "government (administration)",
+        "de bezuinigingen": "cutbacks",
+        "behoren": "to belong",
+        "intussen": "meanwhile",
+        "de raad": "advice",
+        "liefst": "preferably",
+        "willen het liefst": "to prefer",
+    },
+    {
+        "uitvoeren": "to perform",
+        "de chirurg": "surgeon",
+        "de handeling": "operation",
+        "het niveau": "level",
+        "bedoelen": "to intend",
+        "beperken": "to limit",
+        "de schade": "damage",
+        "treden": "to step",
+        "bevestigen": "to confirm",
+        "de getuige": "witness",
+        "het kruispunt": "junction",
+        "weigeren": "to refuse",
+        "aanwezig": "present",
+    },
+    {
+        "de uitspraak": "statement",
+        "de druk": "pressure",
+        "veroorzaken": "to cause",
+        "de klant": "customer",
+        "de leverancier": "supplier",
+        "de ontwikkeling": "development",
+        "de vakgebied": "field (of research)",
+        "bevinden (zich)": "to find",
+        "de poging": "attempt",
+        "knap": "handsome",
+    },
+    {
+        "verantwoordelijk": "responsible",
+        "minstens": "at least",
+        "beweren": "to claim",
+        "het overleg": "consultation",
+        "de fout": "error",
+        "dwingen": "to force",
+        "desnoods": "if necessary",
+        "de leiding": "leadership",
+        "steunen": "to support",
+        "recht": "straight",
+    },
+    {
+        "dalen": "to go down",
+        "dom": "stupid",
+        "de omstandigheid": "circumstance",
+        "reeds": "already",
+        "bevatten": "to contain",
+        "de praktijk": "practice",
+        "herstellen": "to recover",
+        "de maatschappij": "society",
+    },
+]
 
 general = [lesson for lesson in general if len(lesson) >= 15]
 general_vocab = [lesson for lesson in general_vocab]
@@ -1282,4 +1343,5 @@ alternatives = {
     "careful": "cautious",
     "to keep silent about": ["to stay silent", "to keep silent"],
     "I got along with everyone quickly": "I got on quickly with everyone",
+    "field (of research)": "field",
 }
