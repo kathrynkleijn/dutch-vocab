@@ -81,8 +81,26 @@ test_lesson_14.add_question("willen het liefst", "to prefer")
 test_lesson_15 = lesson_objects.Lesson(15, "web")
 test_lesson_15.add_question("aangezien", "since")
 
-test_lesson_16 = lesson_objects.Lesson(15, "newspapers")
-test_lesson_16.add_question("De hypotheekrente is momenteel aan het stijgen", "Mortgage rates are currently climbing")
+test_lesson_16 = lesson_objects.Lesson(16, "newspapers")
+test_lesson_16.add_question(
+    "De hypotheekrente is momenteel aan het stijgen",
+    "Mortgage rates are currently climbing",
+)
+
+test_lesson_17 = lesson_objects.Lesson(17, "core")
+test_lesson_17.add_question("nog", "still")
+
+test_lesson_18 = lesson_objects.Lesson(18, "core")
+test_lesson_18.add_question(
+    "Op het pleintje bij de kerk waren kinderen aan het spelen",
+    "Children were playing on the square near the church",
+)
+
+test_lesson_19 = lesson_objects.Lesson(19, "core")
+test_lesson_19.add_question(
+    "Een stormvloed spoelde de hele stad in een keer weg, aldus de overlevering",
+    "A storm surge washed away the whole city in one go, according to legend",
+)
 
 
 core = lesson_objects.Topic("core")
@@ -106,7 +124,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_1), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_eng1(self, mocked_input):
@@ -115,7 +133,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_1), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_ned2(self, mocked_input):
@@ -124,7 +142,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_2), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_eng2(self, mocked_input):
@@ -133,7 +151,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_2), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_eng3(self, mocked_input):
@@ -144,7 +162,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_4), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_ned3(self, mocked_input):
@@ -153,7 +171,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_8), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_eng4(self, mocked_input):
@@ -162,7 +180,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_8), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_ned4(self, mocked_input):
@@ -171,7 +189,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_9), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_eng5(self, mocked_input):
@@ -180,7 +198,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_14), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_ned5(self, mocked_input):
@@ -189,7 +207,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_14), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_wij_we(self, mocked_input):
@@ -198,7 +216,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_3), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_wij_we2(self, mocked_input):
@@ -207,7 +225,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_3), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_zij_ze(self, mocked_input):
@@ -218,7 +236,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_11), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_meaning_order(self, mocked_input):
@@ -227,7 +245,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_1), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_alternative_answer_eng(self, mocked_input):
@@ -238,7 +256,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_5), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_alternative_answer_ned(self, mocked_input):
@@ -247,7 +265,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_6), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_alternative_answer_eng_multi(self, mocked_input):
@@ -267,8 +285,51 @@ class Test(TestCase):
         )
         expected_result = 1
         self.assertEqual(
-            (result1, result2, result3),
+            (result1[0], result2[0], result3[0]),
             (expected_result, expected_result, expected_result),
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_alternative_answer_eng_multi2(self, mocked_input):
+        mocked_input.side_effect = [
+            "Children were playing on the square near the church",
+            "On the square near the church children were playing",
+        ]
+        result1 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_18), 1, testing=0
+        )
+        result2 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_18), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(
+            (result1[0], result2[0]),
+            (expected_result, expected_result),
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_alternative_answer_eng_multi3(self, mocked_input):
+        mocked_input.side_effect = [
+            "A storm surge washed away the whole town in one go, according to legend",
+            "A storm surge washed the whole town away in one go, according to legend",
+            "A storm surge washed the whole city away in one go, according to legend",
+        ]
+        result1 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        result2 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        result3 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        result4 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(
+            (result1[0], result2[0], result3[0], result4[0]),
+            (expected_result, expected_result, expected_result, expected_result),
         )
 
     @mock.patch("vocab_functions.input", create=True)
@@ -278,7 +339,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_10), 1, testing=1
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_eng1(self, mocked_input):
@@ -287,7 +348,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_10), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_eng2(self, mocked_input):
@@ -295,8 +356,8 @@ class Test(TestCase):
         result = vocab_functions.randomly_generated_lesson(
             copy.deepcopy(test_lesson_12), 1, testing=0
         )
-        expected_result = 0
-        self.assertEqual(result, expected_result)
+        expected_result = 1
+        self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
     def test_eng3(self, mocked_input):
@@ -307,7 +368,7 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_13), 1, testing=0
         )
         expected_result = 1
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
     # test for incorrect answer not printing
     @mock.patch("vocab_functions.input", create=True)
@@ -321,9 +382,9 @@ class Test(TestCase):
             result = vocab_functions.randomly_generated_lesson(
                 copy.deepcopy(test_lesson_15), 1, testing=1
             )
-        
+
         expected_result = 0
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
 
         output = fake_output.getvalue()
         self.assertIn("That's not right!", output)
@@ -336,7 +397,55 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_16), 1, testing=1
         )
         expected_result = 0
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result[0], expected_result)
+
+    # test for typos
+    @mock.patch("vocab_functions.input", create=True)
+    def test_typo_eng1(self, mocked_input):
+        mocked_input.side_effect = [
+            "I get thisrty when I see that bottle standing there"
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_4), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(result[0], expected_result)
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_typo_eng2(self, mocked_input):
+        mocked_input.side_effect = ["stil"]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_17), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(result[0], expected_result)
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_typo_eng3(self, mocked_input):
+        mocked_input.side_effect = ["lot"]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_9), 1, testing=0
+        )
+        expected_result = 0
+        self.assertEqual(result[0], expected_result)
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_order_eng1(self, mocked_input):
+        mocked_input.side_effect = ["Mortgage rates are climbing currently"]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_16), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(result[0], expected_result)
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_order_eng1(self, mocked_input):
+        mocked_input.side_effect = ["Mortgage rates are climbing currentluy"]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_16), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(result[0], expected_result)
 
 
 if __name__ == "__main__":

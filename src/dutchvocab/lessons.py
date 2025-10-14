@@ -103,7 +103,7 @@ core = [
         "Er was niemand in dit deel van de stad": "There was no-one in this part of the city",
         "nodig": "necessary",
         "Ze namen de nodige maatregelen": "They took the necessary measures",
-        "Voor dit gerecht heeft u ook geroosterde rijst nodig": "You also need roasted rice for this recipe",
+        "Voor dit gerecht heeft u ook geroosterde rijst nodig": "You also need roasted rice for this dish",
     },
     {
         "per": "by, per",
@@ -163,7 +163,8 @@ core = [
         "Ze stond die eerste nacht met haar tentje op een soort dorpsplein": "She stood that first night with her tent on a kind of village square",
         "sluiten": "to close",
         "Het hotel was gesloten van augustus tot april": "The hotel was closed from August to April",
-        "de punt": "full stop, item, point",
+        "de punt": "full stop, point",
+        "het punt": "item (abstract)",
         "De zin wordt afgesloten met een punt": "The sentence finishes with a full stop",
         "Het derde punt op de agenda is het feest": "The third item on the agenda is the party",
         "Hij eindigde twee punten achter de leider": "He finished two points behind the leader",
@@ -185,7 +186,128 @@ core = [
     },
 ]
 
+core_vocab = [
+    {
+        "voor": "for, in front of",
+        "aan": "to",
+        "als": "when",
+        "om": "around",
+        "het plantsoen": "park",
+        "nog": "still",
+        "bij": "near",
+        "uit": "from",
+    },
+    {
+        "zullen": "will",
+        "of": "or",
+        "over": "over, about",
+        "wel": "rather",
+        "wat": "what",
+        "heel": "whole",
+        "fluiten": "to whistle",
+        "toch": "yet",
+        "troosten": "to comfort",
+    },
+    {
+        "maken": "to make, to repair",
+        "de beweging": "motion, movement",
+        "ons": "us, our",
+        "logeren": "to stay, to lodge",
+        "dan": "than",
+        "de mens": "human",
+        "innig": "intimate",
+        "alleen": "alone",
+        "lang": "long, tall",
+    },
+    {
+        "af": "off",
+        "mee": "with",
+        "de ervaring": "experience",
+        "enkel": "a few, a single",
+        "toe": "towards",
+        "volgens": "according to",
+        "de aardrijkskunde": "geography",
+        "leerlingen": "pupils",
+        "vooral": "especially",
+        "de angst": "fear",
+        "de verslagenheid": "dejection",
+        "uitzinnig": "frenzied",
+        "de woede": "rage",
+        "leggen": "to put",
+    },
+    {
+        "alles": "everything",
+        "even": "just",
+        "vorig": "previous",
+        "het winkelpand": "shopfront",
+        "het faillissement": "bankruptcy",
+        "het bezitter": "owner",
+        "gewoon": "usual, normal, easily",
+        "halen": "to get (from somewhere), to fetch",
+        "lijken": "to seem",
+        "zetten": "to put (down)",
+    },
+    {
+        "blijken": "to prove",
+        "het leven": "life",
+        "verstoren": "to disturb",
+        "zo'n": "such a",
+        "streng": "strict",
+        "trekken": "to draw, to pull",
+        "achter": "behind",
+        "het deel": "part",
+        "nodig": "necessary",
+        "de maatregel": "measure",
+        "het gerecht": "dish",
+    },
+    {
+        "per": "by, per",
+        "pas": "only",
+        "helemaal": "completely",
+        "het geval": "case",
+        "de pad": "toad",
+        "weg": "gone",
+        "de weg": "road, way",
+        "eigenlijk": "actually",
+        "twijfelen": "to doubt",
+    },
+    {
+        "eerder": "sooner",
+        "wedijveren": "to compete",
+        "het paar": "couple, few",
+        "het moment": "time, moment",
+        "de manier": "way, manner",
+        "zeer": "very (written)",
+        "soms": "sometimes",
+        "jammer genoeg": "unfortunately",
+        "de poes": "cat",
+    },
+    {
+        "het begin": "start",
+        "de hervorming": "reform",
+        "vast": "fixed, certain",
+        "degelijk": "sound (adj.)",
+        "zorgen": "to care, to provide",
+        "meteen": "immediately",
+        "het toestel": "appliance",
+        "noodzakelijk": "necessary",
+        "bovendien": "also",
+        "graag": "with pleasure",
+        "daarna": "afterwards",
+    },
+    {
+        "betalen": "to pay",
+        "de/het soort": "kind of",
+        "sluiten": "to close",
+        "de punt": "full stop, point",
+        "het punt": "item (abstract)",
+        "raken": "to touch, to hit",
+        "stellen": "to put (spoken)",
+    },
+]
+
 core = [lesson for lesson in core if len(lesson) >= 15]
+core_vocab = [lesson for lesson in core_vocab]
 
 # Fiction
 
@@ -237,7 +359,7 @@ fiction = [
         "De hemel boven me was blauw": "The sky above me was blue",
         "het lijf": "body",
         "Ik rukte het kledingstuk van haar lijf": "I tore the garment from her body",
-        "spoor": "track, trace",
+        "het spoor": "track, trace",
         "Tot mijn verwondering toonde ze geen spoor van verwarring": "To my surprise she showed no trace of confusion",
         "Je zag er alleen de sporen van dieren": "You saw there only the tracks of animals",
     },
@@ -289,7 +411,71 @@ fiction = [
         # 5
     },
 ]
+fiction_vocab = [
+    {
+        "de blik": "look, gaze",
+        "wenden (zich)": "to turn",
+        "roeren": "to stir",
+        "zwijgen": "to keep silent about",
+        "knikken": "to nod",
+        "schudden": "to shake",
+        "buigen (zich)": "to bend",
+        "glimlachen": "to smile",
+        "de tel": "beat",
+        "schrikken": "to be frightened",
+    },
+    {
+        "omhoog": "up",
+        "de stilte": "silence",
+        "heersen": "to dominate",
+        "volkomen": "completely",
+        "voorzichtig": "careful",
+        "glijden": "to slide",
+        "schreeuwen": "to shout",
+        "woest": "fierce",
+        "werpen": "to throw",
+        "dringen": "to push",
+        "kwijlend": "drooling",
+    },
+    {
+        "haast": "almost",
+        "verontschuldigend": "apologetically",
+        "de traan": "tear",
+        "de schort": "apron",
+        "kruipen": "to crawl",
+        "het gebaar": "gesture",
+        "de hemel": "sky, heaven",
+        "het lijf": "body",
+        "rukken": "to snatch, to tear",
+        "het spoor": "track, trace",
+        "de verwondering": "surprise",
+        "de verwarring": "confusion",
+    },
+    {
+        "verbergen": "to hide",
+        "aarzelen": "to hesitate",
+        "kleden": "to dress",
+        "slordig": "sloppily",
+        "de geest": "mind, spirit",
+        "branden": "to burn",
+        "overeind": "up",
+        "voortdurend": "continuous",
+    },
+    {
+        "smal": "narrow",
+        "schenken": "to donate",
+        "de smidse": "forge",
+        "zuchten": "to sigh",
+        "trillen": "to tremble, to shake",
+        "bloot": "bare",
+        "zwaaien": "to wave",
+        "opzij": "aside",
+        "haaks": "perpendicular",
+    },
+]
+
 fiction = [lesson for lesson in fiction if len(lesson) >= 15]
+fiction_vocab = [lesson for lesson in fiction_vocab]
 
 # Newspapers
 
@@ -299,7 +485,7 @@ newspapers = [
         "Een stormvloed spoelde de hele stad in een keer weg, aldus de overlevering": "A storm surge washed away the whole city in one go, according to legend",
         "de ploeg": "team",
         "De ploeg met de beste winnaarsmentaliteit zal zegeviernen": "The team with the best winner's mentality will prevail",
-        "het beton": "concrete",
+        "het beton": "concrete (n.)",
         "wegens": "because of",
         "Dekker kwam dit seizon wegens een knieblessure nauwelijks in actie": "Dekker was hardly in action this season because of a knee injury",
         "de wagen": "car",
@@ -312,7 +498,7 @@ newspapers = [
         "De hypotheekrente is momenteel aan het stijgen": "Mortgage rates are currently climbing",
     },
     {
-        "het ijzer": "iron",
+        "het ijzer": "iron (n.)",
         "de rechter": "judge",
         "De rechter besloot hem nog in voorarrest te houden": "The judge decided to keep him on remand still",
         "de reeks": "series",
@@ -329,7 +515,7 @@ newspapers = [
         "De wet staat dan toe die kosten als aftrekpost op te voeren in de aangifte inkomstenbelasting": "The law then allows those expenses to be deducted in the income tax return",
     },
     {
-        "betonnen": "concrete (adj)",
+        "betonnen": "concrete (adj.)",
         "de verkiezing": "election",
         "Hij doet nog wel mee als lijstduwer aan de verkiezingen": "He does still participate as a list pusher in the elections",
         "veroordelen": "to condemn",
@@ -341,21 +527,67 @@ newspapers = [
         "de bewoner": "occupant, resident",
         "De huizen van de bewoners worden door middel van lijnen op een plattegrond aangegeven": "Residents' houses are indicated by lines on a map",
         "de dader": "perpetrator, offender",
-        "Aan de hand van verklaringen kon de politie een signalement van de dader opstellen": "Based on statements the police were able to establish a description of the perpetrator",
+        "Aan de hand van verklaringen kon de politie een signalement van de dader opstellen": "Based on statements the police were able to draw up a description of the perpetrator",
         "stelen": "to steal",
         "Dieven hebben de aanhangwagens en opleggers gestolen": "Thieves have stolen the trailers and semi-trailers",
     },
-    {"ijzeren": "iron (adj)"},
+    {"ijzeren": "iron (adj.)"},
     {"hout": "wood"},
     {"houten": "wooden"},
 ]
+newspapers_vocab = [
+    {
+        "aldus": "thus, according to",
+        "spoelen": "to wash",
+        "de overlevering": "legend, tradition",
+        "de ploeg": "team",
+        "zegeviernen": "to prevail",
+        "het beton": "concrete (n.)",
+        "wegens": "because of",
+        "nauwelijks": "rarely",
+        "de wagen": "car",
+        "de woning": "house",
+        "de strijd": "battle",
+        "momenteel": "currently",
+        "de hypotheekrente": "mortgage rate",
+        "stijgen": "to rise",
+    },
+    {
+        "het ijzer": "iron (n.)",
+        "de rechter": "judge",
+        "de reeks": "series",
+        "onlangs": "recently",
+        "destijds": "at the time",
+        "het bestuur": "board",
+        "voorleggen": "to submit",
+        "de winst": "profit",
+        "de steun": "support",
+        "kosten": "costs",
+        "de wet": "law",
+    },
+    {
+        "betonnen": "concrete (adj.)",
+        "de verkiezing": "election",
+        "veroordelen": "to condemn",
+        "de bestuurder": "manager",
+        "aankondigen": "to announce",
+        "de bewoner": "occupant, resident",
+        "de dader": "perpetrator, offender",
+        "de signalement": "description",
+        "opstellen": "to draw up",
+        "de verklaring": "statement",
+        "stelen": "to steal",
+    },
+]
+
 newspapers = [lesson for lesson in newspapers if len(lesson) >= 15]
+newspapers_vocab = [lesson for lesson in newspapers_vocab]
 
 # Spoken
 
 spoken = [
     {
-        "tijdstip": "(point of/in) time",
+        "het tijdstip": "(point of/in) time",
         "naartoe": "to there",
         "Ik ben van plan daar vrijdag naartoe te gaan": "I plan to go there on Friday",
         "hu": "ugh",
@@ -378,7 +610,7 @@ spoken = [
         "Enfin, we gaan mekaar in ieder geval zien rond half tien": "Anyway, we are going to see each other around half past nine in any case",
         "gauw": "soon, quickly",
         "Daan haalt gauw zijn schrijft uit zijn tas": "Daan quickly gets his writing from his bag",
-        "spul": "stuff, things",
+        "het spul": "stuff, things",
         "William gaat met zijn vader naar huis om wat spullen op te halen": "William goes home with his father to fetch some things",
         "anderhalf": "one and a half",
         "Hij heeft deze voormiddag anderhalf uur geslapen": "He slept for an hour and a half this morning",
@@ -386,7 +618,7 @@ spoken = [
         "Dat weet ik niet, hoezo?": "I didn't know that, why?",
         "de heleboel": "a lot",
         "Er lopen hier een heleboel volwassenen rond, maar ik weet niet wie het allemaal zijn": "A lot of adults walk around here, but I don't know who they all are",
-        "tijdperk": "era",
+        "het tijdperk": "era",
     },
     {
         "net": "neat, tidy",
@@ -399,7 +631,7 @@ spoken = [
         "Ik vind dat zelf niet zo'n probleem, alhoewel ik het wel jammer vind": "I don't find that such a problem myself, although I think it's a shame",
         "opschrijven": "to write down",
         "Wat hij zegt, moet je niet allemaal opschrijven": "You musn't write down all of what he is saying",
-        "rap": "fast, quickly",
+        "rap": "fast, quickly (FL)",
         "Dan is dat rap gedaan": "Then that's quickly done",
         "voormalig": "former",
         "tijdelijk": "temporarily",
@@ -428,7 +660,7 @@ spoken = [
         "zat": "plenty",
         "Ilse is rijk zat": "Ilse is plenty rich",
         "tussendoor": "in between",
-        "Dat fietsen was maar even tussendoor": "That cycling was just in between",
+        "Dat fietsen was maar even tussendoor": "That cycling was only briefly in between things",
         "erachter": "behind (it/them)",
         "Je moet dit gewoon afsluiten, punt erachter": "You just have to shut this down, full stop",
         "Hoe kom je erachter of dat waar is?": "How do you find out if that's true?",
@@ -443,7 +675,7 @@ spoken = [
         "voorjaar": "spring",
         "toenmalig": "former, then",
         "daarachter": "behind it, behind them",
-        "Daarachter begint het moeras": "Behind it starts the swamp",
+        "Daarachter begint het moeras": "Behind it the swamp starts",
         "wreed": "cruel",
         "Het was een tamelijk wrede wetgeving": "It was a rather cruel piece of legislation",
         "voorlezen": "to read aloud",
@@ -525,7 +757,121 @@ spoken = [
         "de zin": "fancy (NL)",
     },
 ]
+spoken_vocab = [
+    {
+        "het tijdstip": "(point of/in) time",
+        "naartoe": "to there",
+        "hu": "ugh",
+        "eventjes": "quickly",
+        "hartstikke": "terribly",
+        "ontzettend": "tremendous, terrible",
+        "oei": "oops",
+        "sowieso": "anyway",
+    },
+    {
+        "verschrikkelijk": "terrible",
+        "de wedstrijd": "match",
+        "enfin": "in short, anyway",
+        "gauw": "soon, quickly",
+        "het spul": "stuff, things",
+        "anderhalf": "one and a half",
+        "hoezo": "why",
+        "de heleboel": "a lot",
+        "het tijdperk": "era",
+    },
+    {
+        "net": "neat, tidy",
+        "proper": "clean, tidy",
+        "sober": "plain",
+        "tevoren": "before",
+        "verbreken": "to break up/off",
+        "alhoewel": "although",
+        "opschrijven": "to write down",
+        "rap": "fast, quickly (FL)",
+        "voormalig": "former",
+        "tijdelijk": "temporarily",
+        "voortdurend": "continuous",
+    },
+    {
+        "gelijk": "just as",
+        "dadelijk": "immediately",
+        "benieuwd": "curious",
+        "daarnet": "just (now)",
+        "lesgeven": "to teach",
+        "eraf": "off",
+        "najaar": "autumn",
+        "namiddag": "late afternoon",
+        "eeuwigheid": "eternity",
+    },
+    {
+        "huidig": "current",
+        "voorlopig": "provisional",
+        "zat": "plenty",
+        "tussendoor": "in between",
+        "erachter": "behind (it/them)",
+        "uitzoeken": "to select, to choose",
+        "de stage": "internship",
+        "tamelijk": "rather",
+    },
+    {
+        "voorjaar": "spring",
+        "toenmalig": "former, then",
+        "daarachter": "behind it, behind them",
+        "het moeras": "swamp",
+        "wreed": "cruel",
+        "de wetgeving": "legislation",
+        "voorlezen": "to read aloud",
+        "kletsen": "to chat",
+        "daarstraks": "just now",
+        "inleveren": "to hand in, to sacrifice",
+    },
+    {
+        "hedendaags": "contemporary",
+        "uiteindelijk": "final",
+        "langdurig": "prolonged",
+        "ho": "stop",
+        "diegene": "he, she, those who",
+        "tof": "great",
+        "eruitzien": "to look (like)",
+        "omheen": "around",
+        "daarboven": "above it",
+    },
+    {
+        "heden": "today",
+        "de rotzooi": "junk, mess",
+        "vanachter": "from behind",
+        "de rugzak": "backpack",
+        "overheen": "across, over",
+        "erom": "about it",
+        "de file": "traffic jam",
+        "de spitsuur": "rush hour",
+        "gelukken": "to succeed",
+    },
+    {
+        "verleden": "past, last",
+        "hartelijk": "warm",
+        "gaaf": "great",
+        "langzamerhand": "gradually",
+        "ertussen": "in between",
+        "langskomen": "to pass by, to come round",
+        "eronder": "below",
+        "de krik": "jack",
+        "nakijken": "to check",
+    },
+    {
+        "ernaast": "next to it, beside it",
+        "weeral": "again",
+        "plezierig": "pleasant",
+        "klaarmaken": "to prepare",
+        "eromheen": "around it",
+        "opsturen": "to send",
+        "de goesting": "fancy (FL)",
+        "de zin": "fancy (NL)",
+    },
+]
+
 spoken = [lesson for lesson in spoken if len(lesson) >= 15]
+spoken_vocab = [lesson for lesson in spoken_vocab]
 
 # Web
 
@@ -580,7 +926,24 @@ web = [
         # 3*""
     },
 ]
+web_vocab = [
+    {
+        "de gemeente": "municipality",
+        "huidig": "current",
+        "de bron": "source",
+        "de regering": "government (ministers)",
+        "de invloed": "influence",
+        "uitoefenen": "to exert",
+        "gierig": "stingy",
+        "ene": "a, one",
+        "de oppervlakte": "surface",
+        "de cijfer": "figure, number, mark",
+        "vertekend": "distorted",
+    }
+]
+
 web = [lesson for lesson in web if len(lesson) >= 15]
+web_vocab = [lesson for lesson in web_vocab]
 
 # General
 
@@ -713,8 +1076,71 @@ general = [
     #   "ongeduldig":"impatient"
     # },
 ]
-general = [lesson for lesson in general if len(lesson) >= 15]
+general_vocab = [
+    {
+        "echter": "however",
+        "immers": "indeed",
+        "de overheid": "government (administration)",
+        "de bezuinigingen": "cutbacks",
+        "behoren": "to belong",
+        "intussen": "meanwhile",
+        "de raad": "advice",
+        "liefst": "preferably",
+        "willen het liefst": "to prefer",
+    },
+    {
+        "uitvoeren": "to perform",
+        "de chirurg": "surgeon",
+        "de handeling": "operation",
+        "het niveau": "level",
+        "bedoelen": "to intend",
+        "beperken": "to limit",
+        "de schade": "damage",
+        "treden": "to step",
+        "bevestigen": "to confirm",
+        "de getuige": "witness",
+        "het kruispunt": "junction",
+        "weigeren": "to refuse",
+        "aanwezig": "present",
+    },
+    {
+        "de uitspraak": "statement",
+        "de druk": "pressure",
+        "veroorzaken": "to cause",
+        "de klant": "customer",
+        "de leverancier": "supplier",
+        "de ontwikkeling": "development",
+        "de vakgebied": "field (of research)",
+        "bevinden (zich)": "to find",
+        "de poging": "attempt",
+        "knap": "handsome",
+    },
+    {
+        "verantwoordelijk": "responsible",
+        "minstens": "at least",
+        "beweren": "to claim",
+        "het overleg": "consultation",
+        "de fout": "error",
+        "dwingen": "to force",
+        "desnoods": "if necessary",
+        "de leiding": "leadership",
+        "steunen": "to support",
+        "recht": "straight",
+    },
+    {
+        "dalen": "to go down",
+        "dom": "stupid",
+        "de omstandigheid": "circumstance",
+        "reeds": "already",
+        "bevatten": "to contain",
+        "de praktijk": "practice",
+        "herstellen": "to recover",
+        "de maatschappij": "society",
+    },
+]
 
+general = [lesson for lesson in general if len(lesson) >= 15]
+general_vocab = [lesson for lesson in general_vocab]
 
 proper_nouns_eng = [
     "Amsterdam",
@@ -763,12 +1189,12 @@ proper_nouns_ned = [
 
 
 available_lessons = {
-    "core": core,
-    "fiction": fiction,
-    "newspapers": newspapers,
-    "spoken": spoken,
-    "web": web,
-    "general": general,
+    "core": [core, core_vocab],
+    "fiction": [fiction, fiction_vocab],
+    "newspapers": [newspapers, newspapers_vocab],
+    "spoken": [spoken, spoken_vocab],
+    "web": [web, web_vocab],
+    "general": [general, general_vocab],
 }
 
 
@@ -777,7 +1203,6 @@ alternatives = {
     "Na enkele seconden hoorde ik de auto ook": "Na enkele seconden hoorde ik ook de auto",
     "One of our friends is staying somewhere else": "One of our friends stays somewhere else",
     "We stand in front of the hotel door": "We stand in front of the door of the hotel",
-    "Children were playing on the square near the church": "On the square near the church children were playing",
     "He made a fast motion": "He made a quick motion",
     "He repaired her broken bicycle": [
         "He repaired her broken bike",
@@ -787,12 +1212,11 @@ alternatives = {
     "He decided to go alone": "He has decided to go alone",
     "He was too quick for me": "He beat me to it",
     "He put that it is important to work together": "He stated that it is important to work together",
-    "Everything was dark and silent near us in the village": "In the village near us everything was dark and silent",
     "The shopfront had stood empty for some time after the bankruptcy of the previous owner": [
         "The shopfront stood empty for some time after the bankruptcy of the previous owner",
         "The shopfront was standing empty for some time after the bankruptcy of the previous owner",
     ],
-    "You also need roasted rice for this recipe": "For this recipe you  also need roasted rice",
+    "You also need roasted rice for this dish": "For this dish you also need roasted rice",
     "Betty did not feel completely at ease": [
         "Betty did not feel completely at her ease",
         "Betty didn't feel completely at ease",
@@ -824,18 +1248,18 @@ alternatives = {
     "The light wintery weather seems set to continue the coming weekend and probably beyond": "The light wintery weather seems set to continue the coming weekend and probably also afterwards",
     "The town also pays the energy bill": "The city also pays the energy bill",
     "The sentence finishes with a full stop": "The sentence ends with a full stop",
-    "She took care in bed that her feet did not touch his body": [
-        "In bed she took care that her feet did not touch his body",
-        "She took care that her feet did not touch his body in bed",
-    ],
     "A reason for the divorce was not given": "No reason was given for the divorce",
-    "William goes home with his father to fetch some things": "William goes home with his father to get some things",
-    "Daan quickly gets his writing from his bag": "Daan gets his writing quickly from his bag",
+    "William goes home with his father to fetch some things": [
+        "William goes home with his father to get some things",
+        "William goes home with his father to fetch some stuff",
+    ],
     "I found another way to help you": "I have found another way to help you",
-    "The connection will be broken off in thirty seconds": "The connection will be disconnected in thirty seconds",
-    "Even so I thought I would quickly come back to the last lesson": "Even so I thought I would quickly return to the last lesson",
-    "Behind it starts the swamp": [
-        "Behind it the swamp starts",
+    "The connection will be broken off in thirty seconds": [
+        "The connection will be disconnected in thirty seconds",
+        "The connection will be broken in thirty seconds",
+    ],
+    "Behind it the swamp starts": [
+        "Behind it starts the swamp",
         "Behind it the swamp begins",
     ],
     "I have read almost an entire book aloud": [
@@ -863,15 +1287,17 @@ alternatives = {
     "Delphine had geen goesting om uit te gaan": "Delphine had geen zin om uit te gaan",
     "In bed zorgde ze ervoor dat haar voeten zijn lichaam niet raakten": "In bed zorgde zij ervoor dat haar voeten zijn lichaam niet raakten",
     "The tall girl could reach the top shelf": "The tall girl could reach the highest shelf",
-    "It sounded like a decision that had long been considered": " It sounded like a decision which was long considered",
+    "It sounded like a decision that had long been considered": [
+        "It sounded like a decision which was long considered",
+        "It sounded like a decision which was long thought over",
+    ],
     "Hij ging even een biertje drinken in het cafe": [
         "Hij ging even weg om bier te drinken in het cafe",
         "Hij ging even bier drinken in het cafe",
     ],
     "Het was daar helemaal bewolkt gelijk hier": "Daar was het helemaal bewolkt gelijk hier",
-    "He had written various poems already in his middle school": "Already in his middle school he had written various poems",
     "Pupils who get good marks earn free hours later": "Pupils who get good grades earn free hours later",
-    "Leadership usually comes into its own only in moments of crisis": "Leadership usually only comes into it's own in times of crisis",
+    "Leadership usually comes into its own only in moments of crisis": "Leadership usually only comes into its own in times of crisis",
     "We have to check in two hours before": "We must check in two hours before",
     "Then that's quickly done": "Then that is quickly done",
     "Two lamps cast light on the dark brown leaf": "Two lamps threw light on the dark brown leaf",
@@ -888,19 +1314,15 @@ alternatives = {
     ],
     "The forge I donate to you": "I donate the forge to you",
     "My legs shook still when I walked to the bathroom": [
-        "My legs still shook when I walked to the bathroom",
         "My legs were still shaking when I walked to the bathroom",
     ],
     "They keep watch on each other continuously": "They are continuously watching each other",
     "Anyway, we are going to see each other around half past nine in any case": "Anyway we are going to see each other around half past nine in any case",
-    "Consumer rights when buying a home have improved significantly": "Consumer rights when buying a home have significantly improved",
     "So if you want you can immediately have a look at it": [
         "So if you want you can look at it immediately",
-        "So if you want you can have a look at it immediately",
     ],
     "Daarmee was ze een seconde sneller dan haar oude toptijd": "Daarmee was zij een seconde sneller dan haar oude toptijd",
     "In each book in this series there is a short interview with the author of the novel in the back": "In each book from this series there is a short interview with the authour of the novel in the back",
-    "I did realise recently that those concerts at the time were quite short": "I did realise recently that those concerts were quite short at the time",
     "You musn't write down all of what he is saying": "You musn't write down everything that he says",
     "She gives advice to people with financial problems": "She gives advice to people who have financial problems",
     "Only when there is clarity, will that be a possibility again": "Only when there is clarity will that be a possibility again",
@@ -911,16 +1333,15 @@ alternatives = {
     "to prepare": "to get ready",
     "(point of/in) time": "point in time",
     "(point of/in) time": "point of time",
-    "William goes home with his father to fetch some things": "William goes home with his father to fetch some stuff",
     "The provinces and municipalities have founded schools in numerous places": "The provinces and the municipalities have founded schools in numerous places",
     "A limited number of surgeons can perform these operations": "A limited number of surgeons are able to perform these operations",
     "We kept silent because it didn't make sense for anyone to tell it round": "We stayed silent because it didn't make sense for anyone to tell it round",
     "Daan quickly gets his writing from his bag": "Daan quickly gets his writing out of his bag",
     "Even so I thought I would quickly connect to the last lesson": "Even so I thought that I would quickly connect to the last lesson",
     "Dekker was hardly in action this season because of a knee injury": "Dekker was rarely in action this season because of a knee injury",
-    "It sounded like a decision that had long been considered": "It sounded like a decision which was long thought over",
     "She looks up at the sky as though seeing it for the first time": "She looks up at the sky as if seeing it for the first time",
     "careful": "cautious",
-    "In each book in this series there is a short interview with the author of the novel in the back": "In each book from this series there is a short interview with the author of the novel in the back",
-    "to keep silent about": ["to stay silent", "to keep silent"]
+    "to keep silent about": ["to stay silent", "to keep silent"],
+    "I got along with everyone quickly": "I got on quickly with everyone",
+    "field (of research)": "field",
 }
