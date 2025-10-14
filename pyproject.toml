@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dutchvocab"
-version = "0.2.1"
+version = "0.3.1"
 description = "Lessons for learning Dutch vocabulary."
 authors = [{name="Kathryn Kleijn"}]
 license = "MIT"
