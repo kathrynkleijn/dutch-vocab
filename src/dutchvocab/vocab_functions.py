@@ -427,7 +427,7 @@ def randomly_generated_vocab_lesson(lesson, words):
                 print("That's not right!")
                 print(f"{dutch}\n")
             else:
-                correct = english_question(answer, correct, dutch, english)
+                correct = english_word(answer, correct, dutch, english)
 
             asked_questions.append((1, dutch, english))
 
