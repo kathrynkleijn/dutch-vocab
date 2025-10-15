@@ -294,7 +294,7 @@ def dutch_word(answer, correct, english):
     return correct
 
 
-def english_word(answer, correct, dutch, lesson):
+def english_word(answer, correct, dutch):
 
     answer_words = answer.lower().split()
     answer = " ".join(word for word in answer_words)
@@ -427,7 +427,7 @@ def randomly_generated_vocab_lesson(lesson, words):
                 print("That's not right!")
                 print(f"{dutch}\n")
             else:
-                correct = english_question(answer, correct, dutch, english, lesson)
+                correct = english_question(answer, correct, dutch, english)
 
             asked_questions.append((1, dutch, english))
 

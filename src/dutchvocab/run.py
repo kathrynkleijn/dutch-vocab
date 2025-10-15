@@ -96,61 +96,109 @@ def main():
 
             elif topic == "fiction":
                 lesson = vf.select_lesson(lo.fiction)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if selected_type["lesson_type"] == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+
+                elif selected_type["lesson_type"] == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
 
             elif topic == "newspapers":
                 lesson = vf.select_lesson(lo.newspapers)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if selected_type["lesson_type"] == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+
+                elif selected_type["lesson_type"] == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
 
             elif topic == "spoken":
                 lesson = vf.select_lesson(lo.spoken)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if selected_type["lesson_type"] == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+
+                elif selected_type["lesson_type"] == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
 
             elif topic == "web":
                 lesson = vf.select_lesson(lo.web)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if selected_type["lesson_type"] == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+
+                elif selected_type["lesson_type"] == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
 
             elif topic == "general":
                 lesson = vf.select_lesson(lo.general)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if selected_type["lesson_type"] == "phrases":
+                    questions = vf.select_questions(lesson)
 
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+
+                elif selected_type["lesson_type"] == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
             elif topic == "all":
                 lesson = lo.overall.all
-                questions = vf.select_questions(lesson)
+                if selected_type["lesson_type"] == "phrases":
+                    questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, "all", questions, correct)
-            else:
-                print("Topic not recognised, please try again")
-                correct = 1
-                questions = 1
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+
+                elif selected_type["lesson_type"] == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
 
             if topic != "all":
                 while (correct / questions) * 100 < 50:
