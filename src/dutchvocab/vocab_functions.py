@@ -224,7 +224,7 @@ def english_question(answer, correct, dutch, english, lesson):
     if answer == dutch:
         print("Correct!\n")
         correct += 1
-    if dutch in lessons.alternatives.keys():
+    elif dutch in lessons.alternatives.keys():
         if answer in lessons.alternatives[dutch]:
             print("Correct!\n")
             correct += 1
@@ -303,8 +303,7 @@ def english_word(answer, correct, dutch):
     if answer == dutch:
         print("Correct!\n")
         correct += 1
-
-    if dutch in lessons.alternatives.keys():
+    elif dutch in lessons.alternatives.keys():
         if answer in lessons.alternatives[dutch]:
             print("Correct!\n")
             correct += 1
@@ -427,7 +426,7 @@ def randomly_generated_vocab_lesson(lesson, words):
                 print("That's not right!")
                 print(f"{dutch}\n")
             else:
-                correct = english_word(answer, correct, dutch, english)
+                correct = english_word(answer, correct, dutch)
 
             asked_questions.append((1, dutch, english))
 
