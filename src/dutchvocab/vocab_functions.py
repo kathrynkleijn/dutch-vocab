@@ -547,9 +547,14 @@ def update_log(log, topic, lesson, questions, correct, ltype):
     return pd.concat([log, pd.DataFrame(log_today, index=pd.Index([date.today()]))])
 
 
-def visualisation_today():
+def visualisation_today(year=False, month=False, day=False):
+    if year:
+        chosen_date = date(year, month, day)
+    else:
+        chosen_date = date.today()
+
     log = pd.read_csv("learning_log.csv")
-    log_today = log[log.Date == date.today().strftime("%Y-%m-%d")]
+    log_today = log[log.Date == chosen_date.strftime("%Y-%m-%d")]
 
     log_today = log_today.groupby(["Type", "Module", "Lesson"]).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
@@ -610,4 +615,8 @@ def visualisation_today():
 
 
 if __name__ == "__main__":
-    visualisation_today()
+    year = int(input("Year: "))
+    month = int(input("Month: "))
+    day = int(input("Day: "))
+
+    visualisation_today(year, month, day)
