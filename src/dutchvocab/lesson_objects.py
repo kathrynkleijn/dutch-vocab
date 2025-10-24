@@ -55,7 +55,7 @@ newspapers = Topic("newspapers")
 spoken = Topic("spoken")
 web = Topic("web")
 general = Topic("general")
-overall = Topic("all")
+all = Topic("all")
 
 topics = [core, fiction, newspapers, spoken, web, general]
 
@@ -70,7 +70,7 @@ for topic in topics:
         new_lesson.add_questions(**phrases)
         new_lesson.add_words(**words)
         topic.add_lesson(new_lesson)
-    overall.add_lesson(topic.all)
+    all.add_lesson(topic.all)
 
 available = ""
 for num, topic in enumerate(topics):
@@ -78,9 +78,9 @@ for num, topic in enumerate(topics):
         pass
     else:
         available += f"{num+1}. {topic.name.capitalize()}:\n\t\tLessons 1-{len(topic.lessons)}\n\t\tAll\n"
-available += "Overall"
+available += "All"
 
-topics_all = [core, fiction, newspapers, spoken, web, general, overall]
+topics_all = [core, fiction, newspapers, spoken, web, general, all]
 
 
 if __name__ == "__main__":

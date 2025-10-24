@@ -216,7 +216,7 @@ def main():
                     )
 
             elif topic == "all":
-                lesson = lo.overall.all
+                lesson = lo.all.all
                 if ltype == "phrases":
                     questions = vf.select_questions(lesson)
 
