@@ -75,82 +75,167 @@ def main():
                 )
             ]
             selected_type = inquirer.prompt(lesson_enquiry)
+            ltype = selected_type["lesson_type"]
 
             if topic == "core":
                 lesson = vf.select_lesson(lo.core)
 
-                if selected_type["lesson_type"] == "phrases":
+                if ltype == "phrases":
                     questions = vf.select_questions(lesson)
 
                     correct, questions, asked_questions = vf.randomly_generated_lesson(
                         lesson, questions
                     )
-                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
-                elif selected_type["lesson_type"] == "vocabulary":
+                elif ltype == "vocabulary":
                     words = vf.select_words(lesson)
 
                     correct, questions, asked_questions = (
                         vf.randomly_generated_vocab_lesson(lesson, words)
                     )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif topic == "fiction":
                 lesson = vf.select_lesson(lo.fiction)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if ltype == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
+
+                elif ltype == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif topic == "newspapers":
                 lesson = vf.select_lesson(lo.newspapers)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if ltype == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
+
+                elif ltype == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif topic == "spoken":
                 lesson = vf.select_lesson(lo.spoken)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if ltype == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
+
+                elif ltype == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif topic == "web":
                 lesson = vf.select_lesson(lo.web)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if ltype == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
+
+                elif ltype == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif topic == "general":
                 lesson = vf.select_lesson(lo.general)
-                questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, lesson.name, questions, correct)
+                if ltype == "phrases":
+                    questions = vf.select_questions(lesson)
+
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
+
+                elif ltype == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif topic == "all":
                 lesson = lo.overall.all
-                questions = vf.select_questions(lesson)
+                if ltype == "phrases":
+                    questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
-                )
-                log = vf.update_log(log, topic, "all", questions, correct)
-            else:
-                print("Topic not recognised, please try again")
-                correct = 1
-                questions = 1
+                    correct, questions, asked_questions = vf.randomly_generated_lesson(
+                        lesson, questions
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
+
+                elif ltype == "vocabulary":
+                    words = vf.select_words(lesson)
+
+                    correct, questions, asked_questions = (
+                        vf.randomly_generated_vocab_lesson(lesson, words)
+                    )
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             if topic != "all":
                 while (correct / questions) * 100 < 50:
@@ -182,7 +267,9 @@ def main():
                     correct, questions, asked_questions = vf.repeated_lesson(
                         lesson, questions, all_questions=asked_questions
                     )
-                    log = vf.update_log(log, topic, lesson.name, questions, correct)
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             again = input("\nWould you like to do another lesson?  (Y/N)       ")
             if again.upper() != "Y":
