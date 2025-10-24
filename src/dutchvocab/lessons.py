@@ -415,6 +415,7 @@ fiction_vocab = [
     {
         "de blik": "look, gaze",
         "wenden (zich)": "to turn",
+        "afwenden": "to avert",
         "roeren": "to stir",
         "zwijgen": "to keep silent about",
         "knikken": "to nod",
