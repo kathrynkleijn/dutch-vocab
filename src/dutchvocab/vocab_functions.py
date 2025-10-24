@@ -534,13 +534,14 @@ def test(lesson):
     return correct, complete
 
 
-def update_log(log, topic, lesson, questions, correct):
+def update_log(log, topic, lesson, questions, correct, ltype):
 
     log_today = {
         "Module": topic,
         "Lesson": lesson,
         "Questions": questions,
         "Score": correct,
+        "Type": ltype,
     }
 
     return pd.concat([log, pd.DataFrame(log_today, index=pd.Index([date.today()]))])
@@ -550,7 +551,7 @@ def visualisation_today():
     log = pd.read_csv("learning_log.csv")
     log_today = log[log.Date == date.today().strftime("%Y-%m-%d")]
 
-    log_today = log_today.groupby(["Module", "Lesson"]).agg(
+    log_today = log_today.groupby(["Type", "Module", "Lesson"]).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log_today = log_today.reset_index()
@@ -561,29 +562,48 @@ def visualisation_today():
     cm = plt.colormaps["tab10"]
     colour_labels = log_today.Module.unique()
     colours = cm(np.linspace(0, 1, len(colour_labels)))
-
     colour_map = dict(zip(colour_labels, colours))
 
-    fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+    phrases = log_today[log_today.Type == "phrases"]
+    vocab = log_today[log_today.Type == "vocabulary"]
 
-    axes[0].bar(
-        log_today.Lesson,
-        log_today.Questions,
-        width=0.5,
-        color=log_today.Module.map(colour_map),
-    )
-    axes[0].set_xlabel("Lesson")
-    axes[0].set_ylabel("Total Questions Answered")
+    types_to_plot = []
+    if not phrases.empty:
+        types_to_plot.append((phrases, "Phrases"))
+    if not vocab.empty:
+        types_to_plot.append((vocab, "Vocabulary"))
 
-    axes[1].bar(
-        log_today.Lesson,
-        log_today.Percentage,
-        width=0.5,
-        color=log_today.Module.map(colour_map),
-    )
-    axes[1].set_xlabel("Lesson")
-    axes[1].set_ylabel("Percentage")
-    axes[1].set_ylim([0, 100])
+    n_rows = len(types_to_plot)
+
+    if n_rows == 0:
+        pass
+    else:
+        fig, axes = plt.subplots(n_rows, 2, figsize=(10, 5 * n_rows))
+        if n_rows == 1:
+            axes = np.array([axes])
+
+        for i, (df, title) in enumerate(types_to_plot):
+
+            axes[i][0].bar(
+                df.Lesson,
+                df.Questions,
+                width=0.5,
+                color=df.Module.map(colour_map),
+            )
+            axes[i][0].set_title(f"{title}: Questions Answered")
+            axes[i][0].set_xlabel("Lesson")
+            axes[i][0].set_ylabel("Total Questions")
+
+            axes[i][1].bar(
+                df.Lesson,
+                df.Percentage,
+                width=0.5,
+                color=df.Module.map(colour_map),
+            )
+            axes[i][1].set_title(f"{title}: Percentage")
+            axes[i][1].set_xlabel("Lesson")
+            axes[i][1].set_ylabel("Percentage")
+            axes[i][1].set_ylim([0, 100])
 
     plt.tight_layout()
     plt.show()
