@@ -177,6 +177,7 @@ def dutch_question(answer, correct, dutch, english, lesson):
             correct += 1
         elif typos_and_word_order(answer_formatted, english):
             print("Correct! (You have a typo or different word order)\n")
+            print(f"{english}\n")
             correct += 1
         elif english in lessons.alternatives.keys():
             alternatives = lessons.alternatives[english]
@@ -188,6 +189,7 @@ def dutch_question(answer, correct, dutch, english, lesson):
                     typos_and_word_order(answer_formatted, alt) for alt in alternatives
                 ):
                     print("Correct! (You have a typo or different word order)\n")
+                    print(f"{english}\n")
                     correct += 1
                 else:
                     print("That's not right!")
@@ -201,6 +203,7 @@ def dutch_question(answer, correct, dutch, english, lesson):
                     alternatives,
                 ):
                     print("Correct! (You have a typo or different word order)\n")
+                    print(f"{english}\n")
                     correct += 1
                 else:
                     print("That's not right!")
@@ -258,6 +261,7 @@ def dutch_word(answer, correct, english):
             correct += 1
         elif typos_and_word_order(answer_formatted, english):
             print("Correct! (You have a typo)\n")
+            print(f"{english}\n")
             correct += 1
         elif english in lessons.alternatives.keys():
             alternatives = lessons.alternatives[english]
@@ -269,6 +273,7 @@ def dutch_word(answer, correct, english):
                     typos_and_word_order(answer_formatted, alt) for alt in alternatives
                 ):
                     print("Correct! (You have a typo)\n")
+                    print(f"{english}\n")
                     correct += 1
                 else:
                     print("That's not right!")
@@ -282,6 +287,7 @@ def dutch_word(answer, correct, english):
                     alternatives,
                 ):
                     print("Correct! (You have a typo)\n")
+                    print(f"{english}\n")
                     correct += 1
                 else:
                     print("That's not right!")
