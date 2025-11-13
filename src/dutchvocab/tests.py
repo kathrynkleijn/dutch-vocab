@@ -485,6 +485,20 @@ class Test(TestCase):
             (expected_result, expected_result),
         )
 
+    @mock.patch("vocab_functions.input", create=True)
+    def test_comma_sentence(self, mocked_input):
+        mocked_input.side_effect = [
+            "A storm surge washed away the whole city in one go according to legend",
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_19), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(
+            result[0],
+            expected_result,
+        )
+
 
 if __name__ == "__main__":
 
