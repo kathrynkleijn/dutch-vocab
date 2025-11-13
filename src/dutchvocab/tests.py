@@ -102,6 +102,11 @@ test_lesson_19.add_question(
     "A storm surge washed away the whole city in one go, according to legend",
 )
 
+test_lesson_20 = lesson_objects.Lesson(20, "core")
+test_lesson_20.add_question(
+    "Eigenlijk ben ik daar wel benieuwd naar",
+    "Actually I'm curious about that",
+)
 
 core = lesson_objects.Topic("core")
 core.add_lesson(test_lesson_1)
@@ -323,13 +328,10 @@ class Test(TestCase):
         result3 = vocab_functions.randomly_generated_lesson(
             copy.deepcopy(test_lesson_19), 1, testing=0
         )
-        result4 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_19), 1, testing=0
-        )
         expected_result = 1
         self.assertEqual(
-            (result1[0], result2[0], result3[0], result4[0]),
-            (expected_result, expected_result, expected_result, expected_result),
+            (result1[0], result2[0], result3[0]),
+            (expected_result, expected_result, expected_result),
         )
 
     @mock.patch("vocab_functions.input", create=True)
@@ -446,6 +448,24 @@ class Test(TestCase):
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_iam(self, mocked_input):
+        mocked_input.side_effect = [
+            "Actually I am curious about that",
+            "Actually I'm curious about that",
+        ]
+        result1 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_20), 1, testing=0
+        )
+        result2 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_20), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(
+            (result1[0], result2[0]),
+            (expected_result, expected_result),
+        )
 
 
 if __name__ == "__main__":

@@ -161,6 +161,8 @@ def typos_and_word_order(answer, test):
 def dutch_question(answer, correct, dutch, english, lesson):
 
     answer_formatted = answer_formatting(answer, dutch, lesson, 0)
+    if "I am" in answer_formatted:
+        answer_formatted = answer_formatted.replace("I am", "I'm")
 
     if any(True for char in answer_formatted if char in ","):
         answer_meanings = answer_formatted.split(", ")
