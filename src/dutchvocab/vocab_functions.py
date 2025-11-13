@@ -165,8 +165,8 @@ def dutch_question(answer, correct, dutch, english, lesson):
         answer_formatted = answer_formatted.replace("I am", "I'm")
 
     if any(True for char in answer_formatted if char in ","):
-        answer_meanings = answer_formatted.split(", ")
-        test_meanings = english.split(", ")
+        answer_meanings = [item.strip() for item in answer_formatted.split(",")]
+        test_meanings = [item.strip() for item in english.split(",")]
         if Counter(answer_meanings) == Counter(test_meanings):
             print("Correct!\n")
             correct += 1

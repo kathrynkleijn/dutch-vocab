@@ -467,6 +467,24 @@ class Test(TestCase):
             (expected_result, expected_result),
         )
 
+    @mock.patch("vocab_functions.input", create=True)
+    def test_comma_split(self, mocked_input):
+        mocked_input.side_effect = [
+            "for, in front of",
+            "for,in front of",
+        ]
+        result1 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_1), 1, testing=0
+        )
+        result2 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_1), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(
+            (result1[0], result2[0]),
+            (expected_result, expected_result),
+        )
+
 
 if __name__ == "__main__":
 
