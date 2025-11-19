@@ -652,8 +652,8 @@ spoken = [
         "eraf": "off",
         "Nu wil ik mijn haar eraf": "Now I want my hair off",
         "het najaar": "autumn",
-        "namiddag": "late afternoon",
-        "eeuwigheid": "eternity",
+        "de namiddag": "late afternoon",
+        "de eeuwigheid": "eternity",
     },
     {
         "huidig": "current",
@@ -800,9 +800,9 @@ spoken_vocab = [
         "daarnet": "just (now)",
         "lesgeven": "to teach",
         "eraf": "off",
-        "najaar": "autumn",
-        "namiddag": "late afternoon",
-        "eeuwigheid": "eternity",
+        "het najaar": "autumn",
+        "de namiddag": "late afternoon",
+        "de eeuwigheid": "eternity",
     },
     {
         "huidig": "current",
