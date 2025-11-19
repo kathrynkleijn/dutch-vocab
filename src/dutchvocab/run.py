@@ -66,6 +66,11 @@ def main():
 
             print(f"You have selected {topic.capitalize()}.")
 
+            continue_with_topic = input("Do you wish to continue? (Y/n)  ")
+            if continue_with_topic.upper() != "Y":
+                print("Exiting lessons...")
+                break
+
             lesson_types = ["vocabulary", "phrases"]
             lesson_enquiry = [
                 inquirer.List(
