@@ -158,7 +158,7 @@ def typos_and_word_order(answer, test):
     return score >= threshold
 
 
-def dutch_question(answer, correct, dutch, english, lesson):
+def dutch_question(answer, correct, dutch, english, lesson, eng_typo):
 
     answer_formatted = answer_formatting(answer, dutch, lesson, 0)
     if "I am" in answer_formatted:
@@ -179,9 +179,10 @@ def dutch_question(answer, correct, dutch, english, lesson):
             print("Correct!\n")
             correct += 1
         elif typos_and_word_order(answer_formatted, english):
-            print("Correct! (You have a typo or different word order)\n")
+            print("Correct! (You have a typo or different word order)")
             print(f"{english}\n")
             correct += 1
+            eng_typo += 1
         elif english in lessons.alternatives.keys():
             alternatives = lessons.alternatives[english]
             if isinstance(alternatives, list):
@@ -191,9 +192,10 @@ def dutch_question(answer, correct, dutch, english, lesson):
                 elif any(
                     typos_and_word_order(answer_formatted, alt) for alt in alternatives
                 ):
-                    print("Correct! (You have a typo or different word order)\n")
+                    print("Correct! (You have a typo or different word order)")
                     print(f"{english}\n")
                     correct += 1
+                    eng_typo += 1
                 else:
                     print("That's not right!")
                     print(f"{english}\n")
@@ -205,9 +207,10 @@ def dutch_question(answer, correct, dutch, english, lesson):
                     answer_formatted,
                     alternatives,
                 ):
-                    print("Correct! (You have a typo or different word order)\n")
+                    print("Correct! (You have a typo or different word order)")
                     print(f"{english}\n")
                     correct += 1
+                    eng_typo += 1
                 else:
                     print("That's not right!")
                     print(f"{english}\n")
@@ -216,7 +219,7 @@ def dutch_question(answer, correct, dutch, english, lesson):
             print("That's not right!")
             print(f"{english}\n")
 
-    return correct
+    return correct, eng_typo
 
 
 def english_question(answer, correct, dutch, english, lesson):
@@ -244,7 +247,7 @@ def english_question(answer, correct, dutch, english, lesson):
     return correct
 
 
-def dutch_word(answer, correct, english):
+def dutch_word(answer, correct, english, eng_typo):
 
     answer_words = answer.lower().split()
     answer_formatted = " ".join(word for word in answer_words)
@@ -263,9 +266,10 @@ def dutch_word(answer, correct, english):
             print("Correct!\n")
             correct += 1
         elif typos_and_word_order(answer_formatted, english):
-            print("Correct! (You have a typo)\n")
+            print("Correct! (You have a typo)")
             print(f"{english}\n")
             correct += 1
+            eng_typo += 1
         elif english in lessons.alternatives.keys():
             alternatives = lessons.alternatives[english]
             if isinstance(alternatives, list):
@@ -275,9 +279,10 @@ def dutch_word(answer, correct, english):
                 elif any(
                     typos_and_word_order(answer_formatted, alt) for alt in alternatives
                 ):
-                    print("Correct! (You have a typo)\n")
+                    print("Correct! (You have a typo)")
                     print(f"{english}\n")
                     correct += 1
+                    eng_typo += 1
                 else:
                     print("That's not right!")
                     print(f"{english}\n")
@@ -289,9 +294,10 @@ def dutch_word(answer, correct, english):
                     answer_formatted,
                     alternatives,
                 ):
-                    print("Correct! (You have a typo)\n")
+                    print("Correct! (You have a typo)")
                     print(f"{english}\n")
                     correct += 1
+                    eng_typo += 1
                 else:
                     print("That's not right!")
                     print(f"{english}\n")
@@ -300,7 +306,7 @@ def dutch_word(answer, correct, english):
             print("That's not right!")
             print(f"{english}\n")
 
-    return correct
+    return correct, eng_typo
 
 
 def english_word(answer, correct, dutch):
@@ -341,6 +347,7 @@ def randomly_generated_lesson(lesson, questions, testing=None):
             all_questions.extend(random.shuffle(extra_questions))
 
     correct = 0
+    eng_typo = 0
     question_number = 1
     asked_questions = []
     for dutch, english in all_questions:
@@ -361,7 +368,9 @@ def randomly_generated_lesson(lesson, questions, testing=None):
                 print("That's not right!")
                 print(f"{english}\n")
             else:
-                correct = dutch_question(answer, correct, dutch, english, lesson)
+                correct, eng_typo = dutch_question(
+                    answer, correct, dutch, english, lesson, eng_typo
+                )
 
             asked_questions.append((0, dutch, english))
 
@@ -385,7 +394,7 @@ def randomly_generated_lesson(lesson, questions, testing=None):
 
     print(f"Lesson finished. You got {correct}/{questions} correct.")
 
-    return correct, questions, asked_questions
+    return correct, questions, asked_questions, eng_typo
 
 
 def randomly_generated_vocab_lesson(lesson, words):
@@ -403,6 +412,7 @@ def randomly_generated_vocab_lesson(lesson, words):
             all_questions.extend(random.shuffle(extra_questions))
 
     correct = 0
+    eng_typo = 0
     question_number = 1
     asked_questions = []
     for dutch, english in all_questions:
@@ -420,7 +430,7 @@ def randomly_generated_vocab_lesson(lesson, words):
                 print("That's not right!")
                 print(f"{english}\n")
             else:
-                correct = dutch_word(answer, correct, english)
+                correct, eng_typo = dutch_word(answer, correct, english, eng_typo)
 
             asked_questions.append((0, dutch, english))
 
@@ -444,7 +454,7 @@ def randomly_generated_vocab_lesson(lesson, words):
 
     print(f"Lesson finished. You got {correct}/{words} correct.")
 
-    return correct, words, asked_questions
+    return correct, words, asked_questions, eng_typo
 
 
 def repeated_lesson(lesson, questions, all_questions=[]):
@@ -543,7 +553,7 @@ def test(lesson):
     return correct, complete
 
 
-def update_log(log, topic, lesson, questions, correct, ltype):
+def update_log(log, topic, lesson, questions, correct, ltype, eng_typo):
 
     log_today = {
         "Module": topic,
@@ -551,6 +561,7 @@ def update_log(log, topic, lesson, questions, correct, ltype):
         "Questions": questions,
         "Score": correct,
         "Type": ltype,
+        "Typos English": eng_typo,
     }
 
     return pd.concat([log, pd.DataFrame(log_today, index=pd.Index([date.today()]))])

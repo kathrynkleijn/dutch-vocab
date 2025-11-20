@@ -88,21 +88,21 @@ def main():
                 if ltype == "phrases":
                     questions = vf.select_questions(lesson)
 
-                    correct, questions, asked_questions = vf.randomly_generated_lesson(
-                        lesson, questions
+                    correct, questions, asked_questions, eng_typo = (
+                        vf.randomly_generated_lesson(lesson, questions)
                     )
                     log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
 
                 elif ltype == "vocabulary":
                     words = vf.select_words(lesson)
 
-                    correct, questions, asked_questions = (
+                    correct, questions, asked_questions, eng_typo = (
                         vf.randomly_generated_vocab_lesson(lesson, words)
                     )
                     log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
 
             elif topic == "fiction":
