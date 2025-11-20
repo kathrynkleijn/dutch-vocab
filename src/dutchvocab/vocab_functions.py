@@ -546,11 +546,13 @@ def test(lesson):
             print("That's not right!")
             print(f"{english}\n")
         else:
-            correct = dutch_question(answer, correct, dutch, english, lesson)
+            correct, eng_typo = dutch_question(
+                answer, correct, dutch, english, lesson, eng_typo
+            )
 
     complete = True
 
-    return correct, complete
+    return correct, complete, eng_typo
 
 
 def update_log(log, topic, lesson, questions, correct, ltype, eng_typo):

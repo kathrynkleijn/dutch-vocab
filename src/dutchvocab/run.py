@@ -350,37 +350,37 @@ def main():
         if topic == "core":
             lesson = vf.select_lesson(lo.core, test=True)
             print("\nBeginning test...\n")
-            correct, complete = vf.test(lesson)
+            correct, complete, eng_typo = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "fiction":
             lesson = vf.select_lesson(lo.fiction, test=True)
             print("\nBeginning test...\n")
-            correct, complete = vf.test(lesson)
+            correct, complete, eng_typo = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "newspapers":
             lesson = vf.select_lesson(lo.newspapers, test=True)
             print("\nBeginning test...\n")
-            correct, complete = vf.test(lesson)
+            correct, complete, eng_typo = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "spoken":
             lesson = vf.select_lesson(lo.spoken, test=True)
             print("\nBeginning test...\n")
-            correct, complete = vf.test(lesson)
+            correct, complete, eng_typo = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "web":
             lesson = vf.select_lesson(lo.web, test=True)
             print("\nBeginning test...\n")
-            correct, complete = vf.test(lesson)
+            correct, complete, eng_typo = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         elif topic == "general":
             lesson = vf.select_lesson(lo.general, test=True)
             print("\nBeginning test...\n")
-            correct, complete = vf.test(lesson)
+            correct, complete, eng_typo = vf.test(lesson)
             # log = vf.update_log(log, topic, lesson.name, questions, correct)
 
         if complete:
