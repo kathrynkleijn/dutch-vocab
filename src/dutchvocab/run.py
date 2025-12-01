@@ -50,25 +50,37 @@ def main():
                 "all",
                 "random",
             ]
-            topic_enquiry = [
-                inquirer.List(
-                    "topic",
-                    message="Select a topic, choose random for a random choice of topic, or choose all for an assortment of questions from all topics",
-                    choices=topics,
+            choosing = True
+            while choosing:
+                topic_enquiry = [
+                    inquirer.List(
+                        "topic",
+                        message="Select a topic, choose random for a random choice of topic, or choose all for an assortment of questions from all topics",
+                        choices=topics,
+                    )
+                ]
+                selected = inquirer.prompt(topic_enquiry)
+
+                if selected["topic"] == "random":
+                    topic = random.choice(lessons.topics)
+                else:
+                    topic = selected["topic"]
+
+                print(f"You have selected {topic.capitalize()}.")
+
+                continue_with_topic = input(
+                    "\nIf you are not happy with this choice, type N to try again or X to cancel and exit. Type anything else or hit Enter to continue.     "
                 )
-            ]
-            selected = inquirer.prompt(topic_enquiry)
+                if continue_with_topic.upper() == "X":
+                    print("Exiting lessons...")
+                    playing = False
+                    break
+                elif continue_with_topic.upper() == "N":
+                    continue
+                else:
+                    choosing = False
 
-            if selected["topic"] == "random":
-                topic = random.choice(lessons.topics)
-            else:
-                topic = selected["topic"]
-
-            print(f"You have selected {topic.capitalize()}.")
-
-            continue_with_topic = input("Do you wish to continue? (Y/n)  ")
-            if continue_with_topic.upper() != "Y":
-                print("Exiting lessons...")
+            if not playing:
                 break
 
             lesson_types = ["vocabulary", "phrases"]
@@ -243,38 +255,47 @@ def main():
                     )
 
             if topic != "all":
-                while (correct / questions) * 100 < 50:
-                    again = input("\nScore less than 50% - try again?  (Y/N)       ")
-                    print("\n")
-                    if again.upper() != "Y":
-                        break
-                    print(f"Retrying lesson {lesson.number} from {topic} ...\n")
-                    if topic == "core":
-                        lesson = copy.deepcopy(lo.core.lessons[int(lesson.number) - 1])
-                    elif topic == "fiction":
-                        lesson = copy.deepcopy(
-                            lo.fiction.lessons[int(lesson.number) - 1]
+                try:
+                    while (correct / questions) * 100 < 50:
+                        again = input(
+                            "\nScore less than 50% - try again?  (Y/N)       "
                         )
-                    elif topic == "newspapers":
-                        lesson = copy.deepcopy(
-                            lo.newspapers.lessons[int(lesson.number) - 1]
+                        print("\n")
+                        if again.upper() != "Y":
+                            break
+                        print(f"Retrying lesson {lesson.number} from {topic} ...\n")
+                        if topic == "core":
+                            lesson = copy.deepcopy(
+                                lo.core.lessons[int(lesson.number) - 1]
+                            )
+                        elif topic == "fiction":
+                            lesson = copy.deepcopy(
+                                lo.fiction.lessons[int(lesson.number) - 1]
+                            )
+                        elif topic == "newspapers":
+                            lesson = copy.deepcopy(
+                                lo.newspapers.lessons[int(lesson.number) - 1]
+                            )
+                        elif topic == "spoken":
+                            lesson = copy.deepcopy(
+                                lo.spoken.lessons[int(lesson.number) - 1]
+                            )
+                        elif topic == "web":
+                            lesson = copy.deepcopy(
+                                lo.web.lessons[int(lesson.number) - 1]
+                            )
+                        elif topic == "general":
+                            lesson = copy.deepcopy(
+                                lo.general.lessons[int(lesson.number) - 1]
+                            )
+                        correct, questions, asked_questions = vf.repeated_lesson(
+                            lesson, questions, all_questions=asked_questions
                         )
-                    elif topic == "spoken":
-                        lesson = copy.deepcopy(
-                            lo.spoken.lessons[int(lesson.number) - 1]
+                        log = vf.update_log(
+                            log, topic, lesson.name, questions, correct, ltype
                         )
-                    elif topic == "web":
-                        lesson = copy.deepcopy(lo.web.lessons[int(lesson.number) - 1])
-                    elif topic == "general":
-                        lesson = copy.deepcopy(
-                            lo.general.lessons[int(lesson.number) - 1]
-                        )
-                    correct, questions, asked_questions = vf.repeated_lesson(
-                        lesson, questions, all_questions=asked_questions
-                    )
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
-                    )
+                except ZeroDivisionError:
+                    pass
 
             again = input("\nWould you like to do another lesson?  (Y/N)       ")
             if again.upper() != "Y":
