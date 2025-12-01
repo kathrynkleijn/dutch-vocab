@@ -208,10 +208,22 @@ def log_maker(report_title, log, debug=False, debug_week=False):
 
 def generate_figures(report_title, logs):
 
-    # lessons = ["core1", "core2", "core3", "core4", "fiction1", "fiction2", "ficiton3", "fiction4"]
-    # log.Lesson = pd.Categorical(
-    #         log["Lesson"], categories=lessons, ordered=True
-    #     )
+    numbers = [x for x in range(1, 11)]
+    topics = [
+        "core",
+        "fiction",
+        "newspapers",
+        "spoken",
+        "web",
+        "general",
+        "all",
+        "random",
+    ]
+    lessons = []
+    for topic in topics:
+        for num in numbers:
+            lessons.append(topic + str(num))
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
 
     with open("settings.txt", "r") as file:
         settings = file.read().splitlines()
@@ -648,7 +660,6 @@ def text_generator(report_title, logs):
     return full_text
 
 
-""" order categoricals """
 if __name__ == "__main__":
 
     log = pd.read_csv("testing_log.csv")
