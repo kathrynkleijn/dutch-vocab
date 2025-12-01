@@ -8,6 +8,7 @@ from plotnine import (
     facet_grid,
     ylim,
     scale_fill_brewer,
+    scale_fill_manual,
     element_text,
     geom_line,
     geom_point,
@@ -19,17 +20,24 @@ from datetime import date, timedelta
 from dutchvocab import lesson_objects
 import numpy as np
 from mizani.palettes import brewer_pal, gradient_n_pal
+import matplotlib.colors as mcolors
 import re
 import os
 
+## Practice Log Figures
 
-# create colour palette
+# create colour palette with seven base colours (one per topic)
 pal = brewer_pal("qual", "Paired")
 
-colors = pal(12)
-np.random.shuffle(colors)
+base_colors = list(pal(7))
 
-all_colors = gradient_n_pal(colors)(np.linspace(0, 1, 50))
+all_colors = []
+for base_color in base_colors:
+    # create gradient from darkened to lightened version of the base colour
+    gradient = gradient_n_pal([mcolors.to_hex("black"), base_color, "white"])(
+        np.linspace(0, 1, 10)
+    )
+    all_colors.extend(gradient)
 
 
 months = [
@@ -217,7 +225,6 @@ def generate_figures(report_title, logs):
         "web",
         "general",
         "all",
-        "random",
     ]
     lessons = []
     for topic in topics:
@@ -237,6 +244,7 @@ def generate_figures(report_title, logs):
     os.makedirs(f"{plot_path}plots/progress", exist_ok=True)
 
     if report_title == "Weekly":
+        print(logs[0])
 
         plot1 = (
             ggplot(logs[0], aes(x="Module", y="Questions", fill="Module"))
@@ -628,6 +636,51 @@ def generate_figures(report_title, logs):
         plot9.save(f"{plot_path}plots/progress/9.png", verbose=False)
 
 
+## Test Log Figures
+
+
+def test_log_single():
+    pass
+
+
+def test_log():
+    pass
+
+
+def generate_test_figures(log, single=True):
+
+    with open("settings.txt", "r") as file:
+        settings = file.read().splitlines()
+        plot_path = settings[1]
+
+    if plot_path and not plot_path.endswith("/"):
+        plot_path = plot_path + "/"
+
+    os.makedirs(f"{plot_path}plots/tests", exist_ok=True)
+
+    log["Incorrect"] = log["Questions"] - log["Correct"]
+    log_res = pd.melt(log, id_vars=[], value_vars=["Correct", "Incorrect"])
+
+    if single:
+        plot1 = (
+            ggplot(log_res, aes(x="variable", y="value", fill="variable"))
+            + geom_bar(stat="identity", width=0.5, show_legend=False)
+            + scale_fill_manual(["orange", "teal"])
+            + labs(
+                x="Result",
+                y="Total Questions",
+                title="Results of Test",
+            )
+            + theme(figure_size=(10, 6))
+        )
+        plot1.save(f"{plot_path}plots/tests/1.png", verbose=False)
+    else:
+        pass
+
+
+## Generate text for reports
+
+
 def text_generator(report_title, logs):
     if report_title == "Weekly":
         text = "this week "
@@ -665,3 +718,7 @@ if __name__ == "__main__":
     log = pd.read_csv("testing_log.csv")
     logs = log_maker("Weekly", log, debug=True, debug_week=date(2025, 8, 18))
     print(text_generator("Weekly", logs))
+    generate_figures("Weekly", logs)
+
+    log2 = pd.read_csv("test_log1.csv")
+    generate_test_figures(log2)
