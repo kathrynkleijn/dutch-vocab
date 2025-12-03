@@ -5,6 +5,7 @@ from dutchvocab import vocab_functions as vf
 import pandas as pd
 from dutchvocab import lesson_objects as lo
 from dutchvocab import pdf_constructor
+from dutchvocab import figure_generator as fg
 from datetime import date, timedelta
 import os
 import inquirer
@@ -371,41 +372,38 @@ def main():
         if topic == "core":
             lesson = vf.select_lesson(lo.core, test=True)
             print("\nBeginning test...\n")
-            correct, complete, eng_typo = vf.test(lesson)
-            # log = vf.update_log(log, topic, lesson.name, questions, correct)
+            correct, complete, log = vf.test(lesson)
 
         elif topic == "fiction":
             lesson = vf.select_lesson(lo.fiction, test=True)
             print("\nBeginning test...\n")
-            correct, complete, eng_typo = vf.test(lesson)
-            # log = vf.update_log(log, topic, lesson.name, questions, correct)
+            correct, complete, log = vf.test(lesson)
 
         elif topic == "newspapers":
             lesson = vf.select_lesson(lo.newspapers, test=True)
             print("\nBeginning test...\n")
-            correct, complete, eng_typo = vf.test(lesson)
-            # log = vf.update_log(log, topic, lesson.name, questions, correct)
+            correct, complete, log = vf.test(lesson)
 
         elif topic == "spoken":
             lesson = vf.select_lesson(lo.spoken, test=True)
             print("\nBeginning test...\n")
-            correct, complete, eng_typo = vf.test(lesson)
-            # log = vf.update_log(log, topic, lesson.name, questions, correct)
+            correct, complete, log = vf.test(lesson)
 
         elif topic == "web":
             lesson = vf.select_lesson(lo.web, test=True)
             print("\nBeginning test...\n")
-            correct, complete, eng_typo = vf.test(lesson)
-            # log = vf.update_log(log, topic, lesson.name, questions, correct)
+            correct, complete, log = vf.test(lesson)
 
         elif topic == "general":
             lesson = vf.select_lesson(lo.general, test=True)
             print("\nBeginning test...\n")
-            correct, complete, eng_typo = vf.test(lesson)
-            # log = vf.update_log(log, topic, lesson.name, questions, correct)
+            correct, complete, log = vf.test(lesson)
 
         if complete:
-            print(f"Your test score for {topic} lesson {lesson} is {correct}.")
+            print(
+                f"Your test score for {topic.capitalize()} lesson {lesson} is {correct}."
+            )
+            fg.generate_test_figures(log)
 
 
 if __name__ == "__main__":
