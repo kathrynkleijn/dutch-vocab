@@ -158,7 +158,9 @@ def typos_and_word_order(answer, test):
     return score >= threshold
 
 
-def dutch_question(answer, correct, dutch, english, lesson, eng_typo):
+def dutch_question(
+    answer, correct, dutch, english, lesson, eng_typo, log=[], test=False
+):
 
     answer_formatted = answer_formatting(answer, dutch, lesson, 0)
     if "I am" in answer_formatted:
@@ -171,24 +173,61 @@ def dutch_question(answer, correct, dutch, english, lesson, eng_typo):
         if Counter(answer_meanings) == Counter(test_meanings):
             print("Correct!\n")
             correct += 1
+            if test:
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame({"Result": "Correct", "Error": "Ok"}),
+                    ]
+                )
         else:
             print("That's not right!")
             print(f"{english}\n")
+            if test:
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame(
+                            {"Result": "Incorrect", "Error": "Vocab/Understanding"}
+                        ),
+                    ]
+                )
     else:
         if answer_formatted == english:
             print("Correct!\n")
             correct += 1
+            if test:
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame({"Result": "Correct", "Error": "Ok"}),
+                    ]
+                )
         elif typos_and_word_order(answer_formatted, english):
             print("Correct! (You have a typo or different word order)")
             print(f"{english}\n")
             correct += 1
             eng_typo += 1
+            if test:
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame({"Result": "Correct", "Error": "Typo"}),
+                    ]
+                )
         elif english in lessons.alternatives.keys():
             alternatives = lessons.alternatives[english]
             if isinstance(alternatives, list):
                 if answer_formatted in alternatives:
                     print("Correct!\n")
                     correct += 1
+                    if test:
+                        log = pd.concat(
+                            [
+                                log,
+                                pd.DataFrame({"Result": "Correct", "Error": "Ok"}),
+                            ]
+                        )
                 elif any(
                     typos_and_word_order(answer_formatted, alt) for alt in alternatives
                 ):
@@ -196,13 +235,39 @@ def dutch_question(answer, correct, dutch, english, lesson, eng_typo):
                     print(f"{english}\n")
                     correct += 1
                     eng_typo += 1
+                    if test:
+                        log = pd.concat(
+                            [
+                                log,
+                                pd.DataFrame({"Result": "Correct", "Error": "Typo"}),
+                            ]
+                        )
                 else:
                     print("That's not right!")
                     print(f"{english}\n")
+                    if test:
+                        log = pd.concat(
+                            [
+                                log,
+                                pd.DataFrame(
+                                    {
+                                        "Result": "Inorrect",
+                                        "Error": "Vocab/Understanding",
+                                    }
+                                ),
+                            ]
+                        )
             else:
                 if answer_formatted == alternatives:
                     print("Correct!\n")
                     correct += 1
+                    if test:
+                        log = pd.concat(
+                            [
+                                log,
+                                pd.DataFrame({"Result": "Correct", "Error": "Ok"}),
+                            ]
+                        )
                 elif typos_and_word_order(
                     answer_formatted,
                     alternatives,
@@ -211,18 +276,48 @@ def dutch_question(answer, correct, dutch, english, lesson, eng_typo):
                     print(f"{english}\n")
                     correct += 1
                     eng_typo += 1
+                    if test:
+                        log = pd.concat(
+                            [
+                                log,
+                                pd.DataFrame({"Result": "Correct", "Error": "Typo"}),
+                            ]
+                        )
                 else:
                     print("That's not right!")
                     print(f"{english}\n")
+                    if test:
+                        log = pd.concat(
+                            [
+                                log,
+                                pd.DataFrame(
+                                    {
+                                        "Result": "Incorrect",
+                                        "Error": "Vocab/Understanding",
+                                    }
+                                ),
+                            ]
+                        )
 
         else:
             print("That's not right!")
             print(f"{english}\n")
+            if test:
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame(
+                            {"Result": "Incorrect", "Error": "Vocab/Understanding"}
+                        ),
+                    ]
+                )
+    if test:
+        return correct, eng_typo, log
+    else:
+        return correct, eng_typo
 
-    return correct, eng_typo
 
-
-def english_question(answer, correct, dutch, english, lesson):
+def english_question(answer, correct, dutch, english, lesson, log=[], test=False):
 
     answer_formatted = answer_formatting(answer, english, lesson.questions, 1, dutch)
 
@@ -233,18 +328,45 @@ def english_question(answer, correct, dutch, english, lesson):
     if answer == dutch:
         print("Correct!\n")
         correct += 1
+        if test:
+            log = pd.concat([log, pd.DataFrame({"Result": "Correct", "Error": "Ok"})])
     elif dutch in lessons.alternatives.keys():
         if answer in lessons.alternatives[dutch]:
             print("Correct!\n")
             correct += 1
+            if test:
+                log = pd.concat(
+                    [log, pd.DataFrame({"Result": "Correct", "Error": "Ok"})]
+                )
         else:
             print("That's not right!")
             print(f"{dutch}\n")
+            if test:
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame(
+                            {"Result": "Inorrect", "Error": "Vocab/Understanding"}
+                        ),
+                    ]
+                )
     else:
         print("That's not right!")
         print(f"{dutch}\n")
+        if test:
+            log = pd.concat(
+                [
+                    log,
+                    pd.DataFrame(
+                        {"Result": "Inorrect", "Error": "Vocab/Understanding"}
+                    ),
+                ]
+            )
 
-    return correct
+    if test:
+        return correct, log
+    else:
+        return correct
 
 
 def dutch_word(answer, correct, english, eng_typo):
@@ -502,6 +624,8 @@ def repeated_lesson(lesson, questions, all_questions=[]):
 
 def test(lesson):
 
+    log = pd.DataFrame(columns=["Result", "Error"])
+
     complete = False
 
     all_questions = list(lesson.questions.items())
@@ -518,6 +642,14 @@ def test(lesson):
             )
             if exit_confirm.strip().lower() != "y":
                 print("\nContinuing with test\n")
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame(
+                            {"Result": "Incorrect", "Error": "Attempted exit"}
+                        ),
+                    ]
+                )
                 continue
             else:
                 print("\nExiting...\n")
@@ -525,8 +657,19 @@ def test(lesson):
         if not answer:
             print("That's not right!")
             print(f"{dutch}\n")
+            # default vocab/understanding until further development
+            log = pd.concat(
+                [
+                    log,
+                    pd.DataFrame(
+                        {"Result": "Incorrect", "Error": "Vocab/Understanding"}
+                    ),
+                ]
+            )
         else:
-            correct = english_question(answer, correct, dutch, english, lesson)
+            correct, log = english_question(
+                answer, correct, dutch, english, lesson, log, test=True
+            )
 
     random.shuffle(all_questions)
 
@@ -538,6 +681,14 @@ def test(lesson):
             )
             if exit_confirm.strip().lower() != "y":
                 print("\nContinuing with test\n")
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame(
+                            {"Result": "Incorrect", "Error": "Attempted exit"}
+                        ),
+                    ]
+                )
                 continue
             else:
                 print("\nExiting...\n")
@@ -545,14 +696,22 @@ def test(lesson):
         if not answer:
             print("That's not right!")
             print(f"{english}\n")
+            log = pd.concat(
+                [
+                    log,
+                    pd.DataFrame(
+                        {"Result": "Incorrect", "Error": "Vocab/Understanding"}
+                    ),
+                ]
+            )
         else:
-            correct, eng_typo = dutch_question(
-                answer, correct, dutch, english, lesson, eng_typo
+            correct, eng_typo, log = dutch_question(
+                answer, correct, dutch, english, lesson, eng_typo, log, test=True
             )
 
     complete = True
 
-    return correct, complete, eng_typo
+    return correct, complete
 
 
 def update_log(log, topic, lesson, questions, correct, ltype, eng_typo):
