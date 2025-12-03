@@ -15,6 +15,9 @@ from plotnine import (
     scale_x_datetime,
     scale_color_brewer,
     scale_color_manual,
+    geom_text,
+    after_stat,
+    stage,
 )
 from datetime import date, timedelta
 from dutchvocab import lesson_objects
@@ -658,20 +661,23 @@ def generate_test_figures(log, single=True):
 
     os.makedirs(f"{plot_path}plots/tests", exist_ok=True)
 
-    log["Incorrect"] = log["Questions"] - log["Correct"]
-    log_res = pd.melt(log, id_vars=[], value_vars=["Correct", "Incorrect"])
-
     if single:
         plot1 = (
-            ggplot(log_res, aes(x="variable", y="value", fill="variable"))
-            + geom_bar(stat="identity", width=0.5, show_legend=False)
-            + scale_fill_manual(["orange", "teal"])
+            ggplot(log, aes("Result", fill="Error"))
+            + geom_bar(width=0.5)
+            + scale_fill_brewer("qual", "Paired")
             + labs(
-                x="Result",
                 y="Total Questions",
                 title="Results of Test",
             )
-            + theme(figure_size=(10, 6))
+            + geom_text(
+                aes(
+                    label=after_stat("count"),
+                    y=stage(after_stat="count", after_scale="y+.15"),
+                ),
+                stat="count",
+                position="stack",
+            )
         )
         plot1.save(f"{plot_path}plots/tests/1.png", verbose=False)
     else:
