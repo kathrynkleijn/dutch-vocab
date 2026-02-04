@@ -32,8 +32,18 @@ def select_lesson(topic, test=False):
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
-                trying = False
+                continue_with_lesson = input(
+                    "\nPress Enter to accept this choice and continue, or type N to try again. Type X to cancel and exit.       "
+                )
+                if continue_with_lesson.upper() == "N":
+                    continue
+                elif continue_with_lesson.upper() == "X":
+                    lesson = False
+                    trying = False
+                else:
+                    trying = False
             except:
+                print("\nInput not recognised. Please try again.\n")
                 continue
         else:
             try:
@@ -45,8 +55,15 @@ def select_lesson(topic, test=False):
                 print(
                     f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                 )
-                trying = False
+                continue_with_lesson = input(
+                    "\nPress Enter to accept this choice and continue, or type N to try again.      "
+                )
+                if continue_with_lesson.upper() == "N":
+                    continue
+                else:
+                    trying = False
             except:
+                print("\nInput not recognised. Please try again.\n")
                 continue
     return lesson
 

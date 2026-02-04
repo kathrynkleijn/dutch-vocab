@@ -22,7 +22,7 @@ def main():
     if report_path and not report_path.endswith("/"):
         report_path = report_path + "/"
 
-    options = ["Practice", "Test"]  # "Vocabulary"
+    options = ["Practice", "Test"]
     select_setting = [
         inquirer.List("type", message="Select type of lesson", choices=options)
     ]
@@ -70,7 +70,7 @@ def main():
                 print(f"You have selected {topic.capitalize()}.")
 
                 continue_with_topic = input(
-                    "\nIf you are not happy with this choice, type N to try again or X to cancel and exit. Type anything else or hit Enter to continue.     "
+                    "\nPress Enter to accept this choice and continue, or type N to try again. Type X to cancel and exit.     "
                 )
                 if continue_with_topic.upper() == "X":
                     print("Exiting lessons...")
@@ -97,6 +97,8 @@ def main():
 
             if topic == "core":
                 lesson = vf.select_lesson(lo.core)
+                if not lesson:
+                    break
 
                 if ltype == "phrases":
                     questions = vf.select_questions(lesson)
@@ -120,6 +122,8 @@ def main():
 
             elif topic == "fiction":
                 lesson = vf.select_lesson(lo.fiction)
+                if not lesson:
+                    break
 
                 if ltype == "phrases":
                     questions = vf.select_questions(lesson)
@@ -143,6 +147,8 @@ def main():
 
             elif topic == "newspapers":
                 lesson = vf.select_lesson(lo.newspapers)
+                if not lesson:
+                    break
 
                 if ltype == "phrases":
                     questions = vf.select_questions(lesson)
@@ -166,6 +172,8 @@ def main():
 
             elif topic == "spoken":
                 lesson = vf.select_lesson(lo.spoken)
+                if not lesson:
+                    break
 
                 if ltype == "phrases":
                     questions = vf.select_questions(lesson)
@@ -189,6 +197,8 @@ def main():
 
             elif topic == "web":
                 lesson = vf.select_lesson(lo.web)
+                if not lesson:
+                    break
 
                 if ltype == "phrases":
                     questions = vf.select_questions(lesson)
@@ -212,6 +222,8 @@ def main():
 
             elif topic == "general":
                 lesson = vf.select_lesson(lo.general)
+                if not lesson:
+                    break
 
                 if ltype == "phrases":
                     questions = vf.select_questions(lesson)
@@ -371,11 +383,13 @@ def main():
 
         if topic == "core":
             lesson = vf.select_lesson(lo.core, test=True)
+
             print("\nBeginning test...\n")
             correct, complete, log = vf.test(lesson)
 
         elif topic == "fiction":
             lesson = vf.select_lesson(lo.fiction, test=True)
+
             print("\nBeginning test...\n")
             correct, complete, log = vf.test(lesson)
 
