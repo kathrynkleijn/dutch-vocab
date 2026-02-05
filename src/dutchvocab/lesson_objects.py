@@ -80,6 +80,7 @@ for num, topic in enumerate(topics):
         available += f"{num+1}. {topic.name.capitalize()}:\n\t\tLessons 1-{len(topic.lessons)}\n\t\tAll\n"
 available += "All"
 
+
 topics_all = [core, fiction, newspapers, spoken, web, general, all]
 
 

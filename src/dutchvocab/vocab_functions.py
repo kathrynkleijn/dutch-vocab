@@ -8,27 +8,36 @@ import copy
 from matplotlib import pyplot as plt
 import numpy as np
 from fuzzywuzzy import fuzz
+import inquirer
 
 
 def select_lesson(topic, test=False):
     trying = True
+    available = [lesson for lesson in range(1, len(topic.lessons) + 1)]
     while trying:
         if not test:
             try:
-                lesson_enquiry = input(
-                    "Select a lesson, choose random for a random choice of lesson, or choose all for an assortment of questions from all lessons          "
-                ).lower()
-                if lesson_enquiry == "random":
+                available.extend(["random", "all"])
+                lesson_enquiry = [
+                    inquirer.List(
+                        "lesson",
+                        message="Select a lesson, choose random for a random choice of lesson, or choose all for an assortment of questions from all lessons          ",
+                        choices=available,
+                    )
+                ]
+                selected = inquirer.prompt(lesson_enquiry)
+
+                if selected["lesson"] == "random":
                     lesson_num = random.randrange((len(topic.lessons) - 1))
                     lesson = copy.deepcopy(topic.lessons[int(lesson_num) - 1])
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
-                elif lesson_enquiry == "all":
+                elif selected["lesson"] == "all":
                     lesson = copy.deepcopy(topic.all)
                     print(f"\nYou have chosen all of {topic.name.capitalize()}.")
                 else:
-                    lesson = copy.deepcopy(topic.lessons[int(lesson_enquiry) - 1])
+                    lesson = copy.deepcopy(topic.lessons[int(selected["lesson"]) - 1])
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
@@ -47,11 +56,16 @@ def select_lesson(topic, test=False):
                 continue
         else:
             try:
-                lesson_enquiry = input(
-                    "Select a lesson to be tested on         "
-                ).lower()
+                lesson_enquiry = [
+                    inquirer.List(
+                        "lesson",
+                        message="Select a lesson to be tested on          ",
+                        choices=available,
+                    )
+                ]
+                selected = inquirer.prompt(lesson_enquiry)
 
-                lesson = copy.deepcopy(topic.lessons[int(lesson_enquiry) - 1])
+                lesson = copy.deepcopy(topic.lessons[int(selected["lesson"]) - 1])
                 print(
                     f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                 )
