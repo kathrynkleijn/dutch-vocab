@@ -9,6 +9,7 @@ from dutchvocab import figure_generator as fg
 from datetime import date, timedelta
 import os
 import inquirer
+import time
 
 
 def main():
@@ -22,6 +23,7 @@ def main():
     if report_path and not report_path.endswith("/"):
         report_path = report_path + "/"
 
+    print("\n")
     options = ["Practice", "Test"]
     select_setting = [
         inquirer.List("type", message="Select type of lesson", choices=options)
@@ -34,12 +36,21 @@ def main():
         print(
             "\nYou have chosen practice mode. You can now choose from any of the available lessons to practice a mixture of words and phrases.\n\n"
         )
+        time.sleep(3.0)
+        choose_lesson = input("\n\nPress Enter to continue")
+        print("\n\n")
 
         playing = True
         log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
         while playing:
 
-            print(f"Available lessons:\n {lo.available}\n\n")
+            vf.slow_print(
+                f"Available lessons:\n {lo.available}\n\n",
+                char_delay=0,
+                line_delay=0.2,
+            )
+            time.sleep(1.0)
+            choose_lesson = input("\n\nPress Enter to continue")
 
             topics = [
                 "core",
@@ -53,6 +64,7 @@ def main():
             ]
             choosing = True
             while choosing:
+                print("\n\n")
                 topic_enquiry = [
                     inquirer.List(
                         "topic",
@@ -84,6 +96,7 @@ def main():
             if not playing:
                 break
 
+            print("\n")
             lesson_types = ["vocabulary", "phrases"]
             lesson_enquiry = [
                 inquirer.List(

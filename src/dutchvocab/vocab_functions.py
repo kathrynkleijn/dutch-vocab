@@ -9,6 +9,17 @@ from matplotlib import pyplot as plt
 import numpy as np
 from fuzzywuzzy import fuzz
 import inquirer
+import time
+
+
+def slow_print(text, char_delay=0.01, line_delay=0.2):
+    """Print multi-line text at a consistent, slowed rate
+    for easy readability, with a pause between lines."""
+    for line in text.splitlines(keepends=True):
+        for char in line:
+            print(char, end="", flush=True)
+            time.sleep(char_delay)
+        time.sleep(line_delay)
 
 
 def select_lesson(topic, test=False):

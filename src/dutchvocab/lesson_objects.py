@@ -1,4 +1,5 @@
 from dutchvocab import lessons
+from dutchvocab import vocab_functions as vf
 from collections import OrderedDict
 
 
@@ -77,7 +78,7 @@ for num, topic in enumerate(topics):
     if len(topic.lessons) == 0:
         pass
     else:
-        available += f"{num+1}. {topic.name.capitalize()}:\n\t\tLessons 1-{len(topic.lessons)}\n\t\tAll\n"
+        available += f"{num+1}. {topic.name.capitalize()}:\n\t\t1-{len(topic.lessons)}\n\t\tAll\n"
 available += "All"
 
 
@@ -86,3 +87,5 @@ topics_all = [core, fiction, newspapers, spoken, web, general, all]
 
 if __name__ == "__main__":
     print(available)
+    print("\n\n")
+    vf.slow_print(available, char_delay=0)
