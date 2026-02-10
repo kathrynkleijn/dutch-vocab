@@ -78,7 +78,9 @@ for num, topic in enumerate(topics):
     if len(topic.lessons) == 0:
         pass
     else:
-        available += f"{num+1}. {topic.name.capitalize()}:\n\t\t1-{len(topic.lessons)}\n\t\tAll\n"
+        available += (
+            f"{num+1}. {topic.name.capitalize()}:\n\t\t1-{len(topic.lessons)}\n"
+        )
 available += "All"
 
 
