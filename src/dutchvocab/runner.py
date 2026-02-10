@@ -9,16 +9,15 @@ import inquirer
 import time
 
 
-def run_practice():
+def run_practice(log):
 
     print(
-        "\nYou have chosen practice mode. You can now choose from any of the available lessons to practice a mixture of words and phrases.\n\n"
+        "\nYou have chosen practice mode. You can now choose from any of the available lessons to practise a mixture of words and phrases.\n\n"
     )
     time.sleep(3.0)
     _ = input("\n\nPress Enter to continue")
 
     playing = True
-    log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
     while playing:
 
         topics = [
@@ -89,9 +88,10 @@ def run_practice():
                 correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_lesson(lesson, questions)
                 )
-                log = vf.update_log(
-                    log, topic, lesson.name, questions, correct, ltype, eng_typo
-                )
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
+                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
@@ -99,9 +99,10 @@ def run_practice():
                 correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                log = vf.update_log(
-                    log, topic, lesson.name, questions, correct, ltype, eng_typo
-                )
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
+                    )
 
         elif topic == "fiction":
             lesson = vf.select_lesson(lo.fiction)
@@ -115,7 +116,10 @@ def run_practice():
                 correct, questions, asked_questions = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
@@ -123,7 +127,10 @@ def run_practice():
                 correct, questions, asked_questions = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
         elif topic == "newspapers":
             lesson = vf.select_lesson(lo.newspapers)
@@ -134,18 +141,24 @@ def run_practice():
             if ltype == "phrases":
                 questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
-                    lesson, questions
+                correct, questions, asked_questions, eng_typo = (
+                    vf.randomly_generated_lesson(lesson, questions)
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
 
-                correct, questions, asked_questions = (
+                correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
         elif topic == "spoken":
             lesson = vf.select_lesson(lo.spoken)
@@ -159,7 +172,10 @@ def run_practice():
                 correct, questions, asked_questions = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
@@ -167,7 +183,10 @@ def run_practice():
                 correct, questions, asked_questions = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
         elif topic == "web":
             lesson = vf.select_lesson(lo.web)
@@ -181,7 +200,10 @@ def run_practice():
                 correct, questions, asked_questions = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
@@ -189,7 +211,10 @@ def run_practice():
                 correct, questions, asked_questions = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
         elif topic == "general":
             lesson = vf.select_lesson(lo.general)
@@ -203,7 +228,10 @@ def run_practice():
                 correct, questions, asked_questions = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
@@ -211,7 +239,10 @@ def run_practice():
                 correct, questions, asked_questions = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
         elif topic == "all":
             lesson = lo.all.all
@@ -221,7 +252,10 @@ def run_practice():
                 correct, questions, asked_questions = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
@@ -229,7 +263,10 @@ def run_practice():
                 correct, questions, asked_questions = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                log = vf.update_log(log, topic, lesson.name, questions, correct, ltype)
+                if questions:
+                    log = vf.update_log(
+                        log, topic, lesson.name, questions, correct, ltype
+                    )
 
         if topic != "all":
             try:
@@ -262,9 +299,10 @@ def run_practice():
                     correct, questions, asked_questions = vf.repeated_lesson(
                         lesson, questions, all_questions=asked_questions
                     )
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
-                    )
+                    if questions:
+                        log = vf.update_log(
+                            log, topic, lesson.name, questions, correct, ltype
+                        )
             except ZeroDivisionError:
                 pass
 

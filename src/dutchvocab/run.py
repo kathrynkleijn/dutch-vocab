@@ -4,8 +4,6 @@ from dutchvocab import lesson_objects as lo
 from dutchvocab import pdf_constructor
 from dutchvocab import figure_generator as fg
 from dutchvocab import runner as rn
-import copy
-import random
 import pandas as pd
 from datetime import date, timedelta
 import os
@@ -40,16 +38,17 @@ def main():
     mode = inquirer.prompt(select_setting)["type"]
 
     practice = False
+    log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
     while mode:
         if mode == "Practice":
 
-            mode, log = rn.run_practice()
+            mode, log = rn.run_practice(log)
 
             practice = True
 
         elif mode == "Test":
 
-            mode, log = rn.run_test()
+            mode = rn.run_test()
 
     print("Exiting lessons...")
 

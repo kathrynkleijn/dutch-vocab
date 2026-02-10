@@ -612,7 +612,7 @@ def randomly_generated_vocab_lesson(lesson, words):
         all_questions = all_questions[:words]
     elif words > len(all_questions):
         extra = math.ceil(words / len(all_questions)) - 1
-        for i in range(extra):
+        for _ in range(extra):
             extra_questions = list(lesson.words.items())
             all_questions.extend(random.shuffle(extra_questions))
 
