@@ -26,11 +26,16 @@ from mizani.palettes import brewer_pal, gradient_n_pal
 import matplotlib.colors as mcolors
 import re
 import os
+import warnings
+
+# Suppress specific warnings
+warnings.filterwarnings("ignore", message=".*Brewer palette Paired has a maximum of 12 colors.*", category=UserWarning)
+warnings.filterwarnings("ignore", message=".*geom_path: Each group consist of only one observation.*")
 
 ## Practice Log Figures
 
 # create colour palette with seven base colours (one per topic)
-pal = brewer_pal("qual", "Paired")
+pal = brewer_pal("qual", "Set3")
 
 base_colors = list(pal(7))
 
@@ -38,9 +43,25 @@ all_colors = []
 for base_color in base_colors:
     # create gradient from darkened to lightened version of the base colour
     gradient = gradient_n_pal([mcolors.to_hex("black"), base_color, "white"])(
-        np.linspace(0, 1, 10)
+        np.linspace(0, 1, 16)
     )
-    all_colors.extend(gradient)
+    all_colors.extend(gradient[3:-3])
+
+numbers = [x for x in range(1, 11)]
+topics = [
+    "core",
+    "fiction",
+    "newspapers",
+    "spoken",
+    "web",
+    "general",
+    "all",
+]
+lessons = []
+for topic in topics:
+    for num in numbers:
+        lessons.append(topic + str(num))
+
 
 
 months = [
@@ -66,7 +87,8 @@ lessons_per_module["all"] = sum(value for value in lessons_per_module.values()) 
 
 def daily_log_module(log):
     log.Date = pd.to_datetime(log.Date)
-    log = log.groupby(["Date", "Module", "Lesson"]).agg(
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
+    log = log.groupby(["Date", "Module", "Lesson"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log["Percentage"] = log.apply(
@@ -80,8 +102,9 @@ def daily_log_module(log):
 
 def weekly_log_module(log):
     log.Date = pd.to_datetime(log.Date)
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
     log["Week"] = log.Date.dt.to_period("W").dt.start_time
-    log = log.groupby([pd.Grouper(key="Week", freq="W-MON"), "Module"]).agg(
+    log = log.groupby([pd.Grouper(key="Week", freq="W-MON"), "Module"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log = log.reset_index()
@@ -96,8 +119,9 @@ def weekly_log_module(log):
 
 def weekly_log_lesson(log):
     log.Date = pd.to_datetime(log.Date)
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
     log["Week"] = log.Date.dt.to_period("W").dt.start_time
-    log = log.groupby([pd.Grouper(key="Week", freq="W-MON"), "Module", "Lesson"]).agg(
+    log = log.groupby([pd.Grouper(key="Week", freq="W-MON"), "Module", "Lesson"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log = log.reset_index()
@@ -108,7 +132,8 @@ def weekly_log_lesson(log):
 
 
 def module_log(log):
-    log = log.groupby("Module").agg(
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
+    log = log.groupby("Module", observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log["Percentage"] = log.apply(
@@ -122,7 +147,8 @@ def module_log(log):
 
 
 def lesson_log(log):
-    log = log.groupby(["Module", "Lesson"]).agg(
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
+    log = log.groupby(["Module", "Lesson"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log["Percentage"] = log.apply(
@@ -133,9 +159,10 @@ def lesson_log(log):
 
 def monthly_log_lesson(log):
     log.Date = pd.to_datetime(log.Date)
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
     log["Year"] = log["Date"].dt.year.astype("Int64")
     log["Year"] = log["Year"].astype(str)
-    log = log.groupby([log.Year, log.Date.dt.month, "Module", "Lesson"]).agg(
+    log = log.groupby([log.Year, log.Date.dt.month, "Module", "Lesson"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log = log.reset_index()
@@ -150,9 +177,10 @@ def monthly_log_lesson(log):
 
 def monthly_log_module(log):
     log.Date = pd.to_datetime(log.Date)
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
     log["Year"] = log["Date"].dt.year.astype("Int64")
     log["Year"] = log["Year"].astype(str)
-    log = log.groupby([log.Year, log.Date.dt.month, "Module"]).agg(
+    log = log.groupby([log.Year, log.Date.dt.month, "Module"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log = log.reset_index()
@@ -170,9 +198,10 @@ def monthly_log_module(log):
 
 def monthly_log(log):
     log.Date = pd.to_datetime(log.Date)
+    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
     log["Year"] = log["Date"].dt.year.astype("Int64")
     log["Year"] = log["Year"].astype(str)
-    log = log.groupby([log.Year, log.Date.dt.month]).agg(
+    log = log.groupby([log.Year, log.Date.dt.month], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log = log.reset_index()
@@ -219,22 +248,6 @@ def log_maker(report_title, log, debug=False, debug_week=False):
 
 def generate_figures(report_title, logs):
 
-    numbers = [x for x in range(1, 11)]
-    topics = [
-        "core",
-        "fiction",
-        "newspapers",
-        "spoken",
-        "web",
-        "general",
-        "all",
-    ]
-    lessons = []
-    for topic in topics:
-        for num in numbers:
-            lessons.append(topic + str(num))
-    log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
-
     with open("settings.txt", "r") as file:
         settings = file.read().splitlines()
     plot_path = settings[1]
@@ -247,7 +260,6 @@ def generate_figures(report_title, logs):
     os.makedirs(f"{plot_path}plots/progress", exist_ok=True)
 
     if report_title == "Weekly":
-        print(logs[0])
 
         plot1 = (
             ggplot(logs[0], aes(x="Module", y="Questions", fill="Module"))
@@ -319,6 +331,7 @@ def generate_figures(report_title, logs):
         plot3.save(f"{plot_path}plots/weekly/3.png", verbose=False)
         plot4.save(f"{plot_path}plots/weekly/4.png", verbose=False)
 
+        logs[2]["Lesson"] = logs[2]["Lesson"].cat.remove_unused_categories()
         plot5 = (
             ggplot(
                 logs[2],
@@ -333,7 +346,7 @@ def generate_figures(report_title, logs):
                 title="Percentage Score Per Day",
             )
             + theme(figure_size=(10, 6))
-            + scale_x_datetime(breaks="1 days")
+            + scale_x_datetime(date_breaks="1 days")
         )
 
         plot5.save(f"{plot_path}plots/weekly/5.png", verbose=False)
@@ -502,6 +515,8 @@ def generate_figures(report_title, logs):
             for week in range(abs(int(number_of_weeks.days / 7)) + 1)
         ]
         breaks = breaks[::-1]
+        logs[6] = logs[6][logs[6]["Week"].dt.date.isin(breaks)]
+        logs[6]["Lesson"] = logs[6]["Lesson"].cat.remove_unused_categories()
         plot4a = (
             ggplot(
                 logs[6],
@@ -509,13 +524,13 @@ def generate_figures(report_title, logs):
             )
             + geom_line()
             + geom_point()
-            + scale_color_manual(values=all_colors)
+            + scale_color_manual(values=all_colors[:len(logs[6]["Lesson"].cat.categories)])
             + labs(
                 x="Week Beginning",
                 y="Percentage",
                 title="Percentage Score Per Week",
             )
-            + theme(figure_size=(10, 6))
+            + theme(figure_size=(10, 6), legend_position="top")
             + scale_x_datetime(breaks=breaks)
         )
 

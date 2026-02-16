@@ -15,7 +15,7 @@ def run_practice(log):
         "\nYou have chosen practice mode. You can now choose from any of the available lessons to practise a mixture of words and phrases.\n\n"
     )
     time.sleep(1.5)
-    _ = input("\n\nPress Enter to continue")
+    _ = input("Press Enter to continue")
 
     playing = True
     while playing:
@@ -88,10 +88,6 @@ def run_practice(log):
                 correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_lesson(lesson, questions)
                 )
-                if questions:
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype, eng_typo
-                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
@@ -99,7 +95,8 @@ def run_practice(log):
                 correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                if questions:
+
+            if questions:
                     log = vf.update_log(
                         log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
@@ -113,23 +110,20 @@ def run_practice(log):
             if ltype == "phrases":
                 questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
+                correct, questions, asked_questions, eng_typo = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                if questions:
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
-                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
 
-                correct, questions, asked_questions = (
+                correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                if questions:
+
+            if questions:
                     log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
 
         elif topic == "newspapers":
@@ -144,10 +138,6 @@ def run_practice(log):
                 correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_lesson(lesson, questions)
                 )
-                if questions:
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
-                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
@@ -155,10 +145,12 @@ def run_practice(log):
                 correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                if questions:
+            
+            if questions:
                     log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
+
 
         elif topic == "spoken":
             lesson = vf.select_lesson(lo.spoken)
@@ -169,23 +161,21 @@ def run_practice(log):
             if ltype == "phrases":
                 questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
+                correct, questions, asked_questions, eng_typo = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                if questions:
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
-                    )
+
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
 
-                correct, questions, asked_questions = (
+                correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                if questions:
+
+            if questions:
                     log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
 
         elif topic == "web":
@@ -197,24 +187,22 @@ def run_practice(log):
             if ltype == "phrases":
                 questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
+                correct, questions, asked_questions, eng_typo = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                if questions:
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
-                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
 
-                correct, questions, asked_questions = (
+                correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                if questions:
+            
+            if questions:
                     log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
+
 
         elif topic == "general":
             lesson = vf.select_lesson(lo.general)
@@ -225,48 +213,44 @@ def run_practice(log):
             if ltype == "phrases":
                 questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
+                correct, questions, asked_questions, eng_typo = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                if questions:
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
-                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
 
-                correct, questions, asked_questions = (
+                correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                if questions:
+            
+            if questions:
                     log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
+
 
         elif topic == "all":
             lesson = lo.all.all
             if ltype == "phrases":
                 questions = vf.select_questions(lesson)
 
-                correct, questions, asked_questions = vf.randomly_generated_lesson(
+                correct, questions, asked_questions, eng_typo = vf.randomly_generated_lesson(
                     lesson, questions
                 )
-                if questions:
-                    log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
-                    )
 
             elif ltype == "vocabulary":
                 words = vf.select_words(lesson)
 
-                correct, questions, asked_questions = (
+                correct, questions, asked_questions, eng_typo = (
                     vf.randomly_generated_vocab_lesson(lesson, words)
                 )
-                if questions:
+            
+            if questions:
                     log = vf.update_log(
-                        log, topic, lesson.name, questions, correct, ltype
+                        log, topic, lesson.name, questions, correct, ltype, eng_typo
                     )
+
 
         if topic != "all":
             try:
@@ -365,39 +349,43 @@ def run_test():
 
     if topic == "core":
         lesson = vf.select_lesson(lo.core, test=True)
-
-        print("\nBeginning test...\n")
+        total = 2*len(lesson.questions)
+        print("\nBeginning test...\nType exit to end the test. All progress will be lost.\n")
         correct, complete, log = vf.test(lesson)
 
     elif topic == "fiction":
         lesson = vf.select_lesson(lo.fiction, test=True)
-
-        print("\nBeginning test...\n")
+        total = 2*len(lesson.questions)
+        print("\nBeginning test...\nType exit to end the test. All progress will be lost.\n")
         correct, complete, log = vf.test(lesson)
 
     elif topic == "newspapers":
         lesson = vf.select_lesson(lo.newspapers, test=True)
-        print("\nBeginning test...\n")
+        total = 2*len(lesson.questions)
+        print("\nBeginning test...\nType exit to end the test. All progress will be lost.\n")
         correct, complete, log = vf.test(lesson)
 
     elif topic == "spoken":
         lesson = vf.select_lesson(lo.spoken, test=True)
-        print("\nBeginning test...\n")
+        total = 2*len(lesson.questions)
+        print("\nBeginning test...\nType exit to end the test. All progress will be lost.\n")
         correct, complete, log = vf.test(lesson)
 
     elif topic == "web":
         lesson = vf.select_lesson(lo.web, test=True)
-        print("\nBeginning test...\n")
+        total = 2*len(lesson.questions)
+        print("\nBeginning test...\nType exit to end the test. All progress will be lost.\n")
         correct, complete, log = vf.test(lesson)
 
     elif topic == "general":
         lesson = vf.select_lesson(lo.general, test=True)
-        print("\nBeginning test...\n")
+        total = 2*len(lesson.questions)
+        print("\nBeginning test...\nType exit to end the test. All progress will be lost.\n")
         correct, complete, log = vf.test(lesson)
 
     if complete:
         print(
-            f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct}."
+            f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
         )
         fg.generate_test_figures(log)
 

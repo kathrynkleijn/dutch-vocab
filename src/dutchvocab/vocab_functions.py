@@ -728,15 +728,15 @@ def test(lesson):
                 log = pd.concat(
                     [
                         log,
-                        pd.DataFrame(
-                            {"Result": "Incorrect", "Error": "Attempted exit"}
+                        pd.DataFrame([
+                            {"Result": "Incorrect", "Error": "Attempted exit"}]
                         ),
                     ]
                 )
                 continue
             else:
                 print("\nExiting...\n")
-                return correct, complete
+                return correct, complete, log
         if not answer:
             print("That's not right!")
             print(f"{dutch}\n")
@@ -745,7 +745,7 @@ def test(lesson):
                 [
                     log,
                     pd.DataFrame(
-                        {"Result": "Incorrect", "Error": "Vocab/Understanding"}
+                        [{"Result": "Incorrect", "Error": "Vocab/Understanding"}]
                     ),
                 ]
             )
@@ -768,14 +768,14 @@ def test(lesson):
                     [
                         log,
                         pd.DataFrame(
-                            {"Result": "Incorrect", "Error": "Attempted exit"}
+                            [{"Result": "Incorrect", "Error": "Attempted exit"}]
                         ),
                     ]
                 )
                 continue
             else:
                 print("\nExiting...\n")
-                return correct, complete
+                return correct, complete, log
         if not answer:
             print("That's not right!")
             print(f"{english}\n")
@@ -783,7 +783,7 @@ def test(lesson):
                 [
                     log,
                     pd.DataFrame(
-                        {"Result": "Incorrect", "Error": "Vocab/Understanding"}
+                        [{"Result": "Incorrect", "Error": "Vocab/Understanding"}]
                     ),
                 ]
             )
@@ -820,7 +820,7 @@ def visualisation_today(year=False, month=False, day=False):
     log = pd.read_csv("learning_log.csv")
     log_today = log[log.Date == chosen_date.strftime("%Y-%m-%d")]
 
-    log_today = log_today.groupby(["Type", "Module", "Lesson"]).agg(
+    log_today = log_today.groupby(["Type", "Module", "Lesson"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log_today = log_today.reset_index()

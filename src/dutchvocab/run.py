@@ -28,7 +28,7 @@ def main():
         char_delay=0,
         line_delay=0.2,
     )
-    time.sleep(1.0)
+    time.sleep(0.5)
     choose_lesson = input("\n\nPress Enter to continue")
 
     print("\n")
@@ -88,16 +88,16 @@ def main():
             )
 
             print("\nWeekly and monthly reports updated.")
-        # progress = input("Would you like to generate a progress report?  (Y/N)       ")
-        # if progress == "Y":
-        # make directories if non-existent
-        #     os.makedirs(f"{report_path}/Reports/Progress_Reports", exist_ok=True)
-        #     pdf = pdf_constructor.build_pdf(log_full, "Progress")
-        #     pdf.output(
-        #         f"Reports/Progress_Reports/{date.today().strftime('%Y%m%d')}_Report.pdf",
-        #         "F",
-        #     )
-        #     print("Progress report completed.")
+            progress = input("Would you like to generate a progress report?  (Y/N)       ")
+            if progress == "Y":
+            # make directories if non-existent
+                os.makedirs(f"{report_path}/Reports/Progress_Reports", exist_ok=True)
+                pdf = pdf_constructor.build_pdf(log_full, "Progress")
+                pdf.output(
+                    f"{report_path}Reports/Progress_Reports/{date.today().strftime('%Y%m%d')}_Report.pdf",
+                    "F",
+                )
+                print("Progress report completed.")
 
 
 if __name__ == "__main__":
