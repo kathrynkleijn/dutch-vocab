@@ -14,7 +14,7 @@ def run_practice(log):
     print(
         "\nYou have chosen practice mode. You can now choose from any of the available lessons to practise a mixture of words and phrases.\n\n"
     )
-    time.sleep(3.0)
+    time.sleep(1.5)
     _ = input("\n\nPress Enter to continue")
 
     playing = True
@@ -345,7 +345,7 @@ def run_test():
     print(
         "You have chosen test mode. You can choose to be tested on any of the available lessons. You will be given each word or phrase in English to translate first, then each in Dutch.\n\n"  # A report will be given at the end of the test."
     )
-    time.sleep(3.0)
+    time.sleep(1.5)
     _ = input("\n\nPress Enter to continue")
     print("\n\n")
 
