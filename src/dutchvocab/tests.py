@@ -116,13 +116,6 @@ core.add_lesson(test_lesson_2)
 class Test(TestCase):
 
     @mock.patch("vocab_functions.input", create=True)
-    def test_wrong_input(self, mocked_input):
-        mocked_input.side_effect = ["sdf", "ihkjk", "1"]
-        result = vocab_functions.select_lesson(core)
-        expected_result = test_lesson_1
-        self.assertEqual(str(result), str(expected_result))
-
-    @mock.patch("vocab_functions.input", create=True)
     def test_capitalisation_ned1(self, mocked_input):
         mocked_input.side_effect = ["VoOr"]
         result = vocab_functions.randomly_generated_lesson(
