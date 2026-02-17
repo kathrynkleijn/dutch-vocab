@@ -207,6 +207,9 @@ def dutch_question(
     answer_formatted = answer_formatting(answer, dutch, lesson, 0)
     if "I am" in answer_formatted:
         answer_formatted = answer_formatted.replace("I am", "I'm")
+    
+    if "town" in answer_formatted:
+        answer_formatted = answer_formatted.replace("town", "city")
 
     commas = answer_formatted.count(",")
     if commas == 1 and len(answer_formatted.split()) < 6 or commas > 1:

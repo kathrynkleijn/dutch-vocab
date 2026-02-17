@@ -158,7 +158,7 @@ core = [
     },
     {
         "betalen": "to pay",
-        "Bovendien betaalt de stad de energiefactuur": "The town also pays the energy bill",
+        "Bovendien betaalt de stad de energiefactuur": "The city also pays the energy bill",
         "de/het soort": "kind of",
         "Ze stond die eerste nacht met haar tentje op een soort dorpsplein": "She stood that first night with her tent on a kind of village square",
         "sluiten": "to close",
@@ -1247,7 +1247,6 @@ alternatives = {
     "A start was made with reforms": ["Reforms were started", "Reforms were intiated"],
     "We were learning and our parents and teachers were pleased to see that": "We were learning and that pleased our parents and teachers",
     "The light wintery weather seems set to continue the coming weekend and probably beyond": "The light wintery weather seems set to continue the coming weekend and probably also afterwards",
-    "The town also pays the energy bill": "The city also pays the energy bill",
     "The sentence finishes with a full stop": "The sentence ends with a full stop",
     "A reason for the divorce was not given": "No reason was given for the divorce",
     "William goes home with his father to fetch some things": [
@@ -1309,11 +1308,6 @@ alternatives = {
     "iron (adj.)": "iron",
     "concrete (adj.)": "concrete",
     "concrete (n.)": "concrete",
-    "A storm surge washed away the whole city in one go, according to legend": [
-        "A storm surge washed away the whole town in one go, according to legend",
-        "A storm surge washed the whole town away in one go, according to legend",
-        "A storm surge washed the whole city away in one go, according to legend",
-    ],
     "The forge I donate to you": "I donate the forge to you",
     "My legs shook still when I walked to the bathroom": [
         "My legs were still shaking when I walked to the bathroom",
