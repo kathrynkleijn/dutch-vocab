@@ -200,11 +200,12 @@ def typos_and_word_order(answer, test):
 
     return score >= threshold
 
+
 def ignore_brackets(test):
 
     brackets = re.findall("\((.*?)\)", test)[0]
-    
-    return test.replace(f"({brackets})","").strip()
+
+    return test.replace(f"({brackets})", "").strip()
 
 
 def dutch_question(
@@ -214,7 +215,7 @@ def dutch_question(
     answer_formatted = answer_formatting(answer, dutch, lesson, 0)
     if "I am" in answer_formatted:
         answer_formatted = answer_formatted.replace("I am", "I'm")
-    
+
     if "town" in answer_formatted:
         answer_formatted = answer_formatted.replace("town", "city")
 
@@ -782,8 +783,8 @@ def test(lesson):
                 log = pd.concat(
                     [
                         log,
-                        pd.DataFrame([
-                            {"Result": "Incorrect", "Error": "Attempted exit"}]
+                        pd.DataFrame(
+                            [{"Result": "Incorrect", "Error": "Attempted exit"}]
                         ),
                     ]
                 )
