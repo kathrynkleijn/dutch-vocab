@@ -446,7 +446,7 @@ fiction_vocab = [
         "kruipen": "to crawl",
         "het gebaar": "gesture",
         "de hemel": "sky, heaven",
-        "het lijf": "body",
+        "het lijf": "body (animal)",
         "rukken": "to snatch, to tear",
         "het spoor": "track, trace",
         "de verwondering": "surprise",
@@ -1341,5 +1341,4 @@ alternatives = {
     "I got along with everyone quickly": "I got on quickly with everyone",
     "field (of research)": "field",
     "Many of our listeners complain of continuous headaches": "Many of our listeners complain about continuous headaches",
-    "body (animal)": "body",
 }

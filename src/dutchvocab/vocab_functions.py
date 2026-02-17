@@ -10,6 +10,7 @@ import numpy as np
 from fuzzywuzzy import fuzz
 import inquirer
 import time
+import re
 
 
 def slow_print(text, char_delay=0.01, line_delay=0.2):
@@ -199,6 +200,12 @@ def typos_and_word_order(answer, test):
 
     return score >= threshold
 
+def ignore_brackets(test):
+
+    brackets = re.findall("\((.*?)\)", test)[0]
+    
+    return test.replace(f"({brackets})","").strip()
+
 
 def dutch_question(
     answer, correct, dutch, english, lesson, eng_typo=0, log=[], test=False
@@ -270,6 +277,35 @@ def dutch_question(
                         ),
                     ]
                 )
+        elif "(" in english:
+            english_updated = ignore_brackets(english)
+            if answer_formatted == english_updated:
+                correct += 1
+                if test:
+                    log = pd.concat(
+                        [
+                            log,
+                            pd.DataFrame(
+                                {"Result": "Correct", "Error": "Ok"},
+                                index=pd.Index([date.today()]),
+                            ),
+                        ]
+                    )
+            elif typos_and_word_order(answer_formatted, english_updated):
+                print("Correct! (You have a typo or different word order)")
+                print(f"{english}\n")
+                correct += 1
+                eng_typo += 1
+                if test:
+                    log = pd.concat(
+                        [
+                            log,
+                            pd.DataFrame(
+                                {"Result": "Correct", "Error": "Typo"},
+                                index=pd.Index([date.today()]),
+                            ),
+                        ]
+                    )
         elif english in lessons.alternatives.keys():
             alternatives = lessons.alternatives[english]
             if isinstance(alternatives, list):
@@ -431,6 +467,21 @@ def english_question(answer, correct, dutch, english, lesson, log=[], test=False
                         log,
                         pd.DataFrame(
                             {"Result": "Inorrect", "Error": "Vocab/Understanding"},
+                            index=pd.Index([date.today()]),
+                        ),
+                    ]
+                )
+    elif "(" in dutch and "(zich)" not in dutch:
+        dutch_updated = ignore_brackets(dutch)
+        if answer == dutch_updated:
+            print("Correct!\n")
+            correct += 1
+            if test:
+                log = pd.concat(
+                    [
+                        log,
+                        pd.DataFrame(
+                            {"Result": "Correct", "Error": "Ok"},
                             index=pd.Index([date.today()]),
                         ),
                     ]

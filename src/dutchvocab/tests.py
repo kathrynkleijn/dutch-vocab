@@ -108,6 +108,19 @@ test_lesson_20.add_question(
     "Actually I'm curious about that",
 )
 
+test_lesson_21 = lesson_objects.Lesson(21, "core")
+test_lesson_21.add_question(
+    "het lijf",
+    "body (animal)",
+)
+
+test_lesson_22 = lesson_objects.Lesson(22, "core")
+test_lesson_22.add_question(
+    "bevinden (zich)",
+    "to find",
+)
+
+
 core = lesson_objects.Topic("core")
 core.add_lesson(test_lesson_1)
 core.add_lesson(test_lesson_2)
@@ -490,6 +503,39 @@ class Test(TestCase):
         self.assertEqual(
             result[0],
             expected_result,
+        )
+    
+    @mock.patch("vocab_functions.input", create=True)
+    def test_brackets(self, mocked_input):
+        mocked_input.side_effect = [
+            "body",
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_21), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(
+            result[0],
+            expected_result,
+        )
+    
+    @mock.patch("vocab_functions.input", create=True)
+    def test_brackets_ned(self, mocked_input):
+        mocked_input.side_effect = [
+            "bevinden (zich)",
+            "bevinden"
+        ]
+        result1 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_22), 1, testing=1
+        )
+        result2 = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_22), 1, testing=1
+        )
+        expected_result1 = 1
+        expected_result2 = 0
+        self.assertEqual(
+            (result1[0],result2[0]),
+            (expected_result1,expected_result2)
         )
 
 
