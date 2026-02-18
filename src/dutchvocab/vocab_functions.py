@@ -208,10 +208,142 @@ def ignore_brackets(test):
     return test.replace(f"({brackets})", "").strip()
 
 
+def check_answer(
+    user_answer,
+    correct_answer,
+    dutch_to_english,
+    phrases,
+    test=False,
+    log=None,
+    typo_count=0,
+):
+
+    # exact match
+    if user_answer == correct_answer:
+        print("Correct!\n")
+        return update_results(correct=True, test=test, log=log, typo_count=typo_count)
+
+    # typos in english
+    if dutch_to_english:
+        if typos_and_word_order(user_answer, correct_answer):
+            print("Correct! (You have a typo or different word order)")
+            print(f"{correct_answer}\n")
+            return update_results(
+                correct=True,
+                test=test,
+                log=log,
+                typo_count=typo_count + 1,
+                error="Typo",
+            )
+
+    # handle brackets
+    if "(" in correct_answer and "(zich)" not in correct_answer:
+        updated_answer = ignore_brackets(correct_answer)
+        if user_answer == updated_answer:
+            print("Correct!")
+            return update_results(
+                correct=True, test=test, log=log, typo_count=typo_count
+            )
+        if dutch_to_english:
+            if typos_and_word_order(user_answer, updated_answer):
+                print("Correct! (You have a typo or different word order)")
+                print(f"{correct_answer}\n")
+                return update_results(
+                    correct=True,
+                    test=test,
+                    log=log,
+                    typo_count=typo_count + 1,
+                    error="Typo",
+                )
+
+    # alternatives
+    if correct_answer in lessons.alternatives.keys():
+        alternatives = lessons.alternatives[correct_answer]
+        # multiple alternatives
+        if isinstance(alternatives, list):
+            if user_answer in alternatives:
+                print("Correct!\n")
+                return update_results(
+                    correct=True, test=test, log=log, typo_count=typo_count
+                )
+            if dutch_to_english:
+                if any(typos_and_word_order(user_answer, alt) for alt in alternatives):
+                    print("Correct! (You have a typo or different word order)")
+                    print(f"{correct_answer}\n")
+                    return update_results(
+                        correct=True,
+                        test=test,
+                        log=log,
+                        typo_count=typo_count + 1,
+                        error="Typo",
+                    )
+        # single alternative
+        else:
+            if user_answer == alternatives:
+                print("Correct!\n")
+                return update_results(
+                    correct=True, test=test, log=log, typo_count=typo_count
+                )
+            if dutch_to_english:
+                if typos_and_word_order(
+                    user_answer,
+                    alternatives,
+                ):
+                    print("Correct! (You have a typo or different word order)")
+                    print(f"{correct_answer}\n")
+                    return update_results(
+                        correct=True,
+                        test=test,
+                        log=log,
+                        typo_count=typo_count + 1,
+                        error="Typo",
+                    )
+
+    # no match
+    print("That's not right!")
+    print(f"{correct_answer}\n")
+    return update_results(
+        correct=False,
+        test=test,
+        log=log,
+        typo_count=typo_count,
+        error="Vocab/Understanding",
+    )
+
+
+def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
+    if correct and not test:
+        return 1, typo_count
+    elif correct and test:
+        log = pd.concat(
+            [
+                log,
+                pd.DataFrame(
+                    {"Result": "Correct", "Error": error},
+                    index=pd.Index([date.today()]),
+                ),
+            ]
+        )
+        return 1, log
+    elif test:
+        log = pd.concat(
+            [
+                log,
+                pd.DataFrame(
+                    {"Result": "Incorrect", "Error": error},
+                    index=pd.Index([date.today()]),
+                ),
+            ]
+        )
+        return 0, log
+    return 0, typo_count
+
+
 def dutch_question(
     answer, correct, dutch, english, lesson, eng_typo=0, log=[], test=False
 ):
 
+    # format answer
     answer_formatted = answer_formatting(answer, dutch, lesson, 0)
     if "I am" in answer_formatted:
         answer_formatted = answer_formatted.replace("I am", "I'm")
@@ -249,179 +381,19 @@ def dutch_question(
                         ),
                     ]
                 )
-    else:
-        if answer_formatted == english:
-            print("Correct!\n")
-            correct += 1
-            if test:
-                log = pd.concat(
-                    [
-                        log,
-                        pd.DataFrame(
-                            {"Result": "Correct", "Error": "Ok"},
-                            index=pd.Index([date.today()]),
-                        ),
-                    ]
-                )
-        elif typos_and_word_order(answer_formatted, english):
-            print("Correct! (You have a typo or different word order)")
-            print(f"{english}\n")
-            correct += 1
-            eng_typo += 1
-            if test:
-                log = pd.concat(
-                    [
-                        log,
-                        pd.DataFrame(
-                            {"Result": "Correct", "Error": "Typo"},
-                            index=pd.Index([date.today()]),
-                        ),
-                    ]
-                )
-        elif "(" in english:
-            english_updated = ignore_brackets(english)
-            if answer_formatted == english_updated:
-                correct += 1
-                if test:
-                    log = pd.concat(
-                        [
-                            log,
-                            pd.DataFrame(
-                                {"Result": "Correct", "Error": "Ok"},
-                                index=pd.Index([date.today()]),
-                            ),
-                        ]
-                    )
-            elif typos_and_word_order(answer_formatted, english_updated):
-                print("Correct! (You have a typo or different word order)")
-                print(f"{english}\n")
-                correct += 1
-                eng_typo += 1
-                if test:
-                    log = pd.concat(
-                        [
-                            log,
-                            pd.DataFrame(
-                                {"Result": "Correct", "Error": "Typo"},
-                                index=pd.Index([date.today()]),
-                            ),
-                        ]
-                    )
-        elif english in lessons.alternatives.keys():
-            alternatives = lessons.alternatives[english]
-            if isinstance(alternatives, list):
-                if answer_formatted in alternatives:
-                    print("Correct!\n")
-                    correct += 1
-                    if test:
-                        log = pd.concat(
-                            [
-                                log,
-                                pd.DataFrame(
-                                    {"Result": "Correct", "Error": "Ok"},
-                                    index=pd.Index([date.today()]),
-                                ),
-                            ]
-                        )
-                elif any(
-                    typos_and_word_order(answer_formatted, alt) for alt in alternatives
-                ):
-                    print("Correct! (You have a typo or different word order)")
-                    print(f"{english}\n")
-                    correct += 1
-                    eng_typo += 1
-                    if test:
-                        log = pd.concat(
-                            [
-                                log,
-                                pd.DataFrame(
-                                    {"Result": "Correct", "Error": "Typo"},
-                                    index=pd.Index([date.today()]),
-                                ),
-                            ]
-                        )
-                else:
-                    print("That's not right!")
-                    print(f"{english}\n")
-                    if test:
-                        log = pd.concat(
-                            [
-                                log,
-                                pd.DataFrame(
-                                    {
-                                        "Result": "Inorrect",
-                                        "Error": "Vocab/Understanding",
-                                    },
-                                    index=pd.Index([date.today()]),
-                                ),
-                            ]
-                        )
-            else:
-                if answer_formatted == alternatives:
-                    print("Correct!\n")
-                    correct += 1
-                    if test:
-                        log = pd.concat(
-                            [
-                                log,
-                                pd.DataFrame(
-                                    {"Result": "Correct", "Error": "Ok"},
-                                    index=pd.Index([date.today()]),
-                                ),
-                            ]
-                        )
-                elif typos_and_word_order(
-                    answer_formatted,
-                    alternatives,
-                ):
-                    print("Correct! (You have a typo or different word order)")
-                    print(f"{english}\n")
-                    correct += 1
-                    eng_typo += 1
-                    if test:
-                        log = pd.concat(
-                            [
-                                log,
-                                pd.DataFrame(
-                                    {"Result": "Correct", "Error": "Typo"},
-                                    index=pd.Index([date.today()]),
-                                ),
-                            ]
-                        )
-                else:
-                    print("That's not right!")
-                    print(f"{english}\n")
-                    if test:
-                        log = pd.concat(
-                            [
-                                log,
-                                pd.DataFrame(
-                                    {
-                                        "Result": "Incorrect",
-                                        "Error": "Vocab/Understanding",
-                                    },
-                                    index=pd.Index([date.today()]),
-                                ),
-                            ]
-                        )
 
-        else:
-            print("That's not right!")
-            print(f"{english}\n")
-            if test:
-                log = pd.concat(
-                    [
-                        log,
-                        pd.DataFrame(
-                            {"Result": "Incorrect", "Error": "Vocab/Understanding"},
-                            index=pd.Index([date.today()]),
-                        ),
-                    ]
-                )
-    if test:
-        return correct, log
-    else:
-        return correct, eng_typo
+    result = check_answer(
+        user_answer=answer_formatted,
+        correct_answer=english,
+        lesson=lesson,
+        dutch_to_english=True,
+        phrases=True,
+        test=test,
+        log=log,
+        typo_count=eng_typo,
+    )
+
+    return result
 
 
 def english_question(answer, correct, dutch, english, lesson, log=[], test=False):
