@@ -168,6 +168,11 @@ def answer_formatting(answer, test, lesson, language, correct_answer=""):
         if len(test.split()) > 2 and len(correct_answer.split()) > 2:
             answer_words[0] = answer_words[0].capitalize()
 
+        answer_formatted = " ".join(word for word in answer_words)
+
+        # check for wij/we, zij/ze, jij/je
+        answer_formatted = accept_alternatives(correct_answer, answer_formatted)
+
     else:
         for word in lessons.proper_nouns_eng:
             if word.lower() in answer_words:
@@ -178,7 +183,15 @@ def answer_formatting(answer, test, lesson, language, correct_answer=""):
         if len(test.split()) > 2 and len(lesson.questions[test].split()) > 2:
             answer_words[0] = answer_words[0].capitalize()
 
-    return " ".join(word for word in answer_words)
+        answer_formatted = " ".join(word for word in answer_words)
+
+        if "I am" in answer_formatted:
+            answer_formatted = answer_formatted.replace("I am", "I'm")
+
+        if "town" in answer_formatted:
+            answer_formatted = answer_formatted.replace("town", "city")
+
+    return answer_formatted
 
 
 def typos_and_word_order(answer, test):
@@ -206,6 +219,37 @@ def ignore_brackets(test):
     brackets = re.findall("\((.*?)\)", test)[0]
 
     return test.replace(f"({brackets})", "").strip()
+
+
+def question(language, dutch, english, lesson, log=None, eng_typo=0, test=False):
+    if language == 0:
+        question = dutch
+        correct_answer = english
+    else:
+        question = english
+        correct_answer = dutch
+
+    answer = input(f"{question}         ")
+    if answer.lower() == "exit":
+        return False
+    if not answer:
+        print("That's not right!")
+        print(f"{correct_answer}\n")
+        return 0, 0
+    else:
+        answer_formatted = answer_formatting(
+            answer, question, lesson, language, correct_answer=correct_answer
+        )
+        result = check_answer(
+            user_answer=answer_formatted,
+            correct_answer=correct_answer,
+            dutch_to_english=language,
+            phrases=True,
+            test=test,
+            log=log,
+            typo_count=eng_typo,
+        )
+        return result
 
 
 def check_answer(
@@ -351,17 +395,7 @@ def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
     return 0, typo_count
 
 
-def dutch_question(
-    answer, correct, dutch, english, lesson, eng_typo=0, log=[], test=False
-):
-
-    # format answer
-    answer_formatted = answer_formatting(answer, dutch, lesson, 0)
-    if "I am" in answer_formatted:
-        answer_formatted = answer_formatted.replace("I am", "I'm")
-
-    if "town" in answer_formatted:
-        answer_formatted = answer_formatted.replace("town", "city")
+def dutch_question(answer_formatted, english, eng_typo=0, log=[], test=False):
 
     commas = answer_formatted.count(",")
     if commas == 1 and len(answer_formatted.split()) < 6 or commas > 1:
@@ -369,7 +403,6 @@ def dutch_question(
         test_meanings = [item.strip() for item in english.split(",")]
         if Counter(answer_meanings) == Counter(test_meanings):
             print("Correct!\n")
-            correct += 1
             if test:
                 log = pd.concat(
                     [
@@ -432,7 +465,7 @@ def english_question(answer, dutch, english, lesson, log=[], test=False):
     return result
 
 
-def dutch_word(answer, correct, english, eng_typo):
+def dutch_word(answer, english, eng_typo):
 
     answer_words = answer.lower().split()
     answer_formatted = " ".join(word for word in answer_words)
@@ -442,7 +475,6 @@ def dutch_word(answer, correct, english, eng_typo):
         test_meanings = [item.strip() for item in english.split(",")]
         if Counter(answer_meanings) == Counter(test_meanings):
             print("Correct!\n")
-            correct += 1
             return 1, 0
         else:
             print("That's not right!")
@@ -485,7 +517,7 @@ def randomly_generated_lesson(lesson, questions, testing=None):
         all_questions = all_questions[:questions]
     elif questions > len(all_questions):
         extra = math.ceil(questions / len(all_questions)) - 1
-        for i in range(extra):
+        for _ in range(extra):
             extra_questions = list(lesson.questions.items())
             all_questions.extend(random.shuffle(extra_questions))
 
@@ -511,29 +543,22 @@ def randomly_generated_lesson(lesson, questions, testing=None):
                 print("That's not right!")
                 print(f"{english}\n")
             else:
-                result = dutch_question(
-                    answer, correct, dutch, english, lesson, eng_typo
+                answer = answer_formatting(
+                    answer, dutch, lesson, language, correct_answer=english
                 )
+                result = dutch_question(answer, english, eng_typo=eng_typo)
                 correct += result[0]
                 eng_typo += result[1]
 
-            asked_questions.append((0, dutch, english))
-
         else:
             # English question
-            answer = input(f"{english}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
+            result = question(language, dutch, english, lesson)
+            if not result:
                 questions = question_number - 1
                 break
-            if not answer:
-                print("That's not right!")
-                print(f"{dutch}\n")
-            else:
-                result = english_question(answer, dutch, english, lesson)
-                correct += result[0]
+            correct += result[0]
 
-            asked_questions.append((1, dutch, english))
+        asked_questions.append((language, dutch, english))
 
         # count questions
         question_number += 1
@@ -576,27 +601,19 @@ def randomly_generated_vocab_lesson(lesson, words):
                 print("That's not right!")
                 print(f"{english}\n")
             else:
-                result = dutch_word(answer, correct, english, eng_typo)
+                result = dutch_word(answer, english, eng_typo)
                 correct += result[0]
                 eng_typo += result[1]
 
-            asked_questions.append((0, dutch, english))
-
         else:
             # English question
-            answer = input(f"{english}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
+            result = question(language, dutch, english, lesson)
+            if not result:
                 words = question_number - 1
                 break
-            if not answer:
-                print("That's not right!")
-                print(f"{dutch}\n")
-            else:
-                result = english_word(answer, dutch)
-                correct += result[0]
+            correct += result[0]
 
-            asked_questions.append((1, dutch, english))
+        asked_questions.append((language, dutch, english))
 
         # count questions
         question_number += 1
@@ -626,22 +643,19 @@ def repeated_lesson(lesson, questions, all_questions=[]):
                 print("That's not right!")
                 print(f"{english}\n")
             else:
-                result = dutch_question(answer, correct, dutch, english, lesson)
+                answer = answer_formatting(
+                    answer, dutch, lesson, language, correct_answer=english
+                )
+                result = dutch_question(answer, english)
                 correct += result[0]
 
         else:
             # English question
-            answer = input(f"{english}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
+            result = question(language, dutch, english, lesson)
+            if not result:
                 questions = question_number - 1
                 break
-            if not answer:
-                print("That's not right!")
-                print(f"{dutch}\n")
-            else:
-                result = english_question(answer, dutch, english, lesson)
-                correct += result[0]
+            correct += result[0]
 
         # count questions
         question_number += 1
