@@ -132,7 +132,7 @@ class Test(TestCase):
     def test_capitalisation_ned1(self, mocked_input):
         mocked_input.side_effect = ["VoOr"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_1), 1, testing=1
+            copy.deepcopy(test_lesson_1), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -141,7 +141,7 @@ class Test(TestCase):
     def test_capitalisation_eng1(self, mocked_input):
         mocked_input.side_effect = ["FOR, In front Of"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_1), 1, testing=0
+            copy.deepcopy(test_lesson_1), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -150,7 +150,7 @@ class Test(TestCase):
     def test_capitalisation_ned2(self, mocked_input):
         mocked_input.side_effect = ["hij geeft de BLoemen aan lena"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_2), 1, testing=1
+            copy.deepcopy(test_lesson_2), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -159,7 +159,7 @@ class Test(TestCase):
     def test_capitalisation_eng2(self, mocked_input):
         mocked_input.side_effect = ["He gives THE Flowers to lEna"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_2), 1, testing=0
+            copy.deepcopy(test_lesson_2), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -170,7 +170,7 @@ class Test(TestCase):
             "i get thirsty when i see that bottle standing there"
         ]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_4), 1, testing=0
+            copy.deepcopy(test_lesson_4), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -179,7 +179,7 @@ class Test(TestCase):
     def test_capitalisation_ned3(self, mocked_input):
         mocked_input.side_effect = ["de Mens"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_8), 1, testing=1
+            copy.deepcopy(test_lesson_8), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -188,7 +188,7 @@ class Test(TestCase):
     def test_capitalisation_eng4(self, mocked_input):
         mocked_input.side_effect = ["Human"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_8), 1, testing=0
+            copy.deepcopy(test_lesson_8), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -197,7 +197,7 @@ class Test(TestCase):
     def test_capitalisation_ned4(self, mocked_input):
         mocked_input.side_effect = ["de heleboel"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_9), 1, testing=1
+            copy.deepcopy(test_lesson_9), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -206,7 +206,7 @@ class Test(TestCase):
     def test_capitalisation_eng5(self, mocked_input):
         mocked_input.side_effect = ["to prefer"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_14), 1, testing=0
+            copy.deepcopy(test_lesson_14), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -215,7 +215,7 @@ class Test(TestCase):
     def test_capitalisation_ned5(self, mocked_input):
         mocked_input.side_effect = ["willen het liefst"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_14), 1, testing=1
+            copy.deepcopy(test_lesson_14), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -224,7 +224,7 @@ class Test(TestCase):
     def test_wij_we(self, mocked_input):
         mocked_input.side_effect = ["Wij staan voor de deur van het hotel"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_3), 1, testing=1
+            copy.deepcopy(test_lesson_3), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -233,7 +233,7 @@ class Test(TestCase):
     def test_wij_we2(self, mocked_input):
         mocked_input.side_effect = ["We staan voor de deur van het hotel"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_3), 1, testing=1
+            copy.deepcopy(test_lesson_3), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -244,7 +244,7 @@ class Test(TestCase):
             "Zij stond die eerste nacht met haar tentje op een soort dorpsplein"
         ]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_11), 1, testing=1
+            copy.deepcopy(test_lesson_11), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -253,7 +253,7 @@ class Test(TestCase):
     def test_meaning_order(self, mocked_input):
         mocked_input.side_effect = ["in front of, for"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_1), 1, testing=0
+            copy.deepcopy(test_lesson_1), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -264,7 +264,7 @@ class Test(TestCase):
             "All the information about camping can be found on the website"
         ]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_5), 1, testing=0
+            copy.deepcopy(test_lesson_5), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -273,7 +273,7 @@ class Test(TestCase):
     def test_alternative_answer_ned(self, mocked_input):
         mocked_input.side_effect = ["Na enkele seconden hoorde ik ook de auto"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_6), 1, testing=1
+            copy.deepcopy(test_lesson_6), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -286,13 +286,13 @@ class Test(TestCase):
             "He fixed her broken bicycle",
         ]
         result1 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_7), 1, testing=0
+            copy.deepcopy(test_lesson_7), 1, testing=1
         )
         result2 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_7), 1, testing=0
+            copy.deepcopy(test_lesson_7), 1, testing=1
         )
         result3 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_7), 1, testing=0
+            copy.deepcopy(test_lesson_7), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(
@@ -307,10 +307,10 @@ class Test(TestCase):
             "On the square near the church children were playing",
         ]
         result1 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_18), 1, testing=0
+            copy.deepcopy(test_lesson_18), 1, testing=1
         )
         result2 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_18), 1, testing=0
+            copy.deepcopy(test_lesson_18), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(
@@ -326,13 +326,13 @@ class Test(TestCase):
             "A storm surge washed the whole city away in one go, according to legend",
         ]
         result1 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_19), 1, testing=0
+            copy.deepcopy(test_lesson_19), 1, testing=1
         )
         result2 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_19), 1, testing=0
+            copy.deepcopy(test_lesson_19), 1, testing=1
         )
         result3 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_19), 1, testing=0
+            copy.deepcopy(test_lesson_19), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(
@@ -344,7 +344,7 @@ class Test(TestCase):
     def test_ned(self, mocked_input):
         mocked_input.side_effect = ["Het hotel was gesloten van augustus tot april"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_10), 1, testing=1
+            copy.deepcopy(test_lesson_10), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -353,7 +353,7 @@ class Test(TestCase):
     def test_eng1(self, mocked_input):
         mocked_input.side_effect = ["The hotel was closed from August to April"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_10), 1, testing=0
+            copy.deepcopy(test_lesson_10), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -362,7 +362,7 @@ class Test(TestCase):
     def test_eng2(self, mocked_input):
         mocked_input.side_effect = ["The city also pays the energy bil"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_12), 1, testing=0
+            copy.deepcopy(test_lesson_12), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -373,7 +373,7 @@ class Test(TestCase):
             "WE have two Dutch teachers who teach one hour per week to non-native speakers"
         ]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_13), 1, testing=0
+            copy.deepcopy(test_lesson_13), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -388,7 +388,7 @@ class Test(TestCase):
 
         with contextlib.redirect_stdout(fake_output):
             result = vocab_functions.randomly_generated_lesson(
-                copy.deepcopy(test_lesson_15), 1, testing=1
+                copy.deepcopy(test_lesson_15), 1, testing=0
             )
 
         expected_result = 0
@@ -402,7 +402,7 @@ class Test(TestCase):
     def test_empty(self, mocked_input):
         mocked_input.side_effect = [""]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_16), 1, testing=1
+            copy.deepcopy(test_lesson_16), 1, testing=0
         )
         expected_result = 0
         self.assertEqual(result[0], expected_result)
@@ -414,7 +414,7 @@ class Test(TestCase):
             "I get thisrty when I see that bottle standing there"
         ]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_4), 1, testing=0
+            copy.deepcopy(test_lesson_4), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -423,7 +423,7 @@ class Test(TestCase):
     def test_typo_eng2(self, mocked_input):
         mocked_input.side_effect = ["stil"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_17), 1, testing=0
+            copy.deepcopy(test_lesson_17), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -432,7 +432,7 @@ class Test(TestCase):
     def test_typo_eng3(self, mocked_input):
         mocked_input.side_effect = ["lot"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_9), 1, testing=0
+            copy.deepcopy(test_lesson_9), 1, testing=1
         )
         expected_result = 0
         self.assertEqual(result[0], expected_result)
@@ -441,7 +441,7 @@ class Test(TestCase):
     def test_order_eng1(self, mocked_input):
         mocked_input.side_effect = ["Mortgage rates are climbing currently"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_16), 1, testing=0
+            copy.deepcopy(test_lesson_16), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -450,7 +450,7 @@ class Test(TestCase):
     def test_order_eng1(self, mocked_input):
         mocked_input.side_effect = ["Mortgage rates are climbing currentluy"]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_16), 1, testing=0
+            copy.deepcopy(test_lesson_16), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -462,10 +462,10 @@ class Test(TestCase):
             "Actually I'm curious about that",
         ]
         result1 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_20), 1, testing=0
+            copy.deepcopy(test_lesson_20), 1, testing=1
         )
         result2 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_20), 1, testing=0
+            copy.deepcopy(test_lesson_20), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(
@@ -480,10 +480,10 @@ class Test(TestCase):
             "for,in front of",
         ]
         result1 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_1), 1, testing=0
+            copy.deepcopy(test_lesson_1), 1, testing=1
         )
         result2 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_1), 1, testing=0
+            copy.deepcopy(test_lesson_1), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(
@@ -497,46 +497,40 @@ class Test(TestCase):
             "A storm surge washed away the whole city in one go according to legend",
         ]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_19), 1, testing=0
+            copy.deepcopy(test_lesson_19), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(
             result[0],
             expected_result,
         )
-    
+
     @mock.patch("vocab_functions.input", create=True)
     def test_brackets(self, mocked_input):
         mocked_input.side_effect = [
             "body",
         ]
         result = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_21), 1, testing=0
+            copy.deepcopy(test_lesson_21), 1, testing=1
         )
         expected_result = 1
         self.assertEqual(
             result[0],
             expected_result,
         )
-    
+
     @mock.patch("vocab_functions.input", create=True)
     def test_brackets_ned(self, mocked_input):
-        mocked_input.side_effect = [
-            "bevinden (zich)",
-            "bevinden"
-        ]
+        mocked_input.side_effect = ["bevinden (zich)", "bevinden"]
         result1 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_22), 1, testing=1
+            copy.deepcopy(test_lesson_22), 1, testing=0
         )
         result2 = vocab_functions.randomly_generated_lesson(
-            copy.deepcopy(test_lesson_22), 1, testing=1
+            copy.deepcopy(test_lesson_22), 1, testing=0
         )
         expected_result1 = 1
         expected_result2 = 0
-        self.assertEqual(
-            (result1[0],result2[0]),
-            (expected_result1,expected_result2)
-        )
+        self.assertEqual((result1[0], result2[0]), (expected_result1, expected_result2))
 
 
 if __name__ == "__main__":

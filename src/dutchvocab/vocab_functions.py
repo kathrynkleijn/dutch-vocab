@@ -160,7 +160,7 @@ def accept_alternatives(test, answer):
 def answer_formatting(answer, test, lesson, language, correct_answer=""):
     answer_words = answer.lower().split()
 
-    if language:
+    if not language:
         for word in lessons.proper_nouns_ned:
             if word.lower() in answer_words:
                 index = answer_words.index(word.lower())
@@ -222,7 +222,7 @@ def ignore_brackets(test):
 
 
 def question(language, dutch, english, lesson, log=None, eng_typo=0, test=False):
-    if language == 0:
+    if language:
         question = dutch
         correct_answer = english
     else:
@@ -283,6 +283,18 @@ def check_answer(
                 typo_count=typo_count + 1,
                 error="Typo",
             )
+
+    # handle commas
+    if dutch_to_english:
+        commas = user_answer.count(",")
+        if commas == 1 and len(user_answer.split()) < 6 or commas > 1:
+            answer_meanings = [item.strip() for item in user_answer.split(",")]
+            test_meanings = [item.strip() for item in user_answer.split(",")]
+            if Counter(answer_meanings) == Counter(test_meanings):
+                print("Correct!\n")
+                return update_results(
+                    correct=True, test=test, log=log, typo_count=typo_count
+                )
 
     # handle brackets
     if "(" in correct_answer and "(zich)" not in correct_answer:
@@ -395,91 +407,10 @@ def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
     return 0, typo_count
 
 
-def dutch_question(answer_formatted, english, eng_typo=0, log=[], test=False):
-
-    commas = answer_formatted.count(",")
-    if commas == 1 and len(answer_formatted.split()) < 6 or commas > 1:
-        answer_meanings = [item.strip() for item in answer_formatted.split(",")]
-        test_meanings = [item.strip() for item in english.split(",")]
-        if Counter(answer_meanings) == Counter(test_meanings):
-            print("Correct!\n")
-            if test:
-                log = pd.concat(
-                    [
-                        log,
-                        pd.DataFrame(
-                            {"Result": "Correct", "Error": "Ok"},
-                            index=pd.Index([date.today()]),
-                        ),
-                    ]
-                )
-                return 1, log
-            else:
-                return 1, 0
-        else:
-            print("That's not right!")
-            print(f"{english}\n")
-            if test:
-                log = pd.concat(
-                    [
-                        log,
-                        pd.DataFrame(
-                            {"Result": "Incorrect", "Error": "Vocab/Understanding"},
-                            index=pd.Index([date.today()]),
-                        ),
-                    ]
-                )
-                return 0, log
-            else:
-                return 0, 0
-
-    result = check_answer(
-        user_answer=answer_formatted,
-        correct_answer=english,
-        dutch_to_english=True,
-        phrases=True,
-        test=test,
-        log=log,
-        typo_count=eng_typo,
-    )
-
-    return result
-
-
-def english_question(answer, dutch, english, lesson, log=[], test=False):
-
-    answer_formatted = answer_formatting(answer, english, lesson, 1, dutch)
-
-    # check for wij/we, zij/ze, jij/je
-    answer = accept_alternatives(dutch, answer_formatted)
-
-    result = check_answer(
-        user_answer=answer,
-        correct_answer=dutch,
-        dutch_to_english=True,
-        phrases=True,
-        test=test,
-        log=log,
-    )
-
-    return result
-
-
 def dutch_word(answer, english, eng_typo):
 
     answer_words = answer.lower().split()
     answer_formatted = " ".join(word for word in answer_words)
-
-    if any(True for char in answer_formatted if char in ","):
-        answer_meanings = [item.strip() for item in answer_formatted.split(",")]
-        test_meanings = [item.strip() for item in english.split(",")]
-        if Counter(answer_meanings) == Counter(test_meanings):
-            print("Correct!\n")
-            return 1, 0
-        else:
-            print("That's not right!")
-            print(f"{english}\n")
-            return 0, 0
 
     result = check_answer(
         user_answer=answer_formatted,
@@ -526,37 +457,19 @@ def randomly_generated_lesson(lesson, questions, testing=None):
     question_number = 1
     asked_questions = []
     for dutch, english in all_questions:
-        # choose language: 0 = Dutch->English, 1 = English->Dutch
+        # choose language: 0 = English->Dutch, 1 = Dutch->English
         if testing is None:
             language = random.randrange(2)
         else:
             language = testing
 
-        if language == 0:
-            # Dutch question
-            answer = input(f"{dutch}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
-                questions = question_number - 1
-                break
-            if not answer:
-                print("That's not right!")
-                print(f"{english}\n")
-            else:
-                answer = answer_formatting(
-                    answer, dutch, lesson, language, correct_answer=english
-                )
-                result = dutch_question(answer, english, eng_typo=eng_typo)
-                correct += result[0]
-                eng_typo += result[1]
-
-        else:
-            # English question
-            result = question(language, dutch, english, lesson)
-            if not result:
-                questions = question_number - 1
-                break
-            correct += result[0]
+        result = question(language, dutch, english, lesson, eng_typo)
+        if not result:
+            print("Exiting lesson...")
+            questions = question_number - 1
+            break
+        correct += result[0]
+        eng_typo += result[1]
 
         asked_questions.append((language, dutch, english))
 
@@ -587,10 +500,10 @@ def randomly_generated_vocab_lesson(lesson, words):
     question_number = 1
     asked_questions = []
     for dutch, english in all_questions:
-        # choose language: 0 = Dutch->English, 1 = English->Dutch
+        # choose language: 0 = English->Dutch, 1 = Dutch->English
         language = random.randrange(2)
 
-        if language == 0:
+        if language:
             # Dutch question
             answer = input(f"{dutch}         ")
             if answer.lower() == "exit":
@@ -606,6 +519,7 @@ def randomly_generated_vocab_lesson(lesson, words):
                 eng_typo += result[1]
 
         else:
+            # answer formatting here
             # English question
             result = question(language, dutch, english, lesson)
             if not result:
@@ -632,7 +546,7 @@ def repeated_lesson(lesson, questions, all_questions=[]):
 
     for language, dutch, english in all_questions:
 
-        if language == 0:
+        if language:
             # Dutch question
             answer = input(f"{dutch}         ")
             if answer.lower() == "exit":
@@ -646,7 +560,12 @@ def repeated_lesson(lesson, questions, all_questions=[]):
                 answer = answer_formatting(
                     answer, dutch, lesson, language, correct_answer=english
                 )
-                result = dutch_question(answer, english)
+                result = check_answer(
+                    user_answer=answer,
+                    correct_answer=english,
+                    dutch_to_english=True,
+                    phrases=True,
+                )
                 correct += result[0]
 
         else:
@@ -710,7 +629,15 @@ def test(lesson):
                 ]
             )
         else:
-            result = english_question(answer, dutch, english, lesson, log, test=True)
+            answer_formatted = answer_formatting(answer, english, lesson, 1, dutch)
+            result = check_answer(
+                user_answer=answer_formatted,
+                correct_answer=dutch,
+                dutch_to_english=True,
+                phrases=True,
+                test=True,
+                log=log,
+            )
             correct += result[0]
             log = result[1]
 
@@ -748,8 +675,13 @@ def test(lesson):
                 ]
             )
         else:
-            result = dutch_question(
-                answer, correct, dutch, english, lesson, log=log, test=True
+            result = check_answer(
+                user_answer=answer_formatted,
+                correct_answer=english,
+                dutch_to_english=True,
+                phrases=True,
+                test=True,
+                log=log,
             )
             correct += result[0]
             log = result[1]
