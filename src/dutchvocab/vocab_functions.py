@@ -267,6 +267,26 @@ def check_answer(
         print("Correct!\n")
         return update_results(correct=True, test=test, log=log, typo_count=typo_count)
 
+    # handle commas
+    if dutch_to_english:
+        commas = correct_answer.count(",")
+        # commas == 1 and len(correct_answer.split()) < 6 or commas > 1
+        if commas:
+            answer_meanings = [item.strip() for item in user_answer.split(",")]
+            test_meanings = [item.strip() for item in correct_answer.split(",")]
+            if test:
+                if Counter(answer_meanings) == Counter(test_meanings):
+                    print("Correct!\n")
+                    return update_results(
+                        correct=True, test=test, log=log, typo_count=typo_count
+                    )
+            else:
+                if set(answer_meanings) <= set(test_meanings):
+                    print("Correct!\n")
+                    return update_results(
+                        correct=True, test=test, log=log, typo_count=typo_count
+                    )
+
     # typos in english
     if dutch_to_english:
         if typos_and_word_order(user_answer, correct_answer):
@@ -283,18 +303,6 @@ def check_answer(
                 typo_count=typo_count + 1,
                 error="Typo",
             )
-
-    # handle commas
-    if dutch_to_english:
-        commas = user_answer.count(",")
-        if commas == 1 and len(user_answer.split()) < 6 or commas > 1:
-            answer_meanings = [item.strip() for item in user_answer.split(",")]
-            test_meanings = [item.strip() for item in user_answer.split(",")]
-            if Counter(answer_meanings) == Counter(test_meanings):
-                print("Correct!\n")
-                return update_results(
-                    correct=True, test=test, log=log, typo_count=typo_count
-                )
 
     # handle brackets
     if "(" in correct_answer and "(zich)" not in correct_answer:

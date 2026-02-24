@@ -259,6 +259,15 @@ class Test(TestCase):
         self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
+    def test_double_meaning(self, mocked_input):
+        mocked_input.side_effect = ["in front of"]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_1), 1, testing=1
+        )
+        expected_result = 1
+        self.assertEqual(result[0], expected_result)
+
+    @mock.patch("vocab_functions.input", create=True)
     def test_alternative_answer_eng(self, mocked_input):
         mocked_input.side_effect = [
             "All the information about camping can be found on the website"
