@@ -1,4 +1,4 @@
-# Dutch Vocabulary Lessons 0.3.1
+# Dutch Vocabulary Lessons 0.3.2
 
 
 Package to aid in learning Dutch vocabulary using a mixture of words and sentences for context. The lessons are based on the
