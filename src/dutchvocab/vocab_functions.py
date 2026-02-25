@@ -157,8 +157,11 @@ def accept_alternatives(test, answer):
         return answer
 
 
-def answer_formatting(answer, test, lesson, language, correct_answer=""):
+def answer_formatting(answer, test, lesson, language, phrases=True, correct_answer=""):
     answer_words = answer.lower().split()
+
+    if not phrases:
+        return " ".join(word for word in answer_words)
 
     if not language:
         for word in lessons.proper_nouns_ned:
@@ -221,7 +224,9 @@ def ignore_brackets(test):
     return test.replace(f"({brackets})", "").strip()
 
 
-def question(language, dutch, english, lesson, log=None, eng_typo=0, test=False):
+def question(
+    language, dutch, english, lesson, phrases=True, log=None, typo_count=0, test=False
+):
     if language:
         question = dutch
         correct_answer = english
@@ -235,19 +240,30 @@ def question(language, dutch, english, lesson, log=None, eng_typo=0, test=False)
     if not answer:
         print("That's not right!")
         print(f"{correct_answer}\n")
+        if test:
+            # default vocab/understanding until further development
+            log = pd.concat(
+                [
+                    log,
+                    pd.DataFrame(
+                        [{"Result": "Incorrect", "Error": "Vocab/Understanding"}]
+                    ),
+                ]
+            )
+            return 0, log
         return 0, 0
     else:
         answer_formatted = answer_formatting(
-            answer, question, lesson, language, correct_answer=correct_answer
+            answer, question, lesson, language, phrases, correct_answer=correct_answer
         )
         result = check_answer(
             user_answer=answer_formatted,
             correct_answer=correct_answer,
             dutch_to_english=language,
-            phrases=True,
+            phrases=phrases,
             test=test,
             log=log,
-            typo_count=eng_typo,
+            typo_count=typo_count,
         )
         return result
 
@@ -415,37 +431,6 @@ def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
     return 0, typo_count
 
 
-def dutch_word(answer, english, eng_typo):
-
-    answer_words = answer.lower().split()
-    answer_formatted = " ".join(word for word in answer_words)
-
-    result = check_answer(
-        user_answer=answer_formatted,
-        correct_answer=english,
-        dutch_to_english=True,
-        phrases=True,
-        typo_count=eng_typo,
-    )
-
-    return result
-
-
-def english_word(answer, dutch):
-
-    answer_words = answer.lower().split()
-    answer = " ".join(word for word in answer_words)
-
-    result = check_answer(
-        user_answer=answer,
-        correct_answer=dutch,
-        dutch_to_english=True,
-        phrases=True,
-    )
-
-    return result
-
-
 def randomly_generated_lesson(lesson, questions, testing=None):
 
     all_questions = list(lesson.questions.items())
@@ -471,7 +456,7 @@ def randomly_generated_lesson(lesson, questions, testing=None):
         else:
             language = testing
 
-        result = question(language, dutch, english, lesson, eng_typo)
+        result = question(language, dutch, english, lesson, typo_count=eng_typo)
         if not result:
             print("Exiting lesson...")
             questions = question_number - 1
@@ -511,29 +496,15 @@ def randomly_generated_vocab_lesson(lesson, words):
         # choose language: 0 = English->Dutch, 1 = Dutch->English
         language = random.randrange(2)
 
-        if language:
-            # Dutch question
-            answer = input(f"{dutch}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
-                words = question_number - 1
-                break
-            if not answer:
-                print("That's not right!")
-                print(f"{english}\n")
-            else:
-                result = dutch_word(answer, english, eng_typo)
-                correct += result[0]
-                eng_typo += result[1]
-
-        else:
-            # answer formatting here
-            # English question
-            result = question(language, dutch, english, lesson)
-            if not result:
-                words = question_number - 1
-                break
-            correct += result[0]
+        result = question(
+            language, dutch, english, lesson, phrases=False, typo_count=eng_typo
+        )
+        if not result:
+            print("Exiting lesson...")
+            words = question_number - 1
+            break
+        correct += result[0]
+        eng_typo += result[1]
 
         asked_questions.append((language, dutch, english))
 
@@ -600,97 +571,30 @@ def test(lesson):
 
     all_questions = list(lesson.questions.items())
 
-    random.shuffle(all_questions)
-
     correct = 0
 
-    for dutch, english in all_questions:
-        answer = input(f"{english}         ")
-        if answer.lower() == "exit":
-            exit_confirm = input(
-                "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
-            )
-            if exit_confirm.strip().lower() != "y":
-                print("\nContinuing with test\n")
-                log = pd.concat(
-                    [
-                        log,
-                        pd.DataFrame(
-                            [{"Result": "Incorrect", "Error": "Attempted exit"}]
-                        ),
-                    ]
+    for language in range(2):
+        random.shuffle(all_questions)
+        for dutch, english in all_questions:
+            result = question(language, dutch, english, lesson)
+            if not result:
+                exit_confirm = input(
+                    "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
                 )
-                continue
-            else:
-                print("\nExiting...\n")
-                return correct, complete, log
-        if not answer:
-            print("That's not right!")
-            print(f"{dutch}\n")
-            # default vocab/understanding until further development
-            log = pd.concat(
-                [
-                    log,
-                    pd.DataFrame(
-                        [{"Result": "Incorrect", "Error": "Vocab/Understanding"}]
-                    ),
-                ]
-            )
-        else:
-            answer_formatted = answer_formatting(answer, english, lesson, 1, dutch)
-            result = check_answer(
-                user_answer=answer_formatted,
-                correct_answer=dutch,
-                dutch_to_english=True,
-                phrases=True,
-                test=True,
-                log=log,
-            )
-            correct += result[0]
-            log = result[1]
-
-    random.shuffle(all_questions)
-
-    for dutch, english in all_questions:
-        answer = input(f"{dutch}         ")
-        if answer.lower() == "exit":
-            exit_confirm = input(
-                "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
-            )
-            if exit_confirm.strip().lower() != "y":
-                print("\nContinuing with test\n")
-                log = pd.concat(
-                    [
-                        log,
-                        pd.DataFrame(
-                            [{"Result": "Incorrect", "Error": "Attempted exit"}]
-                        ),
-                    ]
-                )
-                continue
-            else:
-                print("\nExiting...\n")
-                return correct, complete, log
-        if not answer:
-            print("That's not right!")
-            print(f"{english}\n")
-            log = pd.concat(
-                [
-                    log,
-                    pd.DataFrame(
-                        [{"Result": "Incorrect", "Error": "Vocab/Understanding"}]
-                    ),
-                ]
-            )
-        else:
-            result = check_answer(
-                user_answer=answer_formatted,
-                correct_answer=english,
-                dutch_to_english=True,
-                phrases=True,
-                test=True,
-                log=log,
-            )
+                if exit_confirm.strip().lower() != "y":
+                    print("\nContinuing with test\n")
+                    log = pd.concat(
+                        [
+                            log,
+                            pd.DataFrame(
+                                [{"Result": "Incorrect", "Error": "Attempted exit"}]
+                            ),
+                        ]
+                    )
+                    continue
+                else:
+                    print("\nExiting...\n")
+                    return correct, complete, log
             correct += result[0]
             log = result[1]
 
