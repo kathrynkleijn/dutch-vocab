@@ -94,9 +94,14 @@ def select_lesson(topic, test=False):
     return lesson
 
 
-def select_questions(lesson):
+def select_questions(lesson, ltype):
+    if ltype == "phrases":
+        available = len(lesson.questions)
+    elif ltype == "vocabulary":
+        available = len(lesson.words)
+
     questions = input(
-        f"\nThere are {len(lesson.questions)} questions available. How many questions would you like?        "
+        f"\nThere are {available} questions available. How many questions would you like?        "
     )
     if questions == "random":
         questions = random.randrange(5, len(lesson.questions))
@@ -104,20 +109,6 @@ def select_questions(lesson):
         questions = int(questions)
     print(
         f"\nYou will have {questions} questions. Type 'exit' at any time to end the lesson.\n\n"
-    )
-    return questions
-
-
-def select_words(lesson):
-    questions = input(
-        f"\nThere are {len(lesson.words)} words available. How many would you like?        "
-    )
-    if questions == "random":
-        questions = random.randrange(5, len(lesson.words))
-    else:
-        questions = int(questions)
-    print(
-        f"\nYou will have {questions} words. Type 'exit' at any time to end the lesson.\n\n"
     )
     return questions
 
@@ -431,9 +422,12 @@ def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
     return 0, typo_count
 
 
-def randomly_generated_lesson(lesson, questions, testing=None):
+def randomly_generated_lesson(lesson, questions, phrases=True, testing=None):
 
-    all_questions = list(lesson.questions.items())
+    if phrases:
+        all_questions = list(lesson.questions.items())
+    else:
+        all_questions = list(lesson.words.items())
 
     random.shuffle(all_questions)
 
@@ -442,8 +436,12 @@ def randomly_generated_lesson(lesson, questions, testing=None):
     elif questions > len(all_questions):
         extra = math.ceil(questions / len(all_questions)) - 1
         for _ in range(extra):
-            extra_questions = list(lesson.questions.items())
+            if phrases:
+                extra_questions = list(lesson.questions.items())
+            else:
+                extra_questions = list(lesson.words.items())
             all_questions.extend(random.shuffle(extra_questions))
+        all_questions = all_questions[:questions]
 
     correct = 0
     eng_typo = 0
@@ -456,7 +454,9 @@ def randomly_generated_lesson(lesson, questions, testing=None):
         else:
             language = testing
 
-        result = question(language, dutch, english, lesson, typo_count=eng_typo)
+        result = question(
+            language, dutch, english, lesson, phrases=phrases, typo_count=eng_typo
+        )
         if not result:
             print("Exiting lesson...")
             questions = question_number - 1
@@ -472,48 +472,6 @@ def randomly_generated_lesson(lesson, questions, testing=None):
     print(f"Lesson finished. You got {correct}/{questions} correct.")
 
     return correct, questions, asked_questions, eng_typo
-
-
-def randomly_generated_vocab_lesson(lesson, words):
-
-    all_questions = list(lesson.words.items())
-
-    random.shuffle(all_questions)
-
-    if words < len(all_questions):
-        all_questions = all_questions[:words]
-    elif words > len(all_questions):
-        extra = math.ceil(words / len(all_questions)) - 1
-        for _ in range(extra):
-            extra_questions = list(lesson.words.items())
-            all_questions.extend(random.shuffle(extra_questions))
-
-    correct = 0
-    eng_typo = 0
-    question_number = 1
-    asked_questions = []
-    for dutch, english in all_questions:
-        # choose language: 0 = English->Dutch, 1 = Dutch->English
-        language = random.randrange(2)
-
-        result = question(
-            language, dutch, english, lesson, phrases=False, typo_count=eng_typo
-        )
-        if not result:
-            print("Exiting lesson...")
-            words = question_number - 1
-            break
-        correct += result[0]
-        eng_typo += result[1]
-
-        asked_questions.append((language, dutch, english))
-
-        # count questions
-        question_number += 1
-
-    print(f"Lesson finished. You got {correct}/{words} correct.")
-
-    return correct, words, asked_questions, eng_typo
 
 
 def repeated_lesson(lesson, questions, all_questions=[]):
