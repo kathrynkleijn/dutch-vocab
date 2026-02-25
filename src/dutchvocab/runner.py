@@ -78,26 +78,11 @@ def run_practice(log):
 
         phrases = True if ltype == "phrases" else False
 
-        if topic == "core":
-            lesson = vf.select_lesson(lo.core)
-
-        elif topic == "fiction":
-            lesson = vf.select_lesson(lo.fiction)
-
-        elif topic == "newspapers":
-            lesson = vf.select_lesson(lo.newspapers)
-
-        elif topic == "spoken":
-            lesson = vf.select_lesson(lo.spoken)
-
-        elif topic == "web":
-            lesson = vf.select_lesson(lo.web)
-
-        elif topic == "general":
-            lesson = vf.select_lesson(lo.general)
-
-        elif topic == "all":
+        if topic == "all":
             lesson = lo.all.all
+        else:
+            lesson_obj = getattr(lo, topic)
+            lesson = vf.select_lesson(lesson_obj)
 
         if not lesson:
             playing = False
@@ -122,33 +107,18 @@ def run_practice(log):
                     if again.upper() != "Y":
                         break
                     print(f"Retrying lesson {lesson.number} from {topic} ...\n")
-                    if topic == "core":
-                        lesson = copy.deepcopy(lo.core.lessons[int(lesson.number) - 1])
-                    elif topic == "fiction":
-                        lesson = copy.deepcopy(
-                            lo.fiction.lessons[int(lesson.number) - 1]
-                        )
-                    elif topic == "newspapers":
-                        lesson = copy.deepcopy(
-                            lo.newspapers.lessons[int(lesson.number) - 1]
-                        )
-                    elif topic == "spoken":
-                        lesson = copy.deepcopy(
-                            lo.spoken.lessons[int(lesson.number) - 1]
-                        )
-                    elif topic == "web":
-                        lesson = copy.deepcopy(lo.web.lessons[int(lesson.number) - 1])
-                    elif topic == "general":
-                        lesson = copy.deepcopy(
-                            lo.general.lessons[int(lesson.number) - 1]
-                        )
+
+                    lesson = copy.deepcopy(lesson_obj.lessons[int(lesson.number) - 1])
+
                     correct, questions, asked_questions = vf.repeated_lesson(
                         lesson, questions, all_questions=asked_questions
                     )
+
                     if questions:
                         log = vf.update_log(
-                            log, topic, lesson.name, questions, correct, ltype
+                            log, topic, lesson.name, questions, correct, ltype, eng_typo
                         )
+
             except ZeroDivisionError:
                 pass
 
