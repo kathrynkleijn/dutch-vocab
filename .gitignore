@@ -3,7 +3,6 @@
 /__pycache__
 /.ipynb_checkpoints/*
 /plots
-/*ideas.txt
 *.pyc
 /src/dutchvocab.egg-info
 /src/learning_log.csv
@@ -12,6 +11,4 @@
 /src/dutchvocab/settings.txt
 /learning_log.csv
 /Bugs.xlsx
-/*_packages.txt
-/package_versions.txt
-/settings.txt
+/*.txt
