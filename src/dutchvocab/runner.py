@@ -179,53 +179,14 @@ def run_test():
 
     print(f"You have selected {topic.capitalize()}.")
 
-    if topic == "core":
-        lesson = vf.select_lesson(lo.core, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
+    lesson_obj = getattr(lo, topic)
 
-    elif topic == "fiction":
-        lesson = vf.select_lesson(lo.fiction, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
-
-    elif topic == "newspapers":
-        lesson = vf.select_lesson(lo.newspapers, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
-
-    elif topic == "spoken":
-        lesson = vf.select_lesson(lo.spoken, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
-
-    elif topic == "web":
-        lesson = vf.select_lesson(lo.web, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
-
-    elif topic == "general":
-        lesson = vf.select_lesson(lo.general, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
+    lesson = vf.select_lesson(lesson_obj, test=True)
+    total = 2 * len(lesson.questions)
+    print(
+        "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
+    )
+    correct, complete, log = vf.test(lesson)
 
     if complete:
         print(
