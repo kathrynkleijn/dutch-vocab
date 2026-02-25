@@ -576,7 +576,7 @@ def test(lesson):
     for language in range(2):
         random.shuffle(all_questions)
         for dutch, english in all_questions:
-            result = question(language, dutch, english, lesson)
+            result = question(language, dutch, english, lesson, log=log, test=True)
             if not result:
                 exit_confirm = input(
                     "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
