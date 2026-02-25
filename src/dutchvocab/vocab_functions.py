@@ -474,7 +474,7 @@ def randomly_generated_lesson(lesson, questions, phrases=True, testing=None):
     return correct, questions, asked_questions, eng_typo
 
 
-def repeated_lesson(lesson, questions, all_questions=[]):
+def repeated_lesson(lesson, questions, phrases=True, all_questions=[]):
 
     random.shuffle(all_questions)
 
@@ -483,35 +483,15 @@ def repeated_lesson(lesson, questions, all_questions=[]):
 
     for language, dutch, english in all_questions:
 
-        if language:
-            # Dutch question
-            answer = input(f"{dutch}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
-                questions = question_number - 1
-                break
-            if not answer:
-                print("That's not right!")
-                print(f"{english}\n")
-            else:
-                answer = answer_formatting(
-                    answer, dutch, lesson, language, correct_answer=english
-                )
-                result = check_answer(
-                    user_answer=answer,
-                    correct_answer=english,
-                    dutch_to_english=True,
-                    phrases=True,
-                )
-                correct += result[0]
-
-        else:
-            # English question
-            result = question(language, dutch, english, lesson)
-            if not result:
-                questions = question_number - 1
-                break
-            correct += result[0]
+        result = question(
+            language, dutch, english, lesson, phrases=phrases, typo_count=eng_typo
+        )
+        if not result:
+            print("Exiting lesson...")
+            questions = question_number - 1
+            break
+        correct += result[0]
+        eng_typo += result[1]
 
         # count questions
         question_number += 1
