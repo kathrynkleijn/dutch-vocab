@@ -8,45 +8,88 @@ import copy
 from matplotlib import pyplot as plt
 import numpy as np
 from fuzzywuzzy import fuzz
+import inquirer
+import time
+import re
+
+
+def slow_print(text, char_delay=0.01, line_delay=0.2):
+    """Print multi-line text at a consistent, slowed rate
+    for easy readability, with a pause between lines."""
+    for line in text.splitlines(keepends=True):
+        for char in line:
+            print(char, end="", flush=True)
+            time.sleep(char_delay)
+        time.sleep(line_delay)
 
 
 def select_lesson(topic, test=False):
     trying = True
+    available = [lesson for lesson in range(1, len(topic.lessons) + 1)]
     while trying:
         if not test:
             try:
-                lesson_enquiry = input(
-                    "Select a lesson, choose random for a random choice of lesson, or choose all for an assortment of questions from all lessons          "
-                ).lower()
-                if lesson_enquiry == "random":
+                available.extend(["random", "all"])
+                lesson_enquiry = [
+                    inquirer.List(
+                        "lesson",
+                        message="Select a lesson, choose random for a random choice of lesson, or choose all for an assortment of questions from all lessons          ",
+                        choices=available,
+                    )
+                ]
+                selected = inquirer.prompt(lesson_enquiry)
+
+                if selected["lesson"] == "random":
                     lesson_num = random.randrange((len(topic.lessons) - 1))
                     lesson = copy.deepcopy(topic.lessons[int(lesson_num) - 1])
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
-                elif lesson_enquiry == "all":
+                elif selected["lesson"] == "all":
                     lesson = copy.deepcopy(topic.all)
                     print(f"\nYou have chosen all of {topic.name.capitalize()}.")
                 else:
-                    lesson = copy.deepcopy(topic.lessons[int(lesson_enquiry) - 1])
+                    lesson = copy.deepcopy(topic.lessons[int(selected["lesson"]) - 1])
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
-                trying = False
+                continue_with_lesson = input(
+                    "\nPress Enter to accept this choice and continue, or type N to try again. Type X to cancel and exit.       "
+                )
+                if continue_with_lesson.upper() == "N":
+                    continue
+                elif continue_with_lesson.upper() == "X":
+                    lesson = False
+                    trying = False
+                else:
+                    trying = False
             except:
+                print("\nInput not recognised. Please try again.\n")
                 continue
         else:
             try:
-                lesson_enquiry = input(
-                    "Select a lesson to be tested on         "
-                ).lower()
+                lesson_enquiry = [
+                    inquirer.List(
+                        "lesson",
+                        message="Select a lesson to be tested on          ",
+                        choices=available,
+                    )
+                ]
+                selected = inquirer.prompt(lesson_enquiry)
 
-                lesson = copy.deepcopy(topic.lessons[int(lesson_enquiry) - 1])
+                lesson = copy.deepcopy(topic.lessons[int(selected["lesson"]) - 1])
                 print(
                     f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                 )
-                trying = False
+                continue_with_lesson = input(
+                    "\nPress Enter to accept this choice and continue, or type N to try again.      "
+                )
+                if continue_with_lesson.upper() == "N":
+                    continue
+                else:
+                    trying = False
             except:
+                print("\nInput not recognised. Please try again.\n")
                 continue
     return lesson
 
@@ -114,16 +157,24 @@ def accept_alternatives(test, answer):
         return answer
 
 
-def answer_formatting(answer, test, lesson, language, correct_answer=""):
+def answer_formatting(answer, test, lesson, language, phrases=True, correct_answer=""):
     answer_words = answer.lower().split()
 
-    if language:
+    if not phrases:
+        return " ".join(word for word in answer_words)
+
+    if not language:
         for word in lessons.proper_nouns_ned:
             if word.lower() in answer_words:
                 index = answer_words.index(word.lower())
                 answer_words[index] = word
         if len(test.split()) > 2 and len(correct_answer.split()) > 2:
             answer_words[0] = answer_words[0].capitalize()
+
+        answer_formatted = " ".join(word for word in answer_words)
+
+        # check for wij/we, zij/ze, jij/je
+        answer_formatted = accept_alternatives(correct_answer, answer_formatted)
 
     else:
         for word in lessons.proper_nouns_eng:
@@ -135,7 +186,15 @@ def answer_formatting(answer, test, lesson, language, correct_answer=""):
         if len(test.split()) > 2 and len(lesson.questions[test].split()) > 2:
             answer_words[0] = answer_words[0].capitalize()
 
-    return " ".join(word for word in answer_words)
+        answer_formatted = " ".join(word for word in answer_words)
+
+        if "I am" in answer_formatted:
+            answer_formatted = answer_formatted.replace("I am", "I'm")
+
+        if "town" in answer_formatted:
+            answer_formatted = answer_formatted.replace("town", "city")
+
+    return answer_formatted
 
 
 def typos_and_word_order(answer, test):
@@ -158,163 +217,218 @@ def typos_and_word_order(answer, test):
     return score >= threshold
 
 
-def dutch_question(answer, correct, dutch, english, lesson):
+def ignore_brackets(test):
 
-    answer_formatted = answer_formatting(answer, dutch, lesson, 0)
+    brackets = re.findall("\((.*?)\)", test)[0]
 
-    if any(True for char in answer_formatted if char in ","):
-        answer_meanings = answer_formatted.split(", ")
-        test_meanings = english.split(", ")
-        if Counter(answer_meanings) == Counter(test_meanings):
-            print("Correct!\n")
-            correct += 1
-        else:
-            print("That's not right!")
-            print(f"{english}\n")
+    return test.replace(f"({brackets})", "").strip()
+
+
+def question(
+    language, dutch, english, lesson, phrases=True, log=None, typo_count=0, test=False
+):
+    if language:
+        question = dutch
+        correct_answer = english
     else:
-        if answer_formatted == english:
-            print("Correct!\n")
-            correct += 1
-        elif typos_and_word_order(answer_formatted, english):
-            print("Correct! (You have a typo or different word order)\n")
-            correct += 1
-        elif english in lessons.alternatives.keys():
-            alternatives = lessons.alternatives[english]
-            if isinstance(alternatives, list):
-                if answer_formatted in alternatives:
+        question = english
+        correct_answer = dutch
+
+    answer = input(f"{question}         ")
+    if answer.lower() == "exit":
+        return False
+    if not answer:
+        print("That's not right!")
+        print(f"{correct_answer}\n")
+        if test:
+            # default vocab/understanding until further development
+            log = pd.concat(
+                [
+                    log,
+                    pd.DataFrame(
+                        [{"Result": "Incorrect", "Error": "Vocab/Understanding"}]
+                    ),
+                ]
+            )
+            return 0, log
+        return 0, 0
+    else:
+        answer_formatted = answer_formatting(
+            answer, question, lesson, language, phrases, correct_answer=correct_answer
+        )
+        result = check_answer(
+            user_answer=answer_formatted,
+            correct_answer=correct_answer,
+            dutch_to_english=language,
+            phrases=phrases,
+            test=test,
+            log=log,
+            typo_count=typo_count,
+        )
+        return result
+
+
+def check_answer(
+    user_answer,
+    correct_answer,
+    dutch_to_english,
+    phrases,
+    test=False,
+    log=None,
+    typo_count=0,
+):
+
+    # exact match
+    if user_answer == correct_answer:
+        print("Correct!\n")
+        return update_results(correct=True, test=test, log=log, typo_count=typo_count)
+
+    # handle commas
+    if dutch_to_english:
+        commas = correct_answer.count(",")
+        # commas == 1 and len(correct_answer.split()) < 6 or commas > 1
+        if commas:
+            answer_meanings = [item.strip() for item in user_answer.split(",")]
+            test_meanings = [item.strip() for item in correct_answer.split(",")]
+            if test:
+                if Counter(answer_meanings) == Counter(test_meanings):
                     print("Correct!\n")
-                    correct += 1
-                elif any(
-                    typos_and_word_order(answer_formatted, alt) for alt in alternatives
-                ):
-                    print("Correct! (You have a typo or different word order)\n")
-                    correct += 1
-                else:
-                    print("That's not right!")
-                    print(f"{english}\n")
+                    return update_results(
+                        correct=True, test=test, log=log, typo_count=typo_count
+                    )
             else:
-                if answer_formatted == alternatives:
+                if set(answer_meanings) <= set(test_meanings):
                     print("Correct!\n")
-                    correct += 1
-                elif typos_and_word_order(
-                    answer_formatted,
+                    return update_results(
+                        correct=True, test=test, log=log, typo_count=typo_count
+                    )
+
+    # typos in english
+    if dutch_to_english:
+        if typos_and_word_order(user_answer, correct_answer):
+            (
+                print("Correct! (You have a typo or different word order)")
+                if phrases
+                else print("Correct! (You have a typo)")
+            )
+            print(f"{correct_answer}\n")
+            return update_results(
+                correct=True,
+                test=test,
+                log=log,
+                typo_count=typo_count + 1,
+                error="Typo",
+            )
+
+    # handle brackets
+    if "(" in correct_answer and "(zich)" not in correct_answer:
+        updated_answer = ignore_brackets(correct_answer)
+        if user_answer == updated_answer:
+            print("Correct!")
+            return update_results(
+                correct=True, test=test, log=log, typo_count=typo_count
+            )
+        if dutch_to_english:
+            if typos_and_word_order(user_answer, updated_answer):
+                print("Correct! (You have a typo or different word order)")
+                print(f"{correct_answer}\n")
+                return update_results(
+                    correct=True,
+                    test=test,
+                    log=log,
+                    typo_count=typo_count + 1,
+                    error="Typo",
+                )
+
+    # alternatives
+    if correct_answer in lessons.alternatives.keys():
+        alternatives = lessons.alternatives[correct_answer]
+        # multiple alternatives
+        if isinstance(alternatives, list):
+            if user_answer in alternatives:
+                print("Correct!\n")
+                return update_results(
+                    correct=True, test=test, log=log, typo_count=typo_count
+                )
+            if dutch_to_english:
+                if any(typos_and_word_order(user_answer, alt) for alt in alternatives):
+                    (
+                        print("Correct! (You have a typo or different word order)")
+                        if phrases
+                        else print("Correct! (You have a typo)")
+                    )
+                    print(f"{correct_answer}\n")
+                    return update_results(
+                        correct=True,
+                        test=test,
+                        log=log,
+                        typo_count=typo_count + 1,
+                        error="Typo",
+                    )
+        # single alternative
+        else:
+            if user_answer == alternatives:
+                print("Correct!\n")
+                return update_results(
+                    correct=True, test=test, log=log, typo_count=typo_count
+                )
+            if dutch_to_english:
+                if typos_and_word_order(
+                    user_answer,
                     alternatives,
                 ):
-                    print("Correct! (You have a typo or different word order)\n")
-                    correct += 1
-                else:
-                    print("That's not right!")
-                    print(f"{english}\n")
+                    (
+                        print("Correct! (You have a typo or different word order)")
+                        if phrases
+                        else print("Correct! (You have a typo)")
+                    )
+                    print(f"{correct_answer}\n")
+                    return update_results(
+                        correct=True,
+                        test=test,
+                        log=log,
+                        typo_count=typo_count + 1,
+                        error="Typo",
+                    )
 
-        else:
-            print("That's not right!")
-            print(f"{english}\n")
-
-    return correct
-
-
-def english_question(answer, correct, dutch, english, lesson):
-
-    answer_formatted = answer_formatting(answer, english, lesson.questions, 1, dutch)
-
-    # check for wij/we, zij/ze, jij/je
-    answer = accept_alternatives(dutch, answer_formatted)
-
-    # return answer to user
-    if answer == dutch:
-        print("Correct!\n")
-        correct += 1
-    elif dutch in lessons.alternatives.keys():
-        if answer in lessons.alternatives[dutch]:
-            print("Correct!\n")
-            correct += 1
-        else:
-            print("That's not right!")
-            print(f"{dutch}\n")
-    else:
-        print("That's not right!")
-        print(f"{dutch}\n")
-
-    return correct
+    # no match
+    print("That's not right!")
+    print(f"{correct_answer}\n")
+    return update_results(
+        correct=False,
+        test=test,
+        log=log,
+        typo_count=typo_count,
+        error="Vocab/Understanding",
+    )
 
 
-def dutch_word(answer, correct, english):
-
-    answer_words = answer.lower().split()
-    answer_formatted = " ".join(word for word in answer_words)
-
-    if any(True for char in answer_formatted if char in ","):
-        answer_meanings = answer_formatted.split(", ")
-        test_meanings = english.split(", ")
-        if Counter(answer_meanings) == Counter(test_meanings):
-            print("Correct!\n")
-            correct += 1
-        else:
-            print("That's not right!")
-            print(f"{english}\n")
-    else:
-        if answer_formatted == english:
-            print("Correct!\n")
-            correct += 1
-        elif typos_and_word_order(answer_formatted, english):
-            print("Correct! (You have a typo)\n")
-            correct += 1
-        elif english in lessons.alternatives.keys():
-            alternatives = lessons.alternatives[english]
-            if isinstance(alternatives, list):
-                if answer_formatted in alternatives:
-                    print("Correct!\n")
-                    correct += 1
-                elif any(
-                    typos_and_word_order(answer_formatted, alt) for alt in alternatives
-                ):
-                    print("Correct! (You have a typo)\n")
-                    correct += 1
-                else:
-                    print("That's not right!")
-                    print(f"{english}\n")
-            else:
-                if answer_formatted == alternatives:
-                    print("Correct!\n")
-                    correct += 1
-                elif typos_and_word_order(
-                    answer_formatted,
-                    alternatives,
-                ):
-                    print("Correct! (You have a typo)\n")
-                    correct += 1
-                else:
-                    print("That's not right!")
-                    print(f"{english}\n")
-
-        else:
-            print("That's not right!")
-            print(f"{english}\n")
-
-    return correct
-
-
-def english_word(answer, correct, dutch):
-
-    answer_words = answer.lower().split()
-    answer = " ".join(word for word in answer_words)
-
-    # return answer to user
-    if answer == dutch:
-        print("Correct!\n")
-        correct += 1
-    elif dutch in lessons.alternatives.keys():
-        if answer in lessons.alternatives[dutch]:
-            print("Correct!\n")
-            correct += 1
-        else:
-            print("That's not right!")
-            print(f"{dutch}\n")
-    else:
-        print("That's not right!")
-        print(f"{dutch}\n")
-
-    return correct
+def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
+    if correct and not test:
+        return 1, typo_count
+    elif correct and test:
+        log = pd.concat(
+            [
+                log,
+                pd.DataFrame(
+                    {"Result": "Correct", "Error": error},
+                    index=pd.Index([date.today()]),
+                ),
+            ]
+        )
+        return 1, log
+    elif test:
+        log = pd.concat(
+            [
+                log,
+                pd.DataFrame(
+                    {"Result": "Incorrect", "Error": error},
+                    index=pd.Index([date.today()]),
+                ),
+            ]
+        )
+        return 0, log
+    return 0, typo_count
 
 
 def randomly_generated_lesson(lesson, questions, testing=None):
@@ -327,56 +441,37 @@ def randomly_generated_lesson(lesson, questions, testing=None):
         all_questions = all_questions[:questions]
     elif questions > len(all_questions):
         extra = math.ceil(questions / len(all_questions)) - 1
-        for i in range(extra):
+        for _ in range(extra):
             extra_questions = list(lesson.questions.items())
             all_questions.extend(random.shuffle(extra_questions))
 
     correct = 0
+    eng_typo = 0
     question_number = 1
     asked_questions = []
     for dutch, english in all_questions:
-        # choose language: 0 = Dutch->English, 1 = English->Dutch
+        # choose language: 0 = English->Dutch, 1 = Dutch->English
         if testing is None:
             language = random.randrange(2)
         else:
             language = testing
 
-        if language == 0:
-            # Dutch question
-            answer = input(f"{dutch}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
-                questions = question_number - 1
-                break
-            if not answer:
-                print("That's not right!")
-                print(f"{english}\n")
-            else:
-                correct = dutch_question(answer, correct, dutch, english, lesson)
+        result = question(language, dutch, english, lesson, typo_count=eng_typo)
+        if not result:
+            print("Exiting lesson...")
+            questions = question_number - 1
+            break
+        correct += result[0]
+        eng_typo += result[1]
 
-            asked_questions.append((0, dutch, english))
-
-        else:
-            # English question
-            answer = input(f"{english}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
-                questions = question_number - 1
-                break
-            if not answer:
-                print("That's not right!")
-                print(f"{dutch}\n")
-            else:
-                correct = english_question(answer, correct, dutch, english, lesson)
-
-            asked_questions.append((1, dutch, english))
+        asked_questions.append((language, dutch, english))
 
         # count questions
         question_number += 1
 
     print(f"Lesson finished. You got {correct}/{questions} correct.")
 
-    return correct, questions, asked_questions
+    return correct, questions, asked_questions, eng_typo
 
 
 def randomly_generated_vocab_lesson(lesson, words):
@@ -389,53 +484,36 @@ def randomly_generated_vocab_lesson(lesson, words):
         all_questions = all_questions[:words]
     elif words > len(all_questions):
         extra = math.ceil(words / len(all_questions)) - 1
-        for i in range(extra):
+        for _ in range(extra):
             extra_questions = list(lesson.words.items())
             all_questions.extend(random.shuffle(extra_questions))
 
     correct = 0
+    eng_typo = 0
     question_number = 1
     asked_questions = []
     for dutch, english in all_questions:
-        # choose language: 0 = Dutch->English, 1 = English->Dutch
+        # choose language: 0 = English->Dutch, 1 = Dutch->English
         language = random.randrange(2)
 
-        if language == 0:
-            # Dutch question
-            answer = input(f"{dutch}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
-                words = question_number - 1
-                break
-            if not answer:
-                print("That's not right!")
-                print(f"{english}\n")
-            else:
-                correct = dutch_word(answer, correct, english)
+        result = question(
+            language, dutch, english, lesson, phrases=False, typo_count=eng_typo
+        )
+        if not result:
+            print("Exiting lesson...")
+            words = question_number - 1
+            break
+        correct += result[0]
+        eng_typo += result[1]
 
-            asked_questions.append((0, dutch, english))
-
-        else:
-            # English question
-            answer = input(f"{english}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
-                words = question_number - 1
-                break
-            if not answer:
-                print("That's not right!")
-                print(f"{dutch}\n")
-            else:
-                correct = english_word(answer, correct, dutch)
-
-            asked_questions.append((1, dutch, english))
+        asked_questions.append((language, dutch, english))
 
         # count questions
         question_number += 1
 
     print(f"Lesson finished. You got {correct}/{words} correct.")
 
-    return correct, words, asked_questions
+    return correct, words, asked_questions, eng_typo
 
 
 def repeated_lesson(lesson, questions, all_questions=[]):
@@ -447,7 +525,7 @@ def repeated_lesson(lesson, questions, all_questions=[]):
 
     for language, dutch, english in all_questions:
 
-        if language == 0:
+        if language:
             # Dutch question
             answer = input(f"{dutch}         ")
             if answer.lower() == "exit":
@@ -458,20 +536,24 @@ def repeated_lesson(lesson, questions, all_questions=[]):
                 print("That's not right!")
                 print(f"{english}\n")
             else:
-                correct = dutch_question(answer, correct, dutch, english, lesson)
+                answer = answer_formatting(
+                    answer, dutch, lesson, language, correct_answer=english
+                )
+                result = check_answer(
+                    user_answer=answer,
+                    correct_answer=english,
+                    dutch_to_english=True,
+                    phrases=True,
+                )
+                correct += result[0]
 
         else:
             # English question
-            answer = input(f"{english}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
+            result = question(language, dutch, english, lesson)
+            if not result:
                 questions = question_number - 1
                 break
-            if not answer:
-                print("That's not right!")
-                print(f"{dutch}\n")
-            else:
-                correct = english_question(answer, correct, dutch, english, lesson)
+            correct += result[0]
 
         # count questions
         question_number += 1
@@ -483,58 +565,45 @@ def repeated_lesson(lesson, questions, all_questions=[]):
 
 def test(lesson):
 
+    log = pd.DataFrame(columns=["Result", "Error"])
+
     complete = False
 
     all_questions = list(lesson.questions.items())
 
-    random.shuffle(all_questions)
-
     correct = 0
 
-    for dutch, english in all_questions:
-        answer = input(f"{english}         ")
-        if answer.lower() == "exit":
-            exit_confirm = input(
-                "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
-            )
-            if exit_confirm.strip().lower() != "y":
-                print("\nContinuing with test\n")
-                continue
-            else:
-                print("\nExiting...\n")
-                return correct, complete
-        if not answer:
-            print("That's not right!")
-            print(f"{dutch}\n")
-        else:
-            correct = english_question(answer, correct, dutch, english, lesson)
-
-    random.shuffle(all_questions)
-
-    for dutch, english in all_questions:
-        answer = input(f"{dutch}         ")
-        if answer.lower() == "exit":
-            exit_confirm = input(
-                "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
-            )
-            if exit_confirm.strip().lower() != "y":
-                print("\nContinuing with test\n")
-                continue
-            else:
-                print("\nExiting...\n")
-                return correct, complete
-        if not answer:
-            print("That's not right!")
-            print(f"{english}\n")
-        else:
-            correct = dutch_question(answer, correct, dutch, english, lesson)
+    for language in range(2):
+        random.shuffle(all_questions)
+        for dutch, english in all_questions:
+            result = question(language, dutch, english, lesson, log=log, test=True)
+            if not result:
+                exit_confirm = input(
+                    "\nExiting test. All progress will be lost. Are you sure you wish to exit?   "
+                )
+                if exit_confirm.strip().lower() != "y":
+                    print("\nContinuing with test\n")
+                    log = pd.concat(
+                        [
+                            log,
+                            pd.DataFrame(
+                                [{"Result": "Incorrect", "Error": "Attempted exit"}]
+                            ),
+                        ]
+                    )
+                    continue
+                else:
+                    print("\nExiting...\n")
+                    return correct, complete, log
+            correct += result[0]
+            log = result[1]
 
     complete = True
 
-    return correct, complete
+    return correct, complete, log
 
 
-def update_log(log, topic, lesson, questions, correct, ltype):
+def update_log(log, topic, lesson, questions, correct, ltype, eng_typo):
 
     log_today = {
         "Module": topic,
@@ -542,16 +611,22 @@ def update_log(log, topic, lesson, questions, correct, ltype):
         "Questions": questions,
         "Score": correct,
         "Type": ltype,
+        "Typos English": eng_typo,
     }
 
     return pd.concat([log, pd.DataFrame(log_today, index=pd.Index([date.today()]))])
 
 
-def visualisation_today():
-    log = pd.read_csv("learning_log.csv")
-    log_today = log[log.Date == date.today().strftime("%Y-%m-%d")]
+def visualisation_today(year=False, month=False, day=False):
+    if year:
+        chosen_date = date(year, month, day)
+    else:
+        chosen_date = date.today()
 
-    log_today = log_today.groupby(["Type", "Module", "Lesson"]).agg(
+    log = pd.read_csv("learning_log.csv")
+    log_today = log[log.Date == chosen_date.strftime("%Y-%m-%d")]
+
+    log_today = log_today.groupby(["Type", "Module", "Lesson"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
     log_today = log_today.reset_index()
@@ -610,4 +685,8 @@ def visualisation_today():
 
 
 if __name__ == "__main__":
-    visualisation_today()
+    year = int(input("Year: "))
+    month = int(input("Month: "))
+    day = int(input("Day: "))
+
+    visualisation_today(year, month, day)

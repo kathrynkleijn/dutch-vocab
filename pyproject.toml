@@ -4,8 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dutchvocab"
-version = "0.3.1"
+version = "0.3.2"
 description = "Lessons for learning Dutch vocabulary."
+dependencies = ["fuzzywuzzy>=0.18.0","fpdf>=1.7.2","inquirer>=3.1.4","matplotlib>=3.10.0","pandas>=2.3.1","plontnine>=0.14.5"]
 authors = [{name="Kathryn Kleijn"}]
 license = "MIT"
 readme = "README.md"
@@ -13,6 +14,9 @@ readme = "README.md"
 [project.scripts]
 dutchlesson = "dutchvocab.run:main"
 dutchsettings = "dutchvocab.settings:main"
+
+[project.optional-dependencies]
+dev = ["black"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
