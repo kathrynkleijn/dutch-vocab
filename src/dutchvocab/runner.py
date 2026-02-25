@@ -110,11 +110,10 @@ def run_practice(log):
 
                     lesson = copy.deepcopy(lesson_obj.lessons[int(lesson.number) - 1])
 
-                    correct, questions, asked_questions = vf.repeated_lesson(
-                        lesson,
-                        questions,
-                        phrases=phrases,
-                        all_questions=asked_questions,
+                    correct, questions, asked_questions, eng_typo = (
+                        vf.randomly_generated_lesson(
+                            lesson, questions, phrases=phrases, repeat=asked_questions
+                        )
                     )
 
                     if questions:

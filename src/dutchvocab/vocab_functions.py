@@ -422,66 +422,49 @@ def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
     return 0, typo_count
 
 
-def randomly_generated_lesson(lesson, questions, phrases=True, testing=None):
+def randomly_generated_lesson(
+    lesson, questions, phrases=True, repeat=None, testing=None
+):
 
-    if phrases:
-        all_questions = list(lesson.questions.items())
+    if repeat is None:
+        all_questions = []
+
+        if phrases:
+            questions_list = list(lesson.questions.items())
+        else:
+            questions_list = list(lesson.words.items())
+
+        if questions > len(questions_list):
+            extra = math.ceil(questions / len(questions_list)) - 1
+            for _ in range(extra):
+                if phrases:
+                    extra_questions = list(lesson.questions.items())
+                else:
+                    extra_questions = list(lesson.words.items())
+                random.shuffle(extra_questions)
+                questions_list.extend(extra_questions)
+
+        questions_list = questions_list[:questions]
+
+        # add None as language placeholder when not a repeated lesson
+        for dutch, english in questions_list:
+            all_questions.append((None, dutch, english))
     else:
-        all_questions = list(lesson.words.items())
+        all_questions = repeat
 
     random.shuffle(all_questions)
-
-    if questions < len(all_questions):
-        all_questions = all_questions[:questions]
-    elif questions > len(all_questions):
-        extra = math.ceil(questions / len(all_questions)) - 1
-        for _ in range(extra):
-            if phrases:
-                extra_questions = list(lesson.questions.items())
-            else:
-                extra_questions = list(lesson.words.items())
-            all_questions.extend(random.shuffle(extra_questions))
-        all_questions = all_questions[:questions]
 
     correct = 0
     eng_typo = 0
     question_number = 1
     asked_questions = []
-    for dutch, english in all_questions:
-        # choose language: 0 = English->Dutch, 1 = Dutch->English
-        if testing is None:
-            language = random.randrange(2)
-        else:
-            language = testing
-
-        result = question(
-            language, dutch, english, lesson, phrases=phrases, typo_count=eng_typo
-        )
-        if not result:
-            print("Exiting lesson...")
-            questions = question_number - 1
-            break
-        correct += result[0]
-        eng_typo += result[1]
-
-        asked_questions.append((language, dutch, english))
-
-        # count questions
-        question_number += 1
-
-    print(f"Lesson finished. You got {correct}/{questions} correct.")
-
-    return correct, questions, asked_questions, eng_typo
-
-
-def repeated_lesson(lesson, questions, phrases=True, all_questions=[]):
-
-    random.shuffle(all_questions)
-
-    correct = 0
-    question_number = 1
 
     for language, dutch, english in all_questions:
+        # choose language if not fixed by repeat: 0 = English->Dutch, 1 = Dutch->English
+        if testing is not None:
+            language = testing
+        elif language is None:
+            language = random.randrange(2)
 
         result = question(
             language, dutch, english, lesson, phrases=phrases, typo_count=eng_typo
@@ -493,12 +476,18 @@ def repeated_lesson(lesson, questions, phrases=True, all_questions=[]):
         correct += result[0]
         eng_typo += result[1]
 
+        if repeat is None:
+            asked_questions.append((language, dutch, english))
+
         # count questions
         question_number += 1
 
     print(f"Lesson finished. You got {correct}/{questions} correct.")
 
-    return correct, questions, all_questions
+    if repeat:
+        asked_questions = all_questions
+
+    return correct, questions, asked_questions, eng_typo
 
 
 def test(lesson):
