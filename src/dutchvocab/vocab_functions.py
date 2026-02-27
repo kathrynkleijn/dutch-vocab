@@ -53,15 +53,25 @@ def select_lesson(topic, test=False):
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
-                continue_with_lesson = input(
-                    "\nPress Enter to accept this choice and continue, or type N to try again. Type X to cancel and exit.       "
-                )
-                if continue_with_lesson.upper() == "N":
-                    continue
-                elif continue_with_lesson.upper() == "X":
+                continue_with_lesson = [
+                    inquirer.List(
+                        "continue",
+                        message="",
+                        choices=[
+                            "Continue",
+                            "Choose different lesson",
+                            "Exit practice mode",
+                        ],
+                    )
+                ]
+                selected = inquirer.prompt(continue_with_lesson)["continue"]
+
+                if selected == "Exit practice mode":
                     lesson = False
                     trying = False
-                else:
+                elif selected == "Choose different lesson":
+                    continue
+                elif selected == "Continue":
                     trying = False
             except:
                 print("\nInput not recognised. Please try again.\n")
