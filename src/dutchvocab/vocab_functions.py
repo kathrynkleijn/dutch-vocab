@@ -611,6 +611,7 @@ def visualisation_today(year=False, month=False, day=False):
             axes[i][1].set_ylim([0, 100])
 
     plt.tight_layout()
+    plt.suptitle("Today's Results")
     plt.show()
 
 
