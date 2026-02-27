@@ -47,18 +47,28 @@ def run_practice(log):
             else:
                 topic = selected["topic"]
 
-            print(f"You have selected {topic.capitalize()}.")
+            print(f"You have selected {topic.capitalize()}.\n")
 
-            continue_with_topic = input(
-                "\nPress Enter to accept this choice and continue, or type N to try again. Type X to cancel and exit.     "
-            )
-            if continue_with_topic.upper() == "X":
-                print("Exiting lesson...")
+            continue_with_topic = [
+                inquirer.List(
+                    "continue",
+                    message="",
+                    choices=[
+                        "Continue",
+                        "Choose different topic",
+                        "Exit practice mode",
+                    ],
+                )
+            ]
+            selected = inquirer.prompt(continue_with_topic)["continue"]
+
+            if selected == "Exit practice mode":
+                print("Exiting practice mode...")
                 playing = False
                 break
-            elif continue_with_topic.upper() == "N":
+            elif selected == "Choose different topic":
                 continue
-            else:
+            elif selected == "Continue":
                 choosing = False
 
         if not playing:
