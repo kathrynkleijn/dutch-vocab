@@ -553,6 +553,9 @@ def visualisation_today(year=False, month=False, day=False):
     log = pd.read_csv("learning_log.csv")
     log_today = log[log.Date == chosen_date.strftime("%Y-%m-%d")]
 
+    if log_today.empty:
+        return
+
     log_today = log_today.groupby(["Type", "Module", "Lesson"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
     )
