@@ -177,6 +177,8 @@ def run_test():
     _ = input("\n\nPress Enter to continue")
     print("\n\n")
 
+    is_testing = True
+    choosing = True
     while choosing:
         topics = ["core", "fiction", "newspapers", "spoken", "web", "general"]
         topic_enquiry = [
@@ -205,28 +207,30 @@ def run_test():
 
         if selected == "Exit test mode":
             print("Exiting test mode...")
-            # placeholder exit - should ask whether to switch mode or exit whole session
-            return None
+            is_testing = False
+            break
         elif selected == "Choose different topic":
             continue
         elif selected == "Continue":
             choosing = False
 
-    lesson_obj = getattr(lo, topic)
+    if is_testing:
 
-    lesson = vf.select_lesson(lesson_obj, test=True)
-    total = 2 * len(lesson.questions)
-    print(
-        "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-    )
-    correct, complete, log = vf.test(lesson)
+        lesson_obj = getattr(lo, topic)
 
-    if complete:
+        lesson = vf.select_lesson(lesson_obj, test=True)
+        total = 2 * len(lesson.questions)
         print(
-            f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
+            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
         )
-        print(log)
-        fg.generate_test_figures(log)
+        correct, complete, log = vf.test(lesson)
+
+        if complete:
+            print(
+                f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
+            )
+            print(log)
+            fg.generate_test_figures(log)
 
     print("\n")
     mode_choice = [
