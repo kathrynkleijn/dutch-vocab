@@ -42,7 +42,7 @@ def main():
     while mode:
         if mode == "Practice":
 
-            mode, log = rn.run_practice(log)
+            mode, log = rn.run_practice(log, practice)
 
             practice = True
 
