@@ -177,19 +177,40 @@ def run_test():
     _ = input("\n\nPress Enter to continue")
     print("\n\n")
 
-    topics = ["core", "fiction", "newspapers", "spoken", "web", "general"]
-    topic_enquiry = [
-        inquirer.List(
-            "topic",
-            message="Select a topic",
-            choices=topics,
-        )
-    ]
-    selected = inquirer.prompt(topic_enquiry)
+    while choosing:
+        topics = ["core", "fiction", "newspapers", "spoken", "web", "general"]
+        topic_enquiry = [
+            inquirer.List(
+                "topic",
+                message="Select a topic",
+                choices=topics,
+            )
+        ]
+        topic = inquirer.prompt(topic_enquiry)["topic"]
 
-    topic = selected["topic"]
+        print(f"You have selected {topic.capitalize()}.\n")
 
-    print(f"You have selected {topic.capitalize()}.")
+        continue_with_topic = [
+            inquirer.List(
+                "continue",
+                message="",
+                choices=[
+                    "Continue",
+                    "Choose different topic",
+                    "Exit test mode",
+                ],
+            )
+        ]
+        selected = inquirer.prompt(continue_with_topic)["continue"]
+
+        if selected == "Exit test mode":
+            print("Exiting test mode...")
+            # placeholder exit - should ask whether to switch mode or exit whole session
+            return None
+        elif selected == "Choose different topic":
+            continue
+        elif selected == "Continue":
+            choosing = False
 
     lesson_obj = getattr(lo, topic)
 
