@@ -32,21 +32,31 @@ class Lesson:
         for dutch, english in kwargs.items():
             self.words[dutch] = english
 
-    def create_flashcard(self):
-        for question, answer in self.questions.items():
-            if len(question) <= 2:
-                self.flashcards[question] = answer
-        for word, translation in self.flashcards.items():
-            side1 = word
-            side2 = translation
-            check_word = word.split(",")[0]
-            if "de" in check_word or "het" in check_word:
-                check_word = word.split()[1]
-            for question, answer in self.questions.items():
-                if check_word in question and len(question) > 2:
-                    side1 = side1 + ",\n" + question
-                    side2 = side2 + ",\n" + answer
-                    self.flashcards[side1] = side2
+    def create_manual_flashcard(self, question, answer):
+        self.flashcards[question] = answer
+
+    def create_flashcards(self):
+        words_dict = {
+            dutch: english
+            for dutch, english in self.questions.items()
+            if len(dutch.split()) <= 2
+        }
+        sentences_dict = {
+            dutch: english
+            for dutch, english in self.questions.items()
+            if len(dutch.split()) > 2
+        }
+        for dutch, english in words_dict.items():
+            side1 = dutch + "\n"
+            side2 = english + "\n"
+            check_word = " " + dutch + " "
+            if "de" in dutch or "het" in dutch:
+                check_word = " " + dutch.split()[1] + " "
+            for sentence, translation in sentences_dict.items():
+                if check_word in sentence:
+                    side1 += "\n" + sentence
+                    side2 += "\n" + translation
+            self.flashcards[side1] = side2
 
 
 class Topic:
@@ -89,6 +99,7 @@ for topic in topics:
         new_lesson.add_words(**words)
         topic.add_lesson(new_lesson)
     all.add_lesson(topic.all)
+
 
 available = ""
 for num, topic in enumerate(topics):

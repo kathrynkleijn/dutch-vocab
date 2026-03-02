@@ -540,6 +540,31 @@ def test(lesson):
     return correct, complete, log
 
 
+def flashcards(lesson):
+
+    lesson.create_flashcards()
+
+    all_cards = list(lesson.flashcards.items())
+
+    for language in range(2):
+
+        for dutch, english in all_cards:
+
+            if language == 0:
+                first = dutch
+                second = english
+            else:
+                first = english
+                second = dutch
+
+            print("-----------------")
+            print(f"\n{first}")
+            _ = input("")
+            print(f"\n{second}\n")
+            print("-----------------\n")
+            _ = input("")
+
+
 def update_log(log, topic, lesson, questions, correct, ltype, eng_typo):
 
     log_today = {
