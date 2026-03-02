@@ -40,12 +40,13 @@ class Lesson:
             side1 = word
             side2 = translation
             check_word = word.split(",")[0]
-            if "de" in word or "het" in word:
+            if "de" in check_word or "het" in check_word:
                 check_word = word.split()[1]
             for question, answer in self.questions.items():
-                if check_word in question:
+                if check_word in question and len(question) > 2:
                     side1 = side1 + ",\n" + question
                     side2 = side2 + ",\n" + answer
+                    self.flashcards[side1] = side2
 
 
 class Topic:
