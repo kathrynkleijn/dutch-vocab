@@ -9,6 +9,77 @@ import inquirer
 import time
 
 
+def run_learning():
+
+    print(
+        "\nYou have chosen learning mode. Select a topic and lesson to learn the words and phrases.\n\n"
+    )
+
+    time.sleep(1.5)
+
+    is_learning = True
+    choosing = True
+    while choosing:
+        topics = ["core", "fiction", "newspapers", "spoken", "web", "general"]
+        topic_enquiry = [
+            inquirer.List(
+                "topic",
+                message="Select a topic",
+                choices=topics,
+            )
+        ]
+        topic = inquirer.prompt(topic_enquiry)["topic"]
+
+        print(f"You have selected {topic.capitalize()}.\n")
+
+        continue_with_topic = [
+            inquirer.List(
+                "continue",
+                message="",
+                choices=[
+                    "Continue",
+                    "Choose different topic",
+                    "Exit learning mode",
+                ],
+            )
+        ]
+        selected = inquirer.prompt(continue_with_topic)["continue"]
+
+        if selected == "Exit learning mode":
+            print("Exiting learning mode...")
+            is_learning = False
+            break
+        elif selected == "Choose different topic":
+            continue
+        elif selected == "Continue":
+            choosing = False
+
+    if is_learning:
+
+        lesson_obj = getattr(lo, topic)
+
+        lesson = vf.select_lesson(lesson_obj, test=True)
+
+        print(
+            "\nEach word and associated phrase(s) will be presented. Press enter after to see the translation.\n\n"
+        )
+
+        vf.flashcards(lesson)
+
+    print("\n")
+    mode_choice = [
+        inquirer.List(
+            "next",
+            message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
+            choices=["Practice", "Learning", "Test", "Exit"],
+        )
+    ]
+    next_action = inquirer.prompt(mode_choice)["next"]
+    if next_action == "Exit":
+        return None
+    return next_action
+
+
 def run_practice(log, practice=False):
 
     if not practice:
@@ -149,7 +220,7 @@ def run_practice(log, practice=False):
         inquirer.List(
             "next",
             message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
-            choices=["Practice", "Test", "Exit"],
+            choices=["Practice", "Learning", "Test", "Exit"],
         )
     ]
     next_action = inquirer.prompt(mode_choice)["next"]
@@ -227,7 +298,7 @@ def run_test():
         inquirer.List(
             "next",
             message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
-            choices=["Practice", "Test", "Exit"],
+            choices=["Practice", "Learning", "Test", "Exit"],
         )
     ]
     next_action = inquirer.prompt(mode_choice)["next"]

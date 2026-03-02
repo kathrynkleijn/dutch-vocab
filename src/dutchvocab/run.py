@@ -33,14 +33,20 @@ def main():
 
     print("\n")
     select_setting = [
-        inquirer.List("type", message="Select mode", choices=["Practice", "Test"])
+        inquirer.List(
+            "type", message="Select mode", choices=["Learning", "Practice", "Test"]
+        )
     ]
     mode = inquirer.prompt(select_setting)["type"]
 
     practice = False
     log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
     while mode:
-        if mode == "Practice":
+        if mode == "Learning":
+
+            mode = rn.run_learning()
+
+        elif mode == "Practice":
 
             mode, log = rn.run_practice(log, practice)
 

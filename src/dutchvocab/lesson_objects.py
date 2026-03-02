@@ -10,6 +10,7 @@ class Lesson:
         self.name = topic + str(number)
         self.questions = OrderedDict()
         self.words = OrderedDict()
+        self.flashcards = OrderedDict()
 
     def __str__(self):
         return f"{self.name}"
@@ -30,6 +31,21 @@ class Lesson:
     def add_words(self, **kwargs):
         for dutch, english in kwargs.items():
             self.words[dutch] = english
+
+    def create_flashcard(self):
+        for question, answer in self.questions.items():
+            if len(question) <= 2:
+                self.flashcards[question] = answer
+        for word, translation in self.flashcards.items():
+            side1 = word
+            side2 = translation
+            check_word = word.split(",")[0]
+            if "de" in word or "het" in word:
+                check_word = word.split()[1]
+            for question, answer in self.questions.items():
+                if check_word in question:
+                    side1 = side1 + ",\n" + question
+                    side2 = side2 + ",\n" + answer
 
 
 class Topic:
