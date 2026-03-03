@@ -71,7 +71,7 @@ def run_learning():
         inquirer.List(
             "next",
             message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
-            choices=["Practice", "Learning", "Test", "Exit"],
+            choices=["Learning", "Practice", "Test", "Exit"],
         )
     ]
     next_action = inquirer.prompt(mode_choice)["next"]
@@ -220,7 +220,7 @@ def run_practice(log, practice=False):
         inquirer.List(
             "next",
             message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
-            choices=["Practice", "Learning", "Test", "Exit"],
+            choices=["Learning", "Practice", "Test", "Exit"],
         )
     ]
     next_action = inquirer.prompt(mode_choice)["next"]
@@ -299,7 +299,7 @@ def run_test():
         inquirer.List(
             "next",
             message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
-            choices=["Practice", "Learning", "Test", "Exit"],
+            choices=["Learning", "Practice", "Test", "Exit"],
         )
     ]
     next_action = inquirer.prompt(mode_choice)["next"]
