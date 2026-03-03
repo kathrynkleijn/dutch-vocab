@@ -2,6 +2,7 @@ import random
 import math
 import pandas as pd
 from datetime import date
+from dutchvocab import lesson_objects as lo
 from dutchvocab import lessons
 from collections import Counter
 import copy
@@ -23,11 +24,52 @@ def slow_print(text, char_delay=0.01, line_delay=0.2):
         time.sleep(line_delay)
 
 
-def select_lesson(topic, test=False):
+def select_topic(mode):
+    choosing = True
+    topics = [topic.name for topic in lo.topics]
+    message = "Select a topic"
+    if mode == "practice":
+        topics.extend(["random", "all"])
+        message = "Select a topic, choose random for a random choice of topic, or choose all for an assortment of questions from all topics"
+
+    while choosing:
+        topic_enquiry = [
+            inquirer.List(
+                "topic",
+                message=message,
+                choices=topics,
+            )
+        ]
+        topic = inquirer.prompt(topic_enquiry)["topic"]
+
+        print(f"You have selected {topic.capitalize()}.\n")
+
+        continue_with_topic = [
+            inquirer.List(
+                "continue",
+                message="",
+                choices=[
+                    "Continue",
+                    "Choose different topic",
+                    f"Exit {mode} mode",
+                ],
+            )
+        ]
+        selected = inquirer.prompt(continue_with_topic)["continue"]
+        if selected == f"Exit {mode} mode":
+            print(f"Exiting {mode} mode...")
+            return None
+        elif selected == "Choose different topic":
+            continue
+        elif selected == "Continue":
+            return topic
+
+
+def select_lesson(topic, mode):
     trying = True
     available = [lesson for lesson in range(1, len(topic.lessons) + 1)]
     while trying:
-        if not test:
+        if mode == "practice":
             try:
                 available.extend(["random", "all"])
                 lesson_enquiry = [
@@ -77,11 +119,15 @@ def select_lesson(topic, test=False):
                 print("\nInput not recognised. Please try again.\n")
                 continue
         else:
+            if mode == "test":
+                message = "Select a lesson to be tested on          "
+            elif mode == "learning":
+                message = "Select a lesson to learn         "
             try:
                 lesson_enquiry = [
                     inquirer.List(
                         "lesson",
-                        message="Select a lesson to be tested on          ",
+                        message=message,
                         choices=available,
                     )
                 ]
@@ -98,13 +144,13 @@ def select_lesson(topic, test=False):
                         choices=[
                             "Continue",
                             "Choose different lesson",
-                            "Exit test mode",
+                            f"Exit {mode} mode",
                         ],
                     )
                 ]
                 selected = inquirer.prompt(continue_with_lesson)["continue"]
 
-                if selected == "Exit test mode":
+                if selected == f"Exit {mode} mode":
                     lesson = False
                     trying = False
                 elif selected == "Choose different lesson":

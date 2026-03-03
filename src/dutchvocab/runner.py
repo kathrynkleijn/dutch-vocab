@@ -17,48 +17,13 @@ def run_learning():
 
     time.sleep(1.5)
 
-    is_learning = True
-    choosing = True
-    while choosing:
-        topics = ["core", "fiction", "newspapers", "spoken", "web", "general"]
-        topic_enquiry = [
-            inquirer.List(
-                "topic",
-                message="Select a topic",
-                choices=topics,
-            )
-        ]
-        topic = inquirer.prompt(topic_enquiry)["topic"]
+    topic = vf.select_topic(mode="learning")
 
-        print(f"You have selected {topic.capitalize()}.\n")
-
-        continue_with_topic = [
-            inquirer.List(
-                "continue",
-                message="",
-                choices=[
-                    "Continue",
-                    "Choose different topic",
-                    "Exit learning mode",
-                ],
-            )
-        ]
-        selected = inquirer.prompt(continue_with_topic)["continue"]
-
-        if selected == "Exit learning mode":
-            print("Exiting learning mode...")
-            is_learning = False
-            break
-        elif selected == "Choose different topic":
-            continue
-        elif selected == "Continue":
-            choosing = False
-
-    if is_learning:
+    if topic is not None:
 
         lesson_obj = getattr(lo, topic)
 
-        lesson = vf.select_lesson(lesson_obj, test=True)
+        lesson = vf.select_lesson(lesson_obj, mode="learning")
 
         print(
             "\nEach word and associated phrase(s) will be presented. Press enter after to see the translation.\n\n"
@@ -89,60 +54,9 @@ def run_practice(log, practice=False):
         time.sleep(1.5)
         _ = input("Press Enter to continue")
 
-    playing = True
+    topic = vf.select_topic(mode="practice")
 
-    topics = [
-        "core",
-        "fiction",
-        "newspapers",
-        "spoken",
-        "web",
-        "general",
-        "all",
-        "random",
-    ]
-    choosing = True
-    while choosing:
-        print("\n\n")
-        topic_enquiry = [
-            inquirer.List(
-                "topic",
-                message="Select a topic, choose random for a random choice of topic, or choose all for an assortment of questions from all topics",
-                choices=topics,
-            )
-        ]
-        selected = inquirer.prompt(topic_enquiry)
-
-        if selected["topic"] == "random":
-            topic = random.choice(lessons.topics)
-        else:
-            topic = selected["topic"]
-
-        print(f"You have selected {topic.capitalize()}.\n")
-
-        continue_with_topic = [
-            inquirer.List(
-                "continue",
-                message="",
-                choices=[
-                    "Continue",
-                    "Choose different topic",
-                    "Exit practice mode",
-                ],
-            )
-        ]
-        selected = inquirer.prompt(continue_with_topic)["continue"]
-
-        if selected == "Exit practice mode":
-            print("Exiting practice mode...")
-            playing = False
-            break
-        elif selected == "Choose different topic":
-            continue
-        elif selected == "Continue":
-            choosing = False
-
-    if playing:
+    if topic is not None:
 
         print("\n")
         lesson_types = ["vocabulary", "phrases"]
@@ -162,7 +76,7 @@ def run_practice(log, practice=False):
             lesson = lo.all.all
         else:
             lesson_obj = getattr(lo, topic)
-            lesson = vf.select_lesson(lesson_obj)
+            lesson = vf.select_lesson(lesson_obj, mode="practice")
 
         if lesson:
 
@@ -238,48 +152,13 @@ def run_test():
     _ = input("\n\nPress Enter to continue")
     print("\n\n")
 
-    is_testing = True
-    choosing = True
-    while choosing:
-        topics = ["core", "fiction", "newspapers", "spoken", "web", "general"]
-        topic_enquiry = [
-            inquirer.List(
-                "topic",
-                message="Select a topic",
-                choices=topics,
-            )
-        ]
-        topic = inquirer.prompt(topic_enquiry)["topic"]
+    topic = vf.select_topic(mode="test")
 
-        print(f"You have selected {topic.capitalize()}.\n")
-
-        continue_with_topic = [
-            inquirer.List(
-                "continue",
-                message="",
-                choices=[
-                    "Continue",
-                    "Choose different topic",
-                    "Exit test mode",
-                ],
-            )
-        ]
-        selected = inquirer.prompt(continue_with_topic)["continue"]
-
-        if selected == "Exit test mode":
-            print("Exiting test mode...")
-            is_testing = False
-            break
-        elif selected == "Choose different topic":
-            continue
-        elif selected == "Continue":
-            choosing = False
-
-    if is_testing:
+    if topic is not None:
 
         lesson_obj = getattr(lo, topic)
 
-        lesson = vf.select_lesson(lesson_obj, test=True)
+        lesson = vf.select_lesson(lesson_obj, mode="test")
 
         if lesson:
             total = 2 * len(lesson.questions)
