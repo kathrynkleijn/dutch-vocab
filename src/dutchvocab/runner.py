@@ -290,7 +290,6 @@ def run_test():
             print(
                 f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
             )
-            print(log)
             fg.generate_test_figures(log)
 
     print("\n")
