@@ -32,31 +32,21 @@ class Lesson:
         for dutch, english in kwargs.items():
             self.words[dutch] = english
 
-    def create_manual_flashcard(self, question, answer):
-        self.flashcards[question] = answer
-
     def create_flashcards(self):
-        words_dict = {
-            dutch: english
-            for dutch, english in self.questions.items()
-            if len(dutch.split()) <= 2
-        }
-        sentences_dict = {
-            dutch: english
-            for dutch, english in self.questions.items()
-            if len(dutch.split()) > 2
-        }
-        for dutch, english in words_dict.items():
-            side1 = dutch + "\n"
-            side2 = english + "\n"
-            check_word = " " + dutch + " "
-            if "de" in dutch or "het" in dutch:
-                check_word = " " + dutch.split()[1] + " "
-            for sentence, translation in sentences_dict.items():
-                if check_word in sentence:
-                    side1 += "\n" + sentence
-                    side2 += "\n" + translation
-            self.flashcards[side1] = side2
+        current_word = None
+        for dutch, english in self.questions.items():
+            print(dutch, english)
+            if len(dutch.split()) <= 2:
+                if current_word is not None:
+                    self.flashcards[side1] = side2
+                current_word = dutch
+                side1 = current_word + "\n"
+                side2 = english + "\n"
+            else:
+                if current_word is not None:
+                    side1 += "\n" + dutch
+                    side2 += "\n" + english
+        self.flashcards[side1] = side2
 
 
 class Topic:
