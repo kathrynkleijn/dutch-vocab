@@ -291,15 +291,16 @@ def check_answer(
         if commas:
             answer_meanings = [item.strip() for item in user_answer.split(",")]
             test_meanings = [item.strip() for item in correct_answer.split(",")]
-            if test:
-                if Counter(answer_meanings) == Counter(test_meanings):
-                    print("Correct!\n")
-                    return update_results(
-                        correct=True, test=test, log=log, typo_count=typo_count
-                    )
-            else:
-                if set(answer_meanings) <= set(test_meanings):
-                    print("Correct!\n")
+            if Counter(answer_meanings) == Counter(test_meanings):
+                print("Correct!\n")
+                return update_results(
+                    correct=True, test=test, log=log, typo_count=typo_count
+                )
+            if not test:
+                if set(answer_meanings) < set(test_meanings):
+                    print("Correct!")
+                    print("Alternative meanings:")
+                    print(f"{correct_answer}\n")
                     return update_results(
                         correct=True, test=test, log=log, typo_count=typo_count
                     )
