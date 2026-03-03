@@ -37,19 +37,19 @@ def select_lesson(topic, test=False):
                         choices=available,
                     )
                 ]
-                selected = inquirer.prompt(lesson_enquiry)
+                selected = inquirer.prompt(lesson_enquiry)["lesson"]
 
-                if selected["lesson"] == "random":
+                if selected == "random":
                     lesson_num = random.randrange((len(topic.lessons) - 1))
                     lesson = copy.deepcopy(topic.lessons[int(lesson_num) - 1])
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
-                elif selected["lesson"] == "all":
+                elif selected == "all":
                     lesson = copy.deepcopy(topic.all)
                     print(f"\nYou have chosen all of {topic.name.capitalize()}.")
                 else:
-                    lesson = copy.deepcopy(topic.lessons[int(selected["lesson"]) - 1])
+                    lesson = copy.deepcopy(topic.lessons[int(selected) - 1])
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
@@ -91,12 +91,25 @@ def select_lesson(topic, test=False):
                 print(
                     f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                 )
-                continue_with_lesson = input(
-                    "\nPress Enter to accept this choice and continue, or type N to try again.      "
-                )
-                if continue_with_lesson.upper() == "N":
+                continue_with_lesson = [
+                    inquirer.List(
+                        "continue",
+                        message="",
+                        choices=[
+                            "Continue",
+                            "Choose different lesson",
+                            "Exit test mode",
+                        ],
+                    )
+                ]
+                selected = inquirer.prompt(continue_with_lesson)["continue"]
+
+                if selected == "Exit test mode":
+                    lesson = False
+                    trying = False
+                elif selected == "Choose different lesson":
                     continue
-                else:
+                elif selected == "Continue":
                     trying = False
             except:
                 print("\nInput not recognised. Please try again.\n")

@@ -280,17 +280,19 @@ def run_test():
         lesson_obj = getattr(lo, topic)
 
         lesson = vf.select_lesson(lesson_obj, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
 
-        if complete:
+        if lesson:
+            total = 2 * len(lesson.questions)
             print(
-                f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
+                "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
             )
-            fg.generate_test_figures(log)
+            correct, complete, log = vf.test(lesson)
+
+            if complete:
+                print(
+                    f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
+                )
+                fg.generate_test_figures(log)
 
     print("\n")
     mode_choice = [
