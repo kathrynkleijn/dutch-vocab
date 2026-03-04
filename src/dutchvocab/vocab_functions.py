@@ -287,14 +287,17 @@ def ignore_brackets(test):
 def question(
     language, dutch, english, lesson, phrases=True, log=None, typo_count=0, test=False
 ):
+    reset = "\033[0m"
     if language:
         question = dutch
         correct_answer = english
+        colour = "\033[38;2;255;165;0m"
     else:
         question = english
         correct_answer = dutch
+        colour = "\033[34m"
 
-    answer = input(f"{question}         ")
+    answer = input(f"{colour}{question}{reset}         ")
     if answer.lower() == "exit":
         return False
     if not answer:
