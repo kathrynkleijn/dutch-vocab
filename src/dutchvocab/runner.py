@@ -25,11 +25,13 @@ def run_learning():
 
         lesson = vf.select_lesson(lesson_obj, mode="learning")
 
-        print(
-            "\nEach word and associated phrase(s) will be presented. Press enter after to see the translation.\n\n"
-        )
+        if lesson:
 
-        vf.flashcards(lesson)
+            print(
+                "\nEach word and associated phrase(s) will be presented. Press enter after to see the translation.\n\n"
+            )
+
+            vf.flashcards(lesson)
 
     print("\n")
     mode_choice = [
