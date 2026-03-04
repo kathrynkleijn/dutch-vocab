@@ -183,34 +183,34 @@ def select_questions(lesson, ltype):
 
 
 def accept_alternatives(test, answer):
-    if "We" in test:
-        if "Wij" in answer:
-            return answer.replace("Wij", "We")
+    if "we" in test.lower():
+        if "wij" in answer:
+            return answer.replace("wij", "we")
         else:
             return answer
-    elif "Wij" in test:
-        if "We" in answer:
-            return answer.replace("We", "Wij")
+    elif "wij" in test.lower():
+        if "we" in answer:
+            return answer.replace("we", "wij")
         else:
             return answer
-    elif "Ze" in test:
-        if "Zij" in answer:
-            return answer.replace("Zij", "Ze")
+    elif "ze" in test.lower():
+        if "zij" in answer:
+            return answer.replace("zij", "ze")
         else:
             return answer
-    elif "Zij" in test:
-        if "Ze" in answer:
-            return answer.replace("Ze", "Zij")
+    elif "zij" in test.lower():
+        if "ze" in answer:
+            return answer.replace("ze", "zij")
         else:
             return answer
-    elif "Je" in test:
-        if "Jij" in answer:
-            return answer.replace("Jij", "Je")
+    elif "je" in test.lower():
+        if "jij" in answer:
+            return answer.replace("jij", "je")
         else:
             return answer
-    elif "Jij" in test:
-        if "Je" in answer:
-            return answer.replace("Je", "Jij")
+    elif "jij" in test.lower():
+        if "je" in answer:
+            return answer.replace("je", "jij")
         else:
             return answer
     else:
@@ -224,17 +224,19 @@ def answer_formatting(answer, test, lesson, language, phrases=True, correct_answ
         return " ".join(word for word in answer_words)
 
     if not language:
+
         for word in lessons.proper_nouns_ned:
             if word.lower() in answer_words:
                 index = answer_words.index(word.lower())
                 answer_words[index] = word
-        if len(test.split()) > 2 and len(correct_answer.split()) > 2:
-            answer_words[0] = answer_words[0].capitalize()
 
         answer_formatted = " ".join(word for word in answer_words)
 
         # check for wij/we, zij/ze, jij/je
         answer_formatted = accept_alternatives(correct_answer, answer_formatted)
+
+        if len(test.split()) > 2 and len(correct_answer.split()) > 2:
+            answer_formatted = answer_formatted[:1].upper() + answer_formatted[1:]
 
     else:
         for word in lessons.proper_nouns_eng:
