@@ -612,18 +612,22 @@ def flashcards(lesson):
     for language in range(2):
 
         for dutch, english in all_cards:
-
+            reset = "\033[0m"
             if language == 0:
                 first = dutch
                 second = english
+                colour1 = "\033[38;2;255;165;0m"
+                colour2 = "\033[34m"
             else:
                 first = english
                 second = dutch
+                colour1 = "\033[34m"
+                colour2 = "\033[38;2;255;165;0m"
 
             print("-----------------")
-            print(f"\n{first}")
+            print(f"\n{colour1}{first}{reset}")
             _ = input("")
-            print(f"\n{second}\n")
+            print(f"\n{colour2}{second}{reset}\n")
             print("-----------------\n")
             _ = input("")
 

@@ -35,7 +35,6 @@ class Lesson:
     def create_flashcards(self):
         current_word = None
         for dutch, english in self.questions.items():
-            print(dutch, english)
             if len(dutch.split()) <= 2:
                 if current_word is not None:
                     self.flashcards[side1] = side2
