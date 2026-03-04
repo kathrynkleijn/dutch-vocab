@@ -295,7 +295,7 @@ def question(
     else:
         question = english
         correct_answer = dutch
-        colour = "\033[34m"
+        colour = "\033[38;2;59;142;234m"
 
     answer = input(f"{colour}{question}{reset}         ")
     if answer.lower() == "exit":
@@ -617,11 +617,11 @@ def flashcards(lesson):
                 first = dutch
                 second = english
                 colour1 = "\033[38;2;255;165;0m"
-                colour2 = "\033[34m"
+                colour2 = "\033[38;2;59;142;234m"
             else:
                 first = english
                 second = dutch
-                colour1 = "\033[34m"
+                colour1 = "\033[38;2;59;142;234m"
                 colour2 = "\033[38;2;255;165;0m"
 
             print("-----------------")
