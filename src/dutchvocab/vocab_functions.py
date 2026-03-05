@@ -183,38 +183,14 @@ def select_questions(lesson, ltype):
 
 
 def accept_alternatives(test, answer):
-    if "we" in test.lower():
-        if "wij" in answer:
-            return answer.replace("wij", "we")
-        else:
-            return answer
-    elif "wij" in test.lower():
-        if "we" in answer:
-            return answer.replace("we", "wij")
-        else:
-            return answer
-    elif "ze" in test.lower():
-        if "zij" in answer:
-            return answer.replace("zij", "ze")
-        else:
-            return answer
-    elif "zij" in test.lower():
-        if "ze" in answer:
-            return answer.replace("ze", "zij")
-        else:
-            return answer
-    elif "je" in test.lower():
-        if "jij" in answer:
-            return answer.replace("jij", "je")
-        else:
-            return answer
-    elif "jij" in test.lower():
-        if "je" in answer:
-            return answer.replace("je", "jij")
-        else:
-            return answer
-    else:
-        return answer
+    pairs = [("we", "wij"), ("ze", "zij"), ("je", "jij")]
+    test_words = test.lower().split()
+    for a, b in pairs:
+        if a in test_words:
+            return answer.replace(b, a)
+        if b in test_words:
+            return answer.replace(a, b)
+    return answer
 
 
 def answer_formatting(answer, test, lesson, language, phrases=True, correct_answer=""):
