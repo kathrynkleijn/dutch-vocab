@@ -220,17 +220,42 @@ def answer_formatting(answer, test, lesson, language, phrases=True, correct_answ
                 index = answer_words.index(word.lower())
                 answer_words[index] = word
 
-        answer_words = ["I" if word == "i" else word for word in answer_words]
-        if len(test.split()) > 2 and len(lesson.questions[test].split()) > 2:
-            answer_words[0] = answer_words[0].capitalize()
+        correct_answer_lower = correct_answer.lower()
+
+        # check for interchangeable meaning words
+        word_checks = [("town", "city")]
+
+        for a, b in word_checks:
+            if a in correct_answer_lower.split():
+                answer_words = [a if word == b else word for word in answer_words]
+            if b in correct_answer_lower.split():
+                answer_words = [b if word == a else word for word in answer_words]
+
+        # re-capitalise I
+        replacements = {"i": "I", "i'm": "I'm"}
+        answer_words = [replacements.get(word, word) for word in answer_words]
 
         answer_formatted = " ".join(word for word in answer_words)
 
-        if "I am" in answer_formatted:
+        # check for contractions
+        checks = [
+            ("that is", "that's"),
+            ("it is", "it's"),
+        ]
+
+        for a, b in checks:
+            if a in correct_answer_lower:
+                answer_formatted = answer_formatted.replace(b, a)
+            if b in correct_answer_lower:
+                answer_formatted = answer_formatted.replace(a, b)
+
+        if "I am" in correct_answer:
+            answer_formatted = answer_formatted.replace("I'm", "I am")
+        if "I'm" in correct_answer:
             answer_formatted = answer_formatted.replace("I am", "I'm")
 
-        if "town" in answer_formatted:
-            answer_formatted = answer_formatted.replace("town", "city")
+        if len(test.split()) > 2 and len(correct_answer.split()) > 2:
+            answer_formatted = answer_formatted[:1].upper() + answer_formatted[1:]
 
     return answer_formatted
 
