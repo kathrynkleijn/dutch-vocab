@@ -499,7 +499,7 @@ def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
 
 
 def randomly_generated_lesson(
-    lesson, questions, phrases=True, repeat=None, testing=None
+    lesson, questions, phrases=True, single=None, repeat=None, testing=None
 ):
 
     if repeat is None:
@@ -522,9 +522,10 @@ def randomly_generated_lesson(
 
         questions_list = questions_list[:questions]
 
-        # add None as language placeholder when not a repeated lesson
+        # add None as language placeholder when not a repeated lesson, or add
+        # chosen language
         for dutch, english in questions_list:
-            all_questions.append((None, dutch, english))
+            all_questions.append((single, dutch, english))
     else:
         all_questions = repeat
 
@@ -536,7 +537,7 @@ def randomly_generated_lesson(
     asked_questions = []
 
     for language, dutch, english in all_questions:
-        # choose language if not fixed by repeat: 0 = English->Dutch, 1 = Dutch->English
+        # choose language if not fixed by repeat or choice: 0 = English->Dutch, 1 = Dutch->English
         if testing is not None:
             language = testing
         elif language is None:

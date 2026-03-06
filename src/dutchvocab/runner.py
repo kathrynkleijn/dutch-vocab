@@ -82,10 +82,28 @@ def run_practice(log, practice=False):
 
         if lesson:
 
+            language_enquiry = [
+                inquirer.List(
+                    "language",
+                    message="Choose whether to have a questions in a single language or a mixture of both.",
+                    choices=["Dutch->English", "English->Dutch", "Both"],
+                )
+            ]  # "\nThis choice can be disabled in settings."
+            language_choice = inquirer.prompt(language_enquiry)["language"]
+
+            if language_choice == "Dutch->English":
+                single = 1
+            elif language_choice == "English->Dutch":
+                single = 0
+            elif language_choice == "Both":
+                single = None
+
             questions = vf.select_questions(lesson, ltype)
 
             correct, questions, asked_questions, eng_typo = (
-                vf.randomly_generated_lesson(lesson, questions, phrases=phrases)
+                vf.randomly_generated_lesson(
+                    lesson, questions, phrases=phrases, single=single
+                )
             )
 
             if questions:
