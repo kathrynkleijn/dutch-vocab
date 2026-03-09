@@ -10,6 +10,7 @@ class Lesson:
         self.name = topic + str(number)
         self.questions = OrderedDict()
         self.words = OrderedDict()
+        self.flashcards = OrderedDict()
 
     def __str__(self):
         return f"{self.name}"
@@ -30,6 +31,21 @@ class Lesson:
     def add_words(self, **kwargs):
         for dutch, english in kwargs.items():
             self.words[dutch] = english
+
+    def create_flashcards(self):
+        current_word = None
+        for dutch, english in self.questions.items():
+            if len(dutch.split()) <= 2:
+                if current_word is not None:
+                    self.flashcards[side1] = side2
+                current_word = dutch
+                side1 = current_word + "\n"
+                side2 = english + "\n"
+            else:
+                if current_word is not None:
+                    side1 += "\n" + dutch
+                    side2 += "\n" + english
+        self.flashcards[side1] = side2
 
 
 class Topic:
@@ -72,6 +88,7 @@ for topic in topics:
         new_lesson.add_words(**words)
         topic.add_lesson(new_lesson)
     all.add_lesson(topic.all)
+
 
 available = ""
 for num, topic in enumerate(topics):

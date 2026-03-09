@@ -2,6 +2,7 @@ import random
 import math
 import pandas as pd
 from datetime import date
+from dutchvocab import lesson_objects as lo
 from dutchvocab import lessons
 from collections import Counter
 import copy
@@ -23,11 +24,52 @@ def slow_print(text, char_delay=0.01, line_delay=0.2):
         time.sleep(line_delay)
 
 
-def select_lesson(topic, test=False):
+def select_topic(mode):
+    choosing = True
+    topics = [topic.name for topic in lo.topics]
+    message = "Select a topic"
+    if mode == "practice":
+        topics.extend(["random", "all"])
+        message = "Select a topic, choose random for a random choice of topic, or choose all for an assortment of questions from all topics"
+
+    while choosing:
+        topic_enquiry = [
+            inquirer.List(
+                "topic",
+                message=message,
+                choices=topics,
+            )
+        ]
+        topic = inquirer.prompt(topic_enquiry)["topic"]
+
+        print(f"You have selected {topic.capitalize()}.\n")
+
+        continue_with_topic = [
+            inquirer.List(
+                "continue",
+                message="",
+                choices=[
+                    "Continue",
+                    "Choose different topic",
+                    f"Exit {mode} mode",
+                ],
+            )
+        ]
+        selected = inquirer.prompt(continue_with_topic)["continue"]
+        if selected == f"Exit {mode} mode":
+            print(f"Exiting {mode} mode...")
+            return None
+        elif selected == "Choose different topic":
+            continue
+        elif selected == "Continue":
+            return topic
+
+
+def select_lesson(topic, mode):
     trying = True
     available = [lesson for lesson in range(1, len(topic.lessons) + 1)]
     while trying:
-        if not test:
+        if mode == "practice":
             try:
                 available.extend(["random", "all"])
                 lesson_enquiry = [
@@ -37,41 +79,55 @@ def select_lesson(topic, test=False):
                         choices=available,
                     )
                 ]
-                selected = inquirer.prompt(lesson_enquiry)
+                selected = inquirer.prompt(lesson_enquiry)["lesson"]
 
-                if selected["lesson"] == "random":
+                if selected == "random":
                     lesson_num = random.randrange((len(topic.lessons) - 1))
                     lesson = copy.deepcopy(topic.lessons[int(lesson_num) - 1])
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
-                elif selected["lesson"] == "all":
+                elif selected == "all":
                     lesson = copy.deepcopy(topic.all)
                     print(f"\nYou have chosen all of {topic.name.capitalize()}.")
                 else:
-                    lesson = copy.deepcopy(topic.lessons[int(selected["lesson"]) - 1])
+                    lesson = copy.deepcopy(topic.lessons[int(selected) - 1])
                     print(
                         f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                     )
-                continue_with_lesson = input(
-                    "\nPress Enter to accept this choice and continue, or type N to try again. Type X to cancel and exit.       "
-                )
-                if continue_with_lesson.upper() == "N":
-                    continue
-                elif continue_with_lesson.upper() == "X":
+                continue_with_lesson = [
+                    inquirer.List(
+                        "continue",
+                        message="",
+                        choices=[
+                            "Continue",
+                            "Choose different lesson",
+                            "Exit practice mode",
+                        ],
+                    )
+                ]
+                selected = inquirer.prompt(continue_with_lesson)["continue"]
+
+                if selected == "Exit practice mode":
                     lesson = False
                     trying = False
-                else:
+                elif selected == "Choose different lesson":
+                    continue
+                elif selected == "Continue":
                     trying = False
             except:
                 print("\nInput not recognised. Please try again.\n")
                 continue
         else:
+            if mode == "test":
+                message = "Select a lesson to be tested on          "
+            elif mode == "learning":
+                message = "Select a lesson to learn         "
             try:
                 lesson_enquiry = [
                     inquirer.List(
                         "lesson",
-                        message="Select a lesson to be tested on          ",
+                        message=message,
                         choices=available,
                     )
                 ]
@@ -81,12 +137,25 @@ def select_lesson(topic, test=False):
                 print(
                     f"\nYou have chosen lesson {lesson.number} from {topic.name.capitalize()}."
                 )
-                continue_with_lesson = input(
-                    "\nPress Enter to accept this choice and continue, or type N to try again.      "
-                )
-                if continue_with_lesson.upper() == "N":
+                continue_with_lesson = [
+                    inquirer.List(
+                        "continue",
+                        message="",
+                        choices=[
+                            "Continue",
+                            "Choose different lesson",
+                            f"Exit {mode} mode",
+                        ],
+                    )
+                ]
+                selected = inquirer.prompt(continue_with_lesson)["continue"]
+
+                if selected == f"Exit {mode} mode":
+                    lesson = False
+                    trying = False
+                elif selected == "Choose different lesson":
                     continue
-                else:
+                elif selected == "Continue":
                     trying = False
             except:
                 print("\nInput not recognised. Please try again.\n")
@@ -94,9 +163,14 @@ def select_lesson(topic, test=False):
     return lesson
 
 
-def select_questions(lesson):
+def select_questions(lesson, ltype):
+    if ltype == "phrases":
+        available = len(lesson.questions)
+    elif ltype == "vocabulary":
+        available = len(lesson.words)
+
     questions = input(
-        f"\nThere are {len(lesson.questions)} questions available. How many questions would you like?        "
+        f"\nThere are {available} questions available. How many questions would you like?        "
     )
     if questions == "random":
         questions = random.randrange(5, len(lesson.questions))
@@ -108,53 +182,15 @@ def select_questions(lesson):
     return questions
 
 
-def select_words(lesson):
-    questions = input(
-        f"\nThere are {len(lesson.words)} words available. How many would you like?        "
-    )
-    if questions == "random":
-        questions = random.randrange(5, len(lesson.words))
-    else:
-        questions = int(questions)
-    print(
-        f"\nYou will have {questions} words. Type 'exit' at any time to end the lesson.\n\n"
-    )
-    return questions
-
-
 def accept_alternatives(test, answer):
-    if "We" in test:
-        if "Wij" in answer:
-            return answer.replace("Wij", "We")
-        else:
-            return answer
-    elif "Wij" in test:
-        if "We" in answer:
-            return answer.replace("We", "Wij")
-        else:
-            return answer
-    elif "Ze" in test:
-        if "Zij" in answer:
-            return answer.replace("Zij", "Ze")
-        else:
-            return answer
-    elif "Zij" in test:
-        if "Ze" in answer:
-            return answer.replace("Ze", "Zij")
-        else:
-            return answer
-    elif "Je" in test:
-        if "Jij" in answer:
-            return answer.replace("Jij", "Je")
-        else:
-            return answer
-    elif "Jij" in test:
-        if "Je" in answer:
-            return answer.replace("Je", "Jij")
-        else:
-            return answer
-    else:
-        return answer
+    pairs = [("we", "wij"), ("ze", "zij"), ("je", "jij")]
+    test_words = test.lower().split()
+    for a, b in pairs:
+        if a in test_words:
+            return answer.replace(b, a)
+        if b in test_words:
+            return answer.replace(a, b)
+    return answer
 
 
 def answer_formatting(answer, test, lesson, language, phrases=True, correct_answer=""):
@@ -164,17 +200,19 @@ def answer_formatting(answer, test, lesson, language, phrases=True, correct_answ
         return " ".join(word for word in answer_words)
 
     if not language:
+
         for word in lessons.proper_nouns_ned:
             if word.lower() in answer_words:
                 index = answer_words.index(word.lower())
                 answer_words[index] = word
-        if len(test.split()) > 2 and len(correct_answer.split()) > 2:
-            answer_words[0] = answer_words[0].capitalize()
 
         answer_formatted = " ".join(word for word in answer_words)
 
         # check for wij/we, zij/ze, jij/je
         answer_formatted = accept_alternatives(correct_answer, answer_formatted)
+
+        if len(test.split()) > 2 and len(correct_answer.split()) > 2:
+            answer_formatted = answer_formatted[:1].upper() + answer_formatted[1:]
 
     else:
         for word in lessons.proper_nouns_eng:
@@ -182,17 +220,42 @@ def answer_formatting(answer, test, lesson, language, phrases=True, correct_answ
                 index = answer_words.index(word.lower())
                 answer_words[index] = word
 
-        answer_words = ["I" if word == "i" else word for word in answer_words]
-        if len(test.split()) > 2 and len(lesson.questions[test].split()) > 2:
-            answer_words[0] = answer_words[0].capitalize()
+        correct_answer_lower = correct_answer.lower()
+
+        # check for interchangeable meaning words
+        word_checks = [("town", "city")]
+
+        for a, b in word_checks:
+            if a in correct_answer_lower.split():
+                answer_words = [a if word == b else word for word in answer_words]
+            if b in correct_answer_lower.split():
+                answer_words = [b if word == a else word for word in answer_words]
+
+        # re-capitalise I
+        replacements = {"i": "I", "i'm": "I'm"}
+        answer_words = [replacements.get(word, word) for word in answer_words]
 
         answer_formatted = " ".join(word for word in answer_words)
 
-        if "I am" in answer_formatted:
+        # check for contractions
+        checks = [
+            ("that is", "that's"),
+            ("it is", "it's"),
+        ]
+
+        for a, b in checks:
+            if a in correct_answer_lower:
+                answer_formatted = answer_formatted.replace(b, a)
+            if b in correct_answer_lower:
+                answer_formatted = answer_formatted.replace(a, b)
+
+        if "I am" in correct_answer:
+            answer_formatted = answer_formatted.replace("I'm", "I am")
+        if "I'm" in correct_answer:
             answer_formatted = answer_formatted.replace("I am", "I'm")
 
-        if "town" in answer_formatted:
-            answer_formatted = answer_formatted.replace("town", "city")
+        if len(test.split()) > 2 and len(correct_answer.split()) > 2:
+            answer_formatted = answer_formatted[:1].upper() + answer_formatted[1:]
 
     return answer_formatted
 
@@ -227,14 +290,17 @@ def ignore_brackets(test):
 def question(
     language, dutch, english, lesson, phrases=True, log=None, typo_count=0, test=False
 ):
+    reset = "\033[0m"
     if language:
         question = dutch
         correct_answer = english
+        colour = "\033[38;2;255;165;0m"
     else:
         question = english
         correct_answer = dutch
+        colour = "\033[38;2;59;142;234m"
 
-    answer = input(f"{question}         ")
+    answer = input(f"{colour}{question}{reset}         ")
     if answer.lower() == "exit":
         return False
     if not answer:
@@ -290,15 +356,16 @@ def check_answer(
         if commas:
             answer_meanings = [item.strip() for item in user_answer.split(",")]
             test_meanings = [item.strip() for item in correct_answer.split(",")]
-            if test:
-                if Counter(answer_meanings) == Counter(test_meanings):
-                    print("Correct!\n")
-                    return update_results(
-                        correct=True, test=test, log=log, typo_count=typo_count
-                    )
-            else:
-                if set(answer_meanings) <= set(test_meanings):
-                    print("Correct!\n")
+            if Counter(answer_meanings) == Counter(test_meanings):
+                print("Correct!\n")
+                return update_results(
+                    correct=True, test=test, log=log, typo_count=typo_count
+                )
+            if not test:
+                if set(answer_meanings) < set(test_meanings):
+                    print("Correct!")
+                    print("Alternative meanings:")
+                    print(f"{correct_answer}\n")
                     return update_results(
                         correct=True, test=test, log=log, typo_count=typo_count
                     )
@@ -431,32 +498,54 @@ def update_results(correct, test=False, log=None, typo_count=0, error="Ok"):
     return 0, typo_count
 
 
-def randomly_generated_lesson(lesson, questions, testing=None):
+def randomly_generated_lesson(
+    lesson, questions, phrases=True, single=None, repeat=None, testing=None
+):
 
-    all_questions = list(lesson.questions.items())
+    if repeat is None:
+        all_questions = []
+
+        if phrases:
+            questions_list = list(lesson.questions.items())
+        else:
+            questions_list = list(lesson.words.items())
+
+        if questions > len(questions_list):
+            extra = math.ceil(questions / len(questions_list)) - 1
+            for _ in range(extra):
+                if phrases:
+                    extra_questions = list(lesson.questions.items())
+                else:
+                    extra_questions = list(lesson.words.items())
+                random.shuffle(extra_questions)
+                questions_list.extend(extra_questions)
+
+        questions_list = questions_list[:questions]
+
+        # add None as language placeholder when not a repeated lesson, or add
+        # chosen language
+        for dutch, english in questions_list:
+            all_questions.append((single, dutch, english))
+    else:
+        all_questions = repeat
 
     random.shuffle(all_questions)
-
-    if questions < len(all_questions):
-        all_questions = all_questions[:questions]
-    elif questions > len(all_questions):
-        extra = math.ceil(questions / len(all_questions)) - 1
-        for _ in range(extra):
-            extra_questions = list(lesson.questions.items())
-            all_questions.extend(random.shuffle(extra_questions))
 
     correct = 0
     eng_typo = 0
     question_number = 1
     asked_questions = []
-    for dutch, english in all_questions:
-        # choose language: 0 = English->Dutch, 1 = Dutch->English
-        if testing is None:
-            language = random.randrange(2)
-        else:
-            language = testing
 
-        result = question(language, dutch, english, lesson, typo_count=eng_typo)
+    for language, dutch, english in all_questions:
+        # choose language if not fixed by repeat or choice: 0 = English->Dutch, 1 = Dutch->English
+        if testing is not None:
+            language = testing
+        elif language is None:
+            language = random.randrange(2)
+
+        result = question(
+            language, dutch, english, lesson, phrases=phrases, typo_count=eng_typo
+        )
         if not result:
             print("Exiting lesson...")
             questions = question_number - 1
@@ -464,103 +553,18 @@ def randomly_generated_lesson(lesson, questions, testing=None):
         correct += result[0]
         eng_typo += result[1]
 
-        asked_questions.append((language, dutch, english))
+        if repeat is None:
+            asked_questions.append((language, dutch, english))
 
         # count questions
         question_number += 1
 
     print(f"Lesson finished. You got {correct}/{questions} correct.")
+
+    if repeat:
+        asked_questions = all_questions
 
     return correct, questions, asked_questions, eng_typo
-
-
-def randomly_generated_vocab_lesson(lesson, words):
-
-    all_questions = list(lesson.words.items())
-
-    random.shuffle(all_questions)
-
-    if words < len(all_questions):
-        all_questions = all_questions[:words]
-    elif words > len(all_questions):
-        extra = math.ceil(words / len(all_questions)) - 1
-        for _ in range(extra):
-            extra_questions = list(lesson.words.items())
-            all_questions.extend(random.shuffle(extra_questions))
-
-    correct = 0
-    eng_typo = 0
-    question_number = 1
-    asked_questions = []
-    for dutch, english in all_questions:
-        # choose language: 0 = English->Dutch, 1 = Dutch->English
-        language = random.randrange(2)
-
-        result = question(
-            language, dutch, english, lesson, phrases=False, typo_count=eng_typo
-        )
-        if not result:
-            print("Exiting lesson...")
-            words = question_number - 1
-            break
-        correct += result[0]
-        eng_typo += result[1]
-
-        asked_questions.append((language, dutch, english))
-
-        # count questions
-        question_number += 1
-
-    print(f"Lesson finished. You got {correct}/{words} correct.")
-
-    return correct, words, asked_questions, eng_typo
-
-
-def repeated_lesson(lesson, questions, all_questions=[]):
-
-    random.shuffle(all_questions)
-
-    correct = 0
-    question_number = 1
-
-    for language, dutch, english in all_questions:
-
-        if language:
-            # Dutch question
-            answer = input(f"{dutch}         ")
-            if answer.lower() == "exit":
-                print("Exiting lesson...")
-                questions = question_number - 1
-                break
-            if not answer:
-                print("That's not right!")
-                print(f"{english}\n")
-            else:
-                answer = answer_formatting(
-                    answer, dutch, lesson, language, correct_answer=english
-                )
-                result = check_answer(
-                    user_answer=answer,
-                    correct_answer=english,
-                    dutch_to_english=True,
-                    phrases=True,
-                )
-                correct += result[0]
-
-        else:
-            # English question
-            result = question(language, dutch, english, lesson)
-            if not result:
-                questions = question_number - 1
-                break
-            correct += result[0]
-
-        # count questions
-        question_number += 1
-
-    print(f"Lesson finished. You got {correct}/{questions} correct.")
-
-    return correct, questions, all_questions
 
 
 def test(lesson):
@@ -603,6 +607,35 @@ def test(lesson):
     return correct, complete, log
 
 
+def flashcards(lesson):
+
+    lesson.create_flashcards()
+
+    all_cards = list(lesson.flashcards.items())
+
+    for language in range(2):
+
+        for dutch, english in all_cards:
+            reset = "\033[0m"
+            if language == 0:
+                first = dutch
+                second = english
+                colour1 = "\033[38;2;255;165;0m"
+                colour2 = "\033[38;2;59;142;234m"
+            else:
+                first = english
+                second = dutch
+                colour1 = "\033[38;2;59;142;234m"
+                colour2 = "\033[38;2;255;165;0m"
+
+            print("-----------------")
+            print(f"\n{colour1}{first}{reset}")
+            _ = input("")
+            print(f"\n{colour2}{second}{reset}\n")
+            print("-----------------\n")
+            _ = input("")
+
+
 def update_log(log, topic, lesson, questions, correct, ltype, eng_typo):
 
     log_today = {
@@ -625,6 +658,9 @@ def visualisation_today(year=False, month=False, day=False):
 
     log = pd.read_csv("learning_log.csv")
     log_today = log[log.Date == chosen_date.strftime("%Y-%m-%d")]
+
+    if log_today.empty:
+        return
 
     log_today = log_today.groupby(["Type", "Module", "Lesson"], observed=True).agg(
         Questions=("Questions", "sum"), Score=("Score", "sum")
@@ -681,6 +717,7 @@ def visualisation_today(year=False, month=False, day=False):
             axes[i][1].set_ylim([0, 100])
 
     plt.tight_layout()
+    plt.suptitle("Today's Results")
     plt.show()
 
 

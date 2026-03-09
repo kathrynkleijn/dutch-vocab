@@ -120,6 +120,17 @@ test_lesson_22.add_question(
     "to find",
 )
 
+test_lesson_23 = lesson_objects.Lesson(23, "core")
+test_lesson_23.add_question(
+    "Het huis waarin wij woonden lag aan een smalle straat",
+    "The house where we lived was in a narrow street",
+)
+
+test_lesson_24 = lesson_objects.Lesson(24, "spoken")
+test_lesson_24.add_question(
+    "Dat is hartstikke fijn voor dat kind", "That is heartening for that child"
+)
+
 
 core = lesson_objects.Topic("core")
 core.add_lesson(test_lesson_1)
@@ -234,6 +245,17 @@ class Test(TestCase):
         mocked_input.side_effect = ["We staan voor de deur van het hotel"]
         result = vocab_functions.randomly_generated_lesson(
             copy.deepcopy(test_lesson_3), 1, testing=0
+        )
+        expected_result = 1
+        self.assertEqual(result[0], expected_result)
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_wij_we3(self, mocked_input):
+        mocked_input.side_effect = [
+            "Het huis waarin we woonden lag aan een smalle straat"
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_23), 1, testing=0
         )
         expected_result = 1
         self.assertEqual(result[0], expected_result)
@@ -540,6 +562,20 @@ class Test(TestCase):
         expected_result1 = 1
         expected_result2 = 0
         self.assertEqual((result1[0], result2[0]), (expected_result1, expected_result2))
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_apostrophe(self, mocked_input):
+        mocked_input.side_effect = [
+            "That's heartening for that child",
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_24), 1, testing=1
+        )
+        expected_result = 1
+        self.assertEqual(
+            result[0],
+            expected_result,
+        )
 
 
 if __name__ == "__main__":

@@ -9,60 +9,56 @@ import inquirer
 import time
 
 
-def run_practice(log):
+def run_learning():
 
     print(
-        "\nYou have chosen practice mode. You can now choose from any of the available lessons to practise a mixture of words and phrases.\n\n"
+        "\nYou have chosen learning mode. Select a topic and lesson to learn the words and phrases.\n\n"
     )
+
     time.sleep(1.5)
-    _ = input("Press Enter to continue")
 
-    playing = True
-    while playing:
+    topic = vf.select_topic(mode="learning")
 
-        topics = [
-            "core",
-            "fiction",
-            "newspapers",
-            "spoken",
-            "web",
-            "general",
-            "all",
-            "random",
-        ]
-        choosing = True
-        while choosing:
-            print("\n\n")
-            topic_enquiry = [
-                inquirer.List(
-                    "topic",
-                    message="Select a topic, choose random for a random choice of topic, or choose all for an assortment of questions from all topics",
-                    choices=topics,
-                )
-            ]
-            selected = inquirer.prompt(topic_enquiry)
+    if topic is not None:
 
-            if selected["topic"] == "random":
-                topic = random.choice(lessons.topics)
-            else:
-                topic = selected["topic"]
+        lesson_obj = getattr(lo, topic)
 
-            print(f"You have selected {topic.capitalize()}.")
+        lesson = vf.select_lesson(lesson_obj, mode="learning")
 
-            continue_with_topic = input(
-                "\nPress Enter to accept this choice and continue, or type N to try again. Type X to cancel and exit.     "
+        if lesson:
+
+            print(
+                "\nEach word and associated phrase(s) will be presented. Press enter after to see the translation.\n\n"
             )
-            if continue_with_topic.upper() == "X":
-                print("Exiting lesson...")
-                playing = False
-                break
-            elif continue_with_topic.upper() == "N":
-                continue
-            else:
-                choosing = False
 
-        if not playing:
-            break
+            vf.flashcards(lesson)
+
+    print("\n")
+    mode_choice = [
+        inquirer.List(
+            "next",
+            message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
+            choices=["Learning", "Practice", "Test", "Exit"],
+        )
+    ]
+    next_action = inquirer.prompt(mode_choice)["next"]
+    if next_action == "Exit":
+        return None
+    return next_action
+
+
+def run_practice(log, practice=False):
+
+    if not practice:
+        print(
+            "\nYou have chosen practice mode. You can now choose from any of the available lessons to practise a mixture of words and phrases.\n\n"
+        )
+        time.sleep(1.5)
+        _ = input("Press Enter to continue")
+
+    topic = vf.select_topic(mode="practice")
+
+    if topic is not None:
 
         print("\n")
         lesson_types = ["vocabulary", "phrases"]
@@ -76,247 +72,95 @@ def run_practice(log):
         selected_type = inquirer.prompt(lesson_enquiry)
         ltype = selected_type["lesson_type"]
 
-        if topic == "core":
-            lesson = vf.select_lesson(lo.core)
-            if not lesson:
-                playing = False
-                break
+        phrases = True if ltype == "phrases" else False
 
-            if ltype == "phrases":
-                questions = vf.select_questions(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_lesson(lesson, questions)
-                )
-
-            elif ltype == "vocabulary":
-                words = vf.select_words(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_vocab_lesson(lesson, words)
-                )
-
-            if questions:
-                log = vf.update_log(
-                    log, topic, lesson.name, questions, correct, ltype, eng_typo
-                )
-
-        elif topic == "fiction":
-            lesson = vf.select_lesson(lo.fiction)
-            if not lesson:
-                playing = False
-                break
-
-            if ltype == "phrases":
-                questions = vf.select_questions(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_lesson(lesson, questions)
-                )
-
-            elif ltype == "vocabulary":
-                words = vf.select_words(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_vocab_lesson(lesson, words)
-                )
-
-            if questions:
-                log = vf.update_log(
-                    log, topic, lesson.name, questions, correct, ltype, eng_typo
-                )
-
-        elif topic == "newspapers":
-            lesson = vf.select_lesson(lo.newspapers)
-            if not lesson:
-                playing = False
-                break
-
-            if ltype == "phrases":
-                questions = vf.select_questions(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_lesson(lesson, questions)
-                )
-
-            elif ltype == "vocabulary":
-                words = vf.select_words(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_vocab_lesson(lesson, words)
-                )
-
-            if questions:
-                log = vf.update_log(
-                    log, topic, lesson.name, questions, correct, ltype, eng_typo
-                )
-
-        elif topic == "spoken":
-            lesson = vf.select_lesson(lo.spoken)
-            if not lesson:
-                playing = False
-                break
-
-            if ltype == "phrases":
-                questions = vf.select_questions(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_lesson(lesson, questions)
-                )
-
-            elif ltype == "vocabulary":
-                words = vf.select_words(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_vocab_lesson(lesson, words)
-                )
-
-            if questions:
-                log = vf.update_log(
-                    log, topic, lesson.name, questions, correct, ltype, eng_typo
-                )
-
-        elif topic == "web":
-            lesson = vf.select_lesson(lo.web)
-            if not lesson:
-                playing = False
-                break
-
-            if ltype == "phrases":
-                questions = vf.select_questions(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_lesson(lesson, questions)
-                )
-
-            elif ltype == "vocabulary":
-                words = vf.select_words(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_vocab_lesson(lesson, words)
-                )
-
-            if questions:
-                log = vf.update_log(
-                    log, topic, lesson.name, questions, correct, ltype, eng_typo
-                )
-
-        elif topic == "general":
-            lesson = vf.select_lesson(lo.general)
-            if not lesson:
-                playing = False
-                break
-
-            if ltype == "phrases":
-                questions = vf.select_questions(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_lesson(lesson, questions)
-                )
-
-            elif ltype == "vocabulary":
-                words = vf.select_words(lesson)
-
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_vocab_lesson(lesson, words)
-                )
-
-            if questions:
-                log = vf.update_log(
-                    log, topic, lesson.name, questions, correct, ltype, eng_typo
-                )
-
-        elif topic == "all":
+        if topic == "all":
             lesson = lo.all.all
-            if ltype == "phrases":
-                questions = vf.select_questions(lesson)
+        else:
+            lesson_obj = getattr(lo, topic)
+            lesson = vf.select_lesson(lesson_obj, mode="practice")
 
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_lesson(lesson, questions)
+        if lesson:
+
+            language_enquiry = [
+                inquirer.List(
+                    "language",
+                    message="Choose whether to have a questions in a single language or a mixture of both.",
+                    choices=["Dutch->English", "English->Dutch", "Both"],
                 )
+            ]  # "\nThis choice can be disabled in settings."
+            language_choice = inquirer.prompt(language_enquiry)["language"]
 
-            elif ltype == "vocabulary":
-                words = vf.select_words(lesson)
+            if language_choice == "Dutch->English":
+                single = 1
+            elif language_choice == "English->Dutch":
+                single = 0
+            elif language_choice == "Both":
+                single = None
 
-                correct, questions, asked_questions, eng_typo = (
-                    vf.randomly_generated_vocab_lesson(lesson, words)
+            questions = vf.select_questions(lesson, ltype)
+
+            correct, questions, asked_questions, eng_typo = (
+                vf.randomly_generated_lesson(
+                    lesson, questions, phrases=phrases, single=single
                 )
+            )
 
             if questions:
                 log = vf.update_log(
                     log, topic, lesson.name, questions, correct, ltype, eng_typo
                 )
 
-        if topic != "all":
-            try:
-                while (correct / questions) * 100 < 50:
-                    again = input("\nScore less than 50% - try again?  (Y/N)       ")
-                    print("\n")
-                    if again.upper() != "Y":
-                        break
-                    print(f"Retrying lesson {lesson.number} from {topic} ...\n")
-                    if topic == "core":
-                        lesson = copy.deepcopy(lo.core.lessons[int(lesson.number) - 1])
-                    elif topic == "fiction":
-                        lesson = copy.deepcopy(
-                            lo.fiction.lessons[int(lesson.number) - 1]
+            if topic != "all":
+                try:
+                    while (correct / questions) * 100 < 50:
+                        again = input(
+                            "\nScore less than 50% - try again?  (Y/N)       "
                         )
-                    elif topic == "newspapers":
-                        lesson = copy.deepcopy(
-                            lo.newspapers.lessons[int(lesson.number) - 1]
-                        )
-                    elif topic == "spoken":
-                        lesson = copy.deepcopy(
-                            lo.spoken.lessons[int(lesson.number) - 1]
-                        )
-                    elif topic == "web":
-                        lesson = copy.deepcopy(lo.web.lessons[int(lesson.number) - 1])
-                    elif topic == "general":
-                        lesson = copy.deepcopy(
-                            lo.general.lessons[int(lesson.number) - 1]
-                        )
-                    correct, questions, asked_questions = vf.repeated_lesson(
-                        lesson, questions, all_questions=asked_questions
-                    )
-                    if questions:
-                        log = vf.update_log(
-                            log, topic, lesson.name, questions, correct, ltype
-                        )
-            except ZeroDivisionError:
-                pass
+                        print("\n")
+                        if again.upper() != "Y":
+                            break
+                        print(f"Retrying lesson {lesson.number} from {topic} ...\n")
 
-        print("\n")
-        mode_choice = [
-            inquirer.List(
-                "next",
-                message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
-                choices=["Practice", "Test", "Exit"],
-            )
-        ]
-        next_action = inquirer.prompt(mode_choice)["next"]
-        if next_action == "Practice":
-            # repeat in practice mode
-            continue
-        elif next_action == "Exit":
-            # exit the session
-            return None, log
-        else:
-            # switch to "Test" mode
-            return next_action, log
+                        lesson = copy.deepcopy(
+                            lesson_obj.lessons[int(lesson.number) - 1]
+                        )
 
-    if not playing:
-        print("\n")
-        mode_choice = [
-            inquirer.List(
-                "next",
-                message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
-                choices=["Practice", "Test", "Exit"],
-            )
-        ]
-        next_action = inquirer.prompt(mode_choice)["next"]
-        if next_action == "Exit":
-            return None, log
-        return next_action, log
+                        correct, questions, asked_questions, eng_typo = (
+                            vf.randomly_generated_lesson(
+                                lesson,
+                                questions,
+                                phrases=phrases,
+                                repeat=asked_questions,
+                            )
+                        )
+
+                        if questions:
+                            log = vf.update_log(
+                                log,
+                                topic,
+                                lesson.name,
+                                questions,
+                                correct,
+                                ltype,
+                                eng_typo,
+                            )
+
+                except ZeroDivisionError:
+                    pass
+
+    print("\n")
+    mode_choice = [
+        inquirer.List(
+            "next",
+            message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
+            choices=["Learning", "Practice", "Test", "Exit"],
+        )
+    ]
+    next_action = inquirer.prompt(mode_choice)["next"]
+    if next_action == "Exit":
+        return None, log
+    return next_action, log
 
 
 def run_test():
@@ -328,81 +172,33 @@ def run_test():
     _ = input("\n\nPress Enter to continue")
     print("\n\n")
 
-    topics = ["core", "fiction", "newspapers", "spoken", "web", "general"]
-    topic_enquiry = [
-        inquirer.List(
-            "topic",
-            message="Select a topic",
-            choices=topics,
-        )
-    ]
-    selected = inquirer.prompt(topic_enquiry)
+    topic = vf.select_topic(mode="test")
 
-    topic = selected["topic"]
+    if topic is not None:
 
-    print(f"You have selected {topic.capitalize()}.")
+        lesson_obj = getattr(lo, topic)
 
-    if topic == "core":
-        lesson = vf.select_lesson(lo.core, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
+        lesson = vf.select_lesson(lesson_obj, mode="test")
 
-    elif topic == "fiction":
-        lesson = vf.select_lesson(lo.fiction, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
+        if lesson:
+            total = 2 * len(lesson.questions)
+            print(
+                "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
+            )
+            correct, complete, log = vf.test(lesson)
 
-    elif topic == "newspapers":
-        lesson = vf.select_lesson(lo.newspapers, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
-
-    elif topic == "spoken":
-        lesson = vf.select_lesson(lo.spoken, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
-
-    elif topic == "web":
-        lesson = vf.select_lesson(lo.web, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
-
-    elif topic == "general":
-        lesson = vf.select_lesson(lo.general, test=True)
-        total = 2 * len(lesson.questions)
-        print(
-            "\nBeginning test...\nType exit to end the test. All progress will be lost.\n"
-        )
-        correct, complete, log = vf.test(lesson)
-
-    if complete:
-        print(
-            f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
-        )
-        print(log)
-        fg.generate_test_figures(log)
+            if complete:
+                print(
+                    f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
+                )
+                fg.generate_test_figures(log)
 
     print("\n")
     mode_choice = [
         inquirer.List(
             "next",
             message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
-            choices=["Practice", "Test", "Exit"],
+            choices=["Learning", "Practice", "Test", "Exit"],
         )
     ]
     next_action = inquirer.prompt(mode_choice)["next"]
