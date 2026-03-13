@@ -343,7 +343,7 @@ fiction = [
         "werpen": "to throw",
         "Twee lampjes wierpen licht op het donkerbruine blad": "Two lamps cast light on the dark brown leaf",
         "dringen": "to push",
-        "De honden stonden kwijlend om hun gevulde bakken te dringen": "The dogs were pressing drooling on their filled bowls",
+        "De honden stonden kwijlend om hun gevulde bakken te dringen": "The dogs were crowding around their filled troughs drooling",
         "Ik ga me haasten, de tijd dringt": "I'm going to hurry, time pushes on",
     },
     {
