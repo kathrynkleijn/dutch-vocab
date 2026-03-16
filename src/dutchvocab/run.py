@@ -41,6 +41,7 @@ def main():
 
     practice = False
     log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
+    test_log = pd.DataFrame(columns=["Lesson", "Score"])
     while mode:
         if mode == "Learning":
 

@@ -1,4 +1,3 @@
-import random
 from dutchvocab import lessons as lessons
 import copy
 from dutchvocab import vocab_functions as vf
@@ -7,6 +6,7 @@ from dutchvocab import lesson_objects as lo
 from dutchvocab import figure_generator as fg
 import inquirer
 import time
+from datetime import date
 
 
 def run_learning():
@@ -192,6 +192,10 @@ def run_test():
                     f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
                 )
                 fg.generate_test_figures(log)
+
+            test_log = pd.DataFrame({"Lesson": [lesson.name] * len(log)})
+            test_log = pd.concat(test_log, log, axis=1)
+            test_log = test_log.set_index(pd.Index([date.today()] * len(log)))
 
     print("\n")
     mode_choice = [
