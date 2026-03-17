@@ -40,8 +40,11 @@ def main():
     mode = inquirer.prompt(select_setting)["type"]
 
     practice = False
-    log = pd.DataFrame(columns=["Module", "Lesson", "Questions", "Score"])
-    test_log = pd.DataFrame(columns=["Lesson", "Score"])
+    test = False
+    log = pd.DataFrame(
+        columns=["Module", "Lesson", "Questions", "Score", "Type", "Typos English"]
+    )
+    test_log = pd.DataFrame(columns=["Lesson", "Result", "Error"])
     while mode:
         if mode == "Learning":
 
@@ -55,7 +58,10 @@ def main():
 
         elif mode == "Test":
 
-            mode = rn.run_test()
+            mode, tlog = rn.run_test()
+            test_log = pd.concat([test_log, tlog])
+
+            test = True
 
     print("Exiting lessons...")
 
@@ -107,6 +113,19 @@ def main():
                     "F",
                 )
                 print("Progress report completed.")
+
+    if test:
+
+        if os.path.isfile("testing_log.csv"):
+            test_log.to_csv("testing_log.csv", mode="a", header=False)
+        else:
+            test_log.to_csv(
+                "testing_log.csv",
+                mode="a",
+                header=True,
+                index=True,
+                index_label="Date",
+            )
 
 
 if __name__ == "__main__":

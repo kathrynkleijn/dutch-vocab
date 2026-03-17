@@ -193,9 +193,9 @@ def run_test():
                 )
                 fg.generate_test_figures(log)
 
-            test_log = pd.DataFrame({"Lesson": [lesson.name] * len(log)})
-            test_log = pd.concat(test_log, log, axis=1)
-            test_log = test_log.set_index(pd.Index([date.today()] * len(log)))
+                test_log = pd.DataFrame({"Lesson": [lesson.name] * len(log)})
+                test_log = pd.concat([test_log, log.reset_index(drop=True)], axis=1)
+                test_log = test_log.set_index(pd.Index([date.today()] * len(log)))
 
     print("\n")
     mode_choice = [
@@ -207,5 +207,5 @@ def run_test():
     ]
     next_action = inquirer.prompt(mode_choice)["next"]
     if next_action == "Exit":
-        return None
-    return next_action
+        return None, test_log
+    return next_action, test_log
