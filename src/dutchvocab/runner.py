@@ -33,6 +33,8 @@ def run_learning():
 
             vf.flashcards(lesson)
 
+        time.sleep(1.0)
+
     print("\n")
     mode_choice = [
         inquirer.List(
@@ -149,6 +151,8 @@ def run_practice(log, practice=False):
                 except ZeroDivisionError:
                     pass
 
+            time.sleep(1.0)
+
     print("\n")
     mode_choice = [
         inquirer.List(
@@ -173,6 +177,7 @@ def run_test():
     print("\n\n")
 
     topic = vf.select_topic(mode="test")
+    test_log = None
 
     if topic is not None:
 
@@ -191,11 +196,14 @@ def run_test():
                 print(
                     f"Your test score for {topic.capitalize()} lesson {lesson.number} is {correct} out of {total}."
                 )
-                fg.generate_test_figures(log)
 
                 test_log = pd.DataFrame({"Lesson": [lesson.name] * len(log)})
                 test_log = pd.concat([test_log, log.reset_index(drop=True)], axis=1)
                 test_log = test_log.set_index(pd.Index([date.today()] * len(log)))
+
+                fg.generate_test_figures(test_log)
+
+            time.sleep(1.0)
 
     print("\n")
     mode_choice = [

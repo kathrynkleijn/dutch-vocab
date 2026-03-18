@@ -59,9 +59,10 @@ def main():
         elif mode == "Test":
 
             mode, tlog = rn.run_test()
-            test_log = pd.concat([test_log, tlog])
+            if tlog is not None:
+                test_log = pd.concat([test_log, tlog])
 
-            test = True
+                test = True
 
     print("Exiting lessons...")
 
@@ -126,6 +127,9 @@ def main():
                 index=True,
                 index_label="Date",
             )
+
+        log_full = pd.read_csv("testing_log.csv")
+        fg.generate_test_figures(log_full, single=False)
 
 
 if __name__ == "__main__":

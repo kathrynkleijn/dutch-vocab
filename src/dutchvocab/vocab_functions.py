@@ -193,7 +193,7 @@ def accept_alternatives(test, answer):
     return answer
 
 
-def answer_formatting(answer, test, lesson, language, phrases=True, correct_answer=""):
+def answer_formatting(answer, test, language, phrases=True, correct_answer=""):
     answer_words = answer.lower().split()
 
     if not phrases:
@@ -288,7 +288,7 @@ def ignore_brackets(test):
 
 
 def question(
-    language, dutch, english, lesson, phrases=True, log=None, typo_count=0, test=False
+    language, dutch, english, phrases=True, log=None, typo_count=0, test=False
 ):
     reset = "\033[0m"
     if language:
@@ -312,7 +312,12 @@ def question(
                 [
                     log,
                     pd.DataFrame(
-                        [{"Result": "Incorrect", "Error": "Vocab/Understanding"}]
+                        [
+                            {
+                                "Result": "Incorrect",
+                                "Error": "Vocab/Understanding",
+                            }
+                        ]
                     ),
                 ]
             )
@@ -320,7 +325,7 @@ def question(
         return 0, 0
     else:
         answer_formatted = answer_formatting(
-            answer, question, lesson, language, phrases, correct_answer=correct_answer
+            answer, question, language, phrases, correct_answer=correct_answer
         )
         result = check_answer(
             user_answer=answer_formatted,
@@ -591,7 +596,12 @@ def test(lesson):
                         [
                             log,
                             pd.DataFrame(
-                                [{"Result": "Incorrect", "Error": "Attempted exit"}]
+                                [
+                                    {
+                                        "Result": "Incorrect",
+                                        "Error": "Attempted exit",
+                                    }
+                                ]
                             ),
                         ]
                     )

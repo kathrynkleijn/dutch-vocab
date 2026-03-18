@@ -29,8 +29,14 @@ import os
 import warnings
 
 # Suppress specific warnings
-warnings.filterwarnings("ignore", message=".*Brewer palette Paired has a maximum of 12 colors.*", category=UserWarning)
-warnings.filterwarnings("ignore", message=".*geom_path: Each group consist of only one observation.*")
+warnings.filterwarnings(
+    "ignore",
+    message=".*Brewer palette Paired has a maximum of 12 colors.*",
+    category=UserWarning,
+)
+warnings.filterwarnings(
+    "ignore", message=".*geom_path: Each group consist of only one observation.*"
+)
 
 ## Practice Log Figures
 
@@ -61,7 +67,6 @@ lessons = []
 for topic in topics:
     for num in numbers:
         lessons.append(topic + str(num))
-
 
 
 months = [
@@ -104,9 +109,9 @@ def weekly_log_module(log):
     log.Date = pd.to_datetime(log.Date)
     log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
     log["Week"] = log.Date.dt.to_period("W").dt.start_time
-    log = log.groupby([pd.Grouper(key="Week", freq="W-MON"), "Module"], observed=True).agg(
-        Questions=("Questions", "sum"), Score=("Score", "sum")
-    )
+    log = log.groupby(
+        [pd.Grouper(key="Week", freq="W-MON"), "Module"], observed=True
+    ).agg(Questions=("Questions", "sum"), Score=("Score", "sum"))
     log = log.reset_index()
     log["Percentage"] = log.apply(
         lambda row: round(row["Score"] / row["Questions"] * 100, 1), axis=1
@@ -121,9 +126,9 @@ def weekly_log_lesson(log):
     log.Date = pd.to_datetime(log.Date)
     log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
     log["Week"] = log.Date.dt.to_period("W").dt.start_time
-    log = log.groupby([pd.Grouper(key="Week", freq="W-MON"), "Module", "Lesson"], observed=True).agg(
-        Questions=("Questions", "sum"), Score=("Score", "sum")
-    )
+    log = log.groupby(
+        [pd.Grouper(key="Week", freq="W-MON"), "Module", "Lesson"], observed=True
+    ).agg(Questions=("Questions", "sum"), Score=("Score", "sum"))
     log = log.reset_index()
     log["Percentage"] = log.apply(
         lambda row: round(row["Score"] / row["Questions"] * 100, 1), axis=1
@@ -162,9 +167,9 @@ def monthly_log_lesson(log):
     log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
     log["Year"] = log["Date"].dt.year.astype("Int64")
     log["Year"] = log["Year"].astype(str)
-    log = log.groupby([log.Year, log.Date.dt.month, "Module", "Lesson"], observed=True).agg(
-        Questions=("Questions", "sum"), Score=("Score", "sum")
-    )
+    log = log.groupby(
+        [log.Year, log.Date.dt.month, "Module", "Lesson"], observed=True
+    ).agg(Questions=("Questions", "sum"), Score=("Score", "sum"))
     log = log.reset_index()
     log["Date"] = pd.to_datetime(log["Date"], format="%m")
     log["Date"] = log["Date"].dt.strftime("%B")
@@ -524,7 +529,9 @@ def generate_figures(report_title, logs):
             )
             + geom_line()
             + geom_point()
-            + scale_color_manual(values=all_colors[:len(logs[6]["Lesson"].cat.categories)])
+            + scale_color_manual(
+                values=all_colors[: len(logs[6]["Lesson"].cat.categories)]
+            )
             + labs(
                 x="Week Beginning",
                 y="Percentage",
@@ -661,8 +668,10 @@ def test_log_single():
     pass
 
 
-def test_log():
-    pass
+def test_log(log):
+    return log.groupby(["Date", "Lesson"], observed=True).agg(
+        Score=("Result", lambda x: (x == "Correct").sum())
+    )
 
 
 def generate_test_figures(log, single=True):
@@ -677,7 +686,7 @@ def generate_test_figures(log, single=True):
     os.makedirs(f"{plot_path}plots/tests", exist_ok=True)
 
     if single:
-        plot1 = (
+        plot = (
             ggplot(log, aes("Result", fill="Error"))
             + geom_bar(width=0.5)
             + scale_fill_brewer("qual", "Paired")
@@ -694,9 +703,25 @@ def generate_test_figures(log, single=True):
                 position="stack",
             )
         )
-        plot1.save(f"{plot_path}plots/tests/1.png", verbose=False)
+        name = date.today().strftime("%Y%m%d") + "_" + log["Lesson"].iloc[0]
+        plot.save(f"{plot_path}plots/tests/{name}.png", verbose=False)
     else:
-        pass
+        colours = ["orange", "teal", "purple"]
+        count = 0
+        lessons = list(set([l for l in log["Lesson"]]))
+        log = log.groupby(["Date", "Lesson"], observed=True).agg(
+            Score=("Result", lambda x: (x == "Correct").sum())
+        )
+        log = log.reset_index()
+        for lesson in lessons:
+            count += 1
+            colour_num = count % len(colours)
+            plot = (
+                ggplot(log[log["Lesson"] == lesson], aes(x="Date", y="Score"))
+                + geom_bar(stat="identity", width=0.5, fill=colours[colour_num])
+                + labs(x="Date of Test")
+            )
+            plot.save(f"{plot_path}plots/tests/{lesson}.png", verbose=False)
 
 
 ## Generate text for reports
@@ -736,10 +761,14 @@ def text_generator(report_title, logs):
 
 if __name__ == "__main__":
 
-    log = pd.read_csv("testing_log.csv")
+    log = pd.read_csv("testing_log1.csv")
     logs = log_maker("Weekly", log, debug=True, debug_week=date(2025, 8, 18))
     print(text_generator("Weekly", logs))
     generate_figures("Weekly", logs)
 
     log2 = pd.read_csv("test_log1.csv")
     generate_test_figures(log2)
+
+    log_full = pd.read_csv("testing_log.csv")
+    print(test_log(log_full))
+    generate_test_figures(log_full, single=False)
