@@ -552,6 +552,7 @@ newspapers_vocab = [
         "momenteel": "currently",
         "de hypotheekrente": "mortgage rate",
         "stijgen": "to rise",
+        "richten (zich)": "to focus",
     },
     {
         "het ijzer": "iron (n.)",
@@ -1341,4 +1342,5 @@ alternatives = {
     "I got along with everyone quickly": "I got on quickly with everyone",
     "field (of research)": "field",
     "Many of our listeners complain of continuous headaches": "Many of our listeners complain about continuous headaches",
+    "Consumer rights when buying a home have improved significantly": "The rights of consumers when buying a home have improved significantly",
 }
