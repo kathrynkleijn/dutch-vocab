@@ -5,11 +5,10 @@
 /plots
 *.pyc
 /src/dutchvocab.egg-info
-/src/learning_log.csv
-/src/dutchvocab/testing_log.csv
-/src/dutchvocab/test_log1.csv
+/src/dutchvocab/*.csv
 /src/dutchvocab/settings.txt
+/src/dutchvocab/plots
 /learning_log.csv
-/testing_log.csv
+/*.csv
 /Bugs.xlsx
 /*.txt
