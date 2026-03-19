@@ -396,7 +396,7 @@ def check_answer(
     if "(" in correct_answer and "(zich)" not in correct_answer:
         updated_answer = ignore_brackets(correct_answer)
         if user_answer == updated_answer:
-            print("Correct!")
+            print("Correct!\n")
             return update_results(
                 correct=True, test=test, log=log, typo_count=typo_count
             )
@@ -549,7 +549,7 @@ def randomly_generated_lesson(
             language = random.randrange(2)
 
         result = question(
-            language, dutch, english, lesson, phrases=phrases, typo_count=eng_typo
+            language, dutch, english, phrases=phrases, typo_count=eng_typo
         )
         if not result:
             print("Exiting lesson...")
