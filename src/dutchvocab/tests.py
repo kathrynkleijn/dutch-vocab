@@ -131,6 +131,12 @@ test_lesson_24.add_question(
     "Dat is hartstikke fijn voor dat kind", "That is heartening for that child"
 )
 
+test_lesson_25 = lesson_objects.Lesson(24, "spoken")
+test_lesson_25.add_question(
+    "Jan denkt oei, ik moet haar nog even feliciteren",
+    "Jan thinks oops, I must congratulate her",
+)
+
 
 core = lesson_objects.Topic("core")
 core.add_lesson(test_lesson_1)
@@ -572,6 +578,20 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_24), 1, testing=1
         )
         expected_result = 1
+        self.assertEqual(
+            result[0],
+            expected_result,
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_comma_sentence2(self, mocked_input):
+        mocked_input.side_effect = [
+            "Jan thinks oops",
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_25), 1, testing=1
+        )
+        expected_result = 0
         self.assertEqual(
             result[0],
             expected_result,

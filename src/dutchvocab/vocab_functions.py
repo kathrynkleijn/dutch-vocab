@@ -357,23 +357,58 @@ def check_answer(
     # handle commas
     if dutch_to_english:
         commas = correct_answer.count(",")
-        # commas == 1 and len(correct_answer.split()) < 6 or commas > 1
+        user_commas = user_answer.count(",")
         if commas:
             answer_meanings = [item.strip() for item in user_answer.split(",")]
             test_meanings = [item.strip() for item in correct_answer.split(",")]
-            if Counter(answer_meanings) == Counter(test_meanings):
-                print("Correct!\n")
-                return update_results(
-                    correct=True, test=test, log=log, typo_count=typo_count
+
+            total_words = len(correct_answer.split())
+            part_lengths = [len(part.split()) for part in test_meanings]
+
+            if user_commas == 0:
+                is_clause_comma = (
+                    len(test_meanings) == 2
+                    and total_words >= 7
+                    and part_lengths[0] >= 3
+                    and part_lengths[1] >= 3
                 )
-            if not test:
-                if set(answer_meanings) < set(test_meanings):
-                    print("Correct!")
-                    print("Alternative meanings:")
-                    print(f"{correct_answer}\n")
+
+                if is_clause_comma:
+                    correct_answer = " ".join(test_meanings)
+                    if user_answer == correct_answer:
+                        print("Correct!\n")
+                        return update_results(
+                            correct=True, test=test, log=log, typo_count=typo_count
+                        )
+                else:
+
+                    if Counter(answer_meanings) == Counter(test_meanings):
+                        print("Correct!\n")
+                        return update_results(
+                            correct=True, test=test, log=log, typo_count=typo_count
+                        )
+                    if not test:
+                        if set(answer_meanings) < set(test_meanings):
+                            print("Correct!")
+                            print("Alternative meanings:")
+                            print(f"{correct_answer}\n")
+                            return update_results(
+                                correct=True, test=test, log=log, typo_count=typo_count
+                            )
+            elif user_commas != 0:
+                if Counter(answer_meanings) == Counter(test_meanings):
+                    print("Correct!\n")
                     return update_results(
                         correct=True, test=test, log=log, typo_count=typo_count
                     )
+                if not test:
+                    if set(answer_meanings) < set(test_meanings):
+                        print("Correct!")
+                        print("Alternative meanings:")
+                        print(f"{correct_answer}\n")
+                        return update_results(
+                            correct=True, test=test, log=log, typo_count=typo_count
+                        )
 
     # typos in english
     if dutch_to_english:
