@@ -131,11 +131,25 @@ test_lesson_24.add_question(
     "Dat is hartstikke fijn voor dat kind", "That is heartening for that child"
 )
 
-test_lesson_25 = lesson_objects.Lesson(24, "spoken")
+test_lesson_25 = lesson_objects.Lesson(25, "spoken")
 test_lesson_25.add_question(
     "Jan denkt oei, ik moet haar nog even feliciteren",
     "Jan thinks oops, I must congratulate her",
 )
+
+test_lesson_26 = lesson_objects.Lesson(26, "web")
+test_lesson_26.add_question(
+    "Leerlingen die goede cijfers halen, verdienen straks vrije uren",
+    "Pupils who get good marks earn free hours later",
+)
+
+test_lesson_27 = lesson_objects.Lesson(27, "web")
+test_lesson_27.add_question(
+    "Die cijfers geven een vertekend beeld", "Those figures give a distorted picture"
+)
+
+test_lesson_28 = lesson_objects.Lesson(28, "fiction")
+test_lesson_28.add_word("volkomen", "completely")
 
 
 core = lesson_objects.Topic("core")
@@ -475,6 +489,48 @@ class Test(TestCase):
         self.assertEqual(result[0], expected_result)
 
     @mock.patch("vocab_functions.input", create=True)
+    def test_typo_eng4(self, mocked_input):
+        mocked_input.side_effect = [
+            "Jan thought oops, I must congratulate her",
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_25), 1, testing=1
+        )
+        expected_result = 0
+        self.assertEqual(
+            result[0],
+            expected_result,
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_typo_eng5(self, mocked_input):
+        mocked_input.side_effect = [
+            "Those numbers give a distorted picture",
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_27), 1, testing=1
+        )
+        expected_result = 0
+        self.assertEqual(
+            result[0],
+            expected_result,
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_typo_eng6(self, mocked_input):
+        mocked_input.side_effect = [
+            "complete",
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_28), 1, phrases=False, testing=1
+        )
+        expected_result = 0
+        self.assertEqual(
+            result[0],
+            expected_result,
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
     def test_order_eng1(self, mocked_input):
         mocked_input.side_effect = ["Mortgage rates are climbing currently"]
         result = vocab_functions.randomly_generated_lesson(
@@ -592,6 +648,20 @@ class Test(TestCase):
             copy.deepcopy(test_lesson_25), 1, testing=1
         )
         expected_result = 0
+        self.assertEqual(
+            result[0],
+            expected_result,
+        )
+
+    @mock.patch("vocab_functions.input", create=True)
+    def test_comma_sentence3(self, mocked_input):
+        mocked_input.side_effect = [
+            "Leerlingen die goede cijfers halen verdienen straks vrije uren",
+        ]
+        result = vocab_functions.randomly_generated_lesson(
+            copy.deepcopy(test_lesson_26), 1, testing=0
+        )
+        expected_result = 1
         self.assertEqual(
             result[0],
             expected_result,
