@@ -67,6 +67,7 @@ lessons = []
 for topic in topics:
     for num in numbers:
         lessons.append(topic + str(num))
+lessons.append("all")
 
 
 months = [
