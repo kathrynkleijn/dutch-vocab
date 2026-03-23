@@ -10,12 +10,35 @@ from plotnine import (
     element_text,
     element_blank,
     scale_fill_gradient,
+    geom_bar,
+    coord_flip,
 )
 from matplotlib import pyplot as plt
 from datetime import date, timedelta
 
+numbers = [x for x in range(1, 11)]
+topics = [
+    "core",
+    "fiction",
+    "newspapers",
+    "spoken",
+    "web",
+    "general",
+    "all",
+]
+lessons = []
+for topic in topics:
+    for num in numbers:
+        lessons.append(topic + str(num))
+lessons.append("all")
+lessons = lessons[::-1]
+
+
 log = pd.read_csv("learning_log.csv")
 log.Date = pd.to_datetime(log.Date)
+log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
+
+# Heat map
 
 counts = log.groupby("Date").size().reset_index(name="value")
 
@@ -63,3 +86,25 @@ plot = (
     )
 )
 plot.save("heatmap.png", verbose=False)
+
+
+# Bar chart
+
+ave_log = log.groupby(["Module", "Lesson"], observed=True).agg(
+    Questions=("Questions", "sum"), Score=("Score", "sum")
+)
+ave_log["Percentage"] = ave_log.apply(
+    lambda row: round(row["Score"] / row["Questions"] * 100, 1), axis=1
+)
+ave_log = ave_log.reset_index()[["Module", "Lesson", "Percentage"]]
+
+merged = log.merge(ave_log, on=["Module", "Lesson"], how="left")
+
+
+plot = (
+    ggplot(merged, aes("Lesson", fill="Percentage"))
+    + geom_bar(width=0.75)
+    + coord_flip()
+    + theme(figure_size=((4.5, 6)))
+)
+plot.save("lesson_count.png", verbose=False)
