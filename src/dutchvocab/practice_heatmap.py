@@ -12,8 +12,9 @@ from plotnine import (
     scale_fill_gradient,
     geom_bar,
     coord_flip,
+    theme_classic,
+    scale_fill_gradientn,
 )
-from matplotlib import pyplot as plt
 from datetime import date, timedelta
 
 numbers = [x for x in range(1, 11)]
@@ -39,6 +40,8 @@ log.Date = pd.to_datetime(log.Date)
 log.Lesson = pd.Categorical(log["Lesson"], categories=lessons, ordered=True)
 
 # Heat map
+
+# dayplot
 
 counts = log.groupby("Date").size().reset_index(name="value")
 
@@ -90,21 +93,40 @@ plot.save("heatmap.png", verbose=False)
 
 # Bar chart
 
+
 ave_log = log.groupby(["Module", "Lesson"], observed=True).agg(
     Questions=("Questions", "sum"), Score=("Score", "sum")
 )
 ave_log["Percentage"] = ave_log.apply(
     lambda row: round(row["Score"] / row["Questions"] * 100, 1), axis=1
 )
-ave_log = ave_log.reset_index()[["Module", "Lesson", "Percentage"]]
+percentage_log = ave_log.reset_index()[["Module", "Lesson", "Percentage"]]
 
-merged = log.merge(ave_log, on=["Module", "Lesson"], how="left")
+merged = log.merge(percentage_log, on=["Module", "Lesson"], how="left")
 
 
 plot = (
     ggplot(merged, aes("Lesson", fill="Percentage"))
     + geom_bar(width=0.75)
     + coord_flip()
+    + theme_classic()
     + theme(figure_size=((4.5, 6)))
+    + labs(y="Number of lessons")
+    + scale_fill_gradientn(
+        colors=["red", "red", "cornsilk", "royalblue", "royalblue"],
+        values=[0.0, 0.5, 0.7, 0.9, 1.0],
+        limits=[0, 100],
+    )
 )
 plot.save("lesson_count.png", verbose=False)
+
+question_log = ave_log.reset_index()[["Module", "Lesson", "Questions", "Percentage"]]
+
+plot = (
+    ggplot(question_log, aes(y="Questions", x="Lesson", fill="Percentage"))
+    + geom_bar(stat="identity", width=0.75)
+    + coord_flip()
+    + theme_classic()
+    + theme(figure_size=((4.5, 6)))
+)
+plot.save("question_count.png", verbose=False)
