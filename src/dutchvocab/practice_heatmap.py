@@ -15,7 +15,7 @@ from plotnine import (
     theme_classic,
     scale_fill_gradientn,
 )
-from datetime import date, timedelta
+from datetime import timedelta, datetime
 
 numbers = [x for x in range(1, 11)]
 topics = [
@@ -93,6 +93,10 @@ plot.save("heatmap.png", verbose=False)
 
 # Bar chart
 
+current_date = datetime.now()
+past_30_days = current_date - timedelta(days=30)
+date_log = log[log["Date"] >= past_30_days]
+
 
 ave_log = log.groupby(["Module", "Lesson"], observed=True).agg(
     Questions=("Questions", "sum"), Score=("Score", "sum")
@@ -104,7 +108,6 @@ percentage_log = ave_log.reset_index()[["Module", "Lesson", "Percentage"]]
 
 merged = log.merge(percentage_log, on=["Module", "Lesson"], how="left")
 
-
 plot = (
     ggplot(merged, aes("Lesson", fill="Percentage"))
     + geom_bar(width=0.75)
@@ -114,11 +117,38 @@ plot = (
     + labs(y="Number of lessons")
     + scale_fill_gradientn(
         colors=["red", "red", "cornsilk", "royalblue", "royalblue"],
-        values=[0.0, 0.5, 0.7, 0.9, 1.0],
-        limits=[0, 100],
+        values=[0.0, 0.1, 0.5, 0.9, 1.0],
+        limits=[45, 95],
+        labels=["<=50", "60", "70", "80", ">=90"],
     )
 )
 plot.save("lesson_count.png", verbose=False)
+
+ave_log_30 = date_log.groupby(["Module", "Lesson"], observed=True).agg(
+    Questions=("Questions", "sum"), Score=("Score", "sum")
+)
+ave_log_30["Percentage"] = ave_log_30.apply(
+    lambda row: round(row["Score"] / row["Questions"] * 100, 1), axis=1
+)
+percentage_log_30 = ave_log_30.reset_index()[["Module", "Lesson", "Percentage"]]
+
+merged_30 = date_log.merge(percentage_log_30, on=["Module", "Lesson"], how="left")
+
+plot = (
+    ggplot(merged_30, aes("Lesson", fill="Percentage"))
+    + geom_bar(width=0.75)
+    + coord_flip()
+    + theme_classic()
+    + theme(figure_size=((4.5, 6)))
+    + labs(y="Number of lessons")
+    + scale_fill_gradientn(
+        colors=["red", "red", "cornsilk", "royalblue", "royalblue"],
+        values=[0.0, 0.1, 0.5, 0.9, 1.0],
+        limits=[45, 95],
+        labels=["<=50", "60", "70", "80", ">=90"],
+    )
+)
+plot.save("lesson_count_30days.png", verbose=False)
 
 question_log = ave_log.reset_index()[["Module", "Lesson", "Questions", "Percentage"]]
 
@@ -128,5 +158,41 @@ plot = (
     + coord_flip()
     + theme_classic()
     + theme(figure_size=((4.5, 6)))
+    + scale_fill_gradientn(
+        colors=["red", "red", "cornsilk", "royalblue", "royalblue"],
+        values=[0.0, 0.1, 0.5, 0.9, 1.0],
+        limits=[45, 95],
+        labels=["<=50", "60", "70", "80", ">=90"],
+    )
 )
+
 plot.save("question_count.png", verbose=False)
+
+question_log_30 = date_log.groupby(["Module", "Lesson"], observed=True).agg(
+    Questions=("Questions", "sum"), Score=("Score", "sum")
+)
+question_log_30["Percentage"] = question_log_30.apply(
+    lambda row: round(row["Score"] / row["Questions"] * 100, 1), axis=1
+)
+question_log_30 = question_log_30.reset_index()[
+    ["Module", "Lesson", "Questions", "Percentage"]
+]
+
+plot = (
+    ggplot(
+        question_log_30,
+        aes(y="Questions", x="Lesson", fill="Percentage"),
+    )
+    + geom_bar(stat="identity", width=0.75)
+    + coord_flip()
+    + theme_classic()
+    + theme(figure_size=((4.5, 6)))
+    + scale_fill_gradientn(
+        colors=["red", "red", "cornsilk", "royalblue", "royalblue"],
+        values=[0.0, 0.1, 0.5, 0.9, 1.0],
+        limits=[45, 95],
+        labels=["<=50", "60", "70", "80", ">=90"],
+    )
+)
+
+plot.save("question_count_30days.png", verbose=False)
