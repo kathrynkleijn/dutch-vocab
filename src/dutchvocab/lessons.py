@@ -1343,4 +1343,5 @@ alternatives = {
     "field (of research)": "field",
     "Many of our listeners complain of continuous headaches": "Many of our listeners complain about continuous headaches",
     "Consumer rights when buying a home have improved significantly": "The rights of consumers when buying a home have improved significantly",
+    "Managers who have not performed well must get no golden handshake": "Managers who have not performed well must not get a golden handshake",
 }
