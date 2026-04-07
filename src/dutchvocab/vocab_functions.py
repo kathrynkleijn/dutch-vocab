@@ -269,13 +269,11 @@ def typos_and_word_order(answer, test):
     length = max(len(test), len(answer))
 
     if length <= 4:
-        threshold = 90
+        threshold = 80
     elif length <= 8:
         threshold = 85
-    elif length <= 15:
-        threshold = 80
     else:
-        threshold = 75
+        threshold = 90
 
     return score >= threshold
 
