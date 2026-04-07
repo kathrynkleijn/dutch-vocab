@@ -367,7 +367,7 @@ fiction = [
         "verbergen": "to hide",
         "Ze verborg haar gezicht in haar handen": "She hid her face in her hands",
         "aarzelen": "to hesitate",
-        "De knapen aarzelden om de snoepjes op te rapen": "The youngsters hesisitated to pick up the sweets",
+        "De knapen aarzelden om de snoepjes op te rapen": "The youngsters hesitated to pick up the sweets",
         "kleden": "to dress",
         "Ik houd er niet van slordig gekleed te gaan": "I don't like to be dressed sloppily",
         "de geest": "mind, spirit",
