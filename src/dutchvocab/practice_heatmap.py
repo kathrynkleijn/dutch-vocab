@@ -73,15 +73,16 @@ plot = (
         expand=(0, 0),
     )
     + scale_fill_gradient(
-        low="#E0DEDE",
-        high="#800026",
+        low="#FCF5F5",
+        high="#FF0000",
         limits=(0, 20),
         breaks=[0, 5, 10, 15, 20],
         labels=["0", "5", "10", "15", "20+"],
     )
     + labs(x="", y="")
+    + theme_classic()
     + theme(
-        figure_size=(10, 2),
+        figure_size=(12, 2),
         axis_text_x=element_text(rotation=45, hjust=1),
         legend_key_height=90,
         legend_key_width=10,
