@@ -571,9 +571,7 @@ def randomly_generated_lesson(
         elif language is None:
             language = random.randrange(2)
 
-        result = question(
-            language, dutch, english, phrases=phrases, typo_count=eng_typo
-        )
+        result = question(language, dutch, english, phrases=phrases)
         if not result:
             print("Exiting lesson...")
             questions = question_number - 1
