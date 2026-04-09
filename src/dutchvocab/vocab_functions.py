@@ -71,11 +71,15 @@ def select_lesson(topic, mode):
     while trying:
         if mode == "practice":
             try:
+                # if returning is None or returning == "on":
+                message = "Select a lesson, choose random for a random choice of lesson, or choose all for an assortment of questions from all lessons          "
+                # else:
+                # message = "Select a lesson          "
                 available.extend(["random", "all"])
                 lesson_enquiry = [
                     inquirer.List(
                         "lesson",
-                        message="Select a lesson, choose random for a random choice of lesson, or choose all for an assortment of questions from all lessons          ",
+                        message=message,
                         choices=available,
                     )
                 ]

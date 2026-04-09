@@ -18,13 +18,37 @@ def main():
         settings = file.read().splitlines()
     report_path = settings[0]
     report_output = settings[2]
+    if len(settings) <= 3:
+        returning = None
+    else:
+        returning = settings[3]
 
     if report_path and not report_path.endswith("/"):
         report_path = report_path + "/"
 
+    if returning is None:
+        with open("settings.txt", "a") as file:
+            file.write("return")
+
+    if returning is None:
+        print("\n")
+        vf.slow_print(
+            """Welcome!\n\nThis package allows you to learn Dutch vocabulary through flashcards and practising translating words and phrases.
+The words are split into different categories based on their usage.\nThere is also the ability to test your knowledge in a testing mode.\n\n
+            (This and subsequent messages can be removed in the settings)""",
+            0.05,
+            0.5,
+        )
+    else:
+        print("\n")
+        print(
+            """Welcome back!\n\nThis package allows you to learn Dutch vocabulary through flashcards and practising translating words and phrases.
+The words are split into different categories based on their usage.\nThere is also the ability to test your knowledge in a testing mode.\n\n"""
+        )
+
     print("\n")
     vf.slow_print(
-        f"Available lessons:\n {lo.available}\n\n",
+        f"Available lessons:\n{lo.available}\n\n",
         char_delay=0,
         line_delay=0.2,
     )
@@ -34,10 +58,14 @@ def main():
     print("\n")
     select_setting = [
         inquirer.List(
-            "type", message="Select mode", choices=["Learning", "Practice", "Test"]
+            "type",
+            message="Select mode",
+            choices=["Learning", "Practice", "Test", "Exit"],
         )
     ]
     mode = inquirer.prompt(select_setting)["type"]
+    if mode == "Exit":
+        mode = False
 
     practice = False
     test = False
