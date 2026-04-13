@@ -230,7 +230,7 @@ def run_test():
     mode_choice = [
         inquirer.List(
             "next",
-            message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
+            message=message,
             choices=["Learning", "Practice", "Test", "Exit"],
         )
     ]

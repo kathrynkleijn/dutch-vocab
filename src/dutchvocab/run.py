@@ -4,6 +4,7 @@ from dutchvocab import lesson_objects as lo
 from dutchvocab import pdf_constructor
 from dutchvocab import figure_generator as fg
 from dutchvocab import runner as rn
+from dutchvocab import settings as st
 import pandas as pd
 from datetime import date, timedelta
 import os
@@ -14,21 +15,21 @@ import time
 def main():
 
     # get settings
-    with open("settings.txt", "r") as file:
-        settings = file.read().splitlines()
-    report_path = settings[0]
-    report_output = settings[2]
-    if len(settings) <= 3:
+    if not os.path.isfile("settings.txt"):
+        st.main(init=True)
         returning = None
     else:
-        returning = settings[3]
+        returning = True
 
+    with open("settings.txt", "r") as file:
+        settings = file.read().splitlines()
+        report_path = settings[0]
+        report_output = settings[2]
+        messages = settings[3]
+
+    # check for trailing "/"
     if report_path and not report_path.endswith("/"):
         report_path = report_path + "/"
-
-    if returning is None:
-        with open("settings.txt", "a") as file:
-            file.write("return")
 
     if returning is None:
         print("\n")
@@ -39,12 +40,15 @@ The words are split into different categories based on their usage.\nThere is al
             0.05,
             0.5,
         )
-    else:
+    elif messages == "On":
         print("\n")
-        print(
+        vf.slow_print(
             """Welcome back!\n\nThis package allows you to learn Dutch vocabulary through flashcards and practising translating words and phrases.
 The words are split into different categories based on their usage.\nThere is also the ability to test your knowledge in a testing mode.\n\n"""
         )
+    elif messages == "Off":
+        print("\n")
+        print("Welcome back!")
 
     print("\n")
     vf.slow_print(
