@@ -50,6 +50,9 @@ The words are split into different categories based on their usage.\nThere is al
         print("\n")
         print("Welcome back!")
 
+    if returning is None:
+        messages = "On"
+
     print("\n")
     vf.slow_print(
         f"Available lessons:\n{lo.available}\n\n",
@@ -80,17 +83,17 @@ The words are split into different categories based on their usage.\nThere is al
     while mode:
         if mode == "Learning":
 
-            mode = rn.run_learning()
+            mode = rn.run_learning(messages)
 
         elif mode == "Practice":
 
-            mode, log = rn.run_practice(log, practice)
+            mode, log = rn.run_practice(log, practice, messages)
 
             practice = True
 
         elif mode == "Test":
 
-            mode, tlog = rn.run_test()
+            mode, tlog = rn.run_test(messages)
             if tlog is not None:
                 test_log = pd.concat([test_log, tlog])
 

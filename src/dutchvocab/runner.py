@@ -9,14 +9,14 @@ import time
 from datetime import date
 
 
-def run_learning():
+def run_learning(messages="On"):
 
-    # if returning is None or returning == "on":
-    print(
-        "\nYou have chosen learning mode. Select a topic and lesson to learn the words and phrases.\n\n"
-    )
-    # else:
-    # print("Starting learning mode...\n\n")
+    if messages == "On":
+        print(
+            "\nYou have chosen learning mode. Select a topic and lesson to learn the words and phrases.\n\n"
+        )
+    elif messages == "Off":
+        print("Starting learning mode...\n\n")
 
     time.sleep(1.5)
 
@@ -39,14 +39,14 @@ def run_learning():
         time.sleep(1.0)
 
     print("\n")
-    # if returning is None or returning == "on":
-    message = "Would you like to continue? Select a mode to continue or exit to end the session.   "
-    # else:
-    # message = "Would you like to continue?    "
+    if messages == "On":
+        message = "Would you like to continue? Select a mode to continue or exit to end the session.   "
+    elif messages == "Off":
+        message = "Would you like to continue?    "
     mode_choice = [
         inquirer.List(
             "next",
-            message="Would you like to continue? Select a mode to continue or exit to end the session.   ",
+            message=message,
             choices=["Learning", "Practice", "Test", "Exit"],
         )
     ]
@@ -56,15 +56,15 @@ def run_learning():
     return next_action
 
 
-def run_practice(log, practice=False):
+def run_practice(log, practice=False, messages="On"):
 
     if not practice:
-        # if returning is None or returning == "on":
-        print(
-            "\nYou have chosen practice mode. You can now choose from any of the available lessons to practise a mixture of words and phrases.\n\n"
-        )
-        # else:
-        # print("Starting practice mode...\n\n")
+        if messages == "On":
+            print(
+                "\nYou have chosen practice mode. You can now choose from any of the available lessons to practise a mixture of words and phrases.\n\n"
+            )
+        elif messages == "Off":
+            print("Starting practice mode...\n\n")
         time.sleep(1.5)
         _ = input("Press Enter to continue")
 
@@ -164,10 +164,10 @@ def run_practice(log, practice=False):
             time.sleep(1.0)
 
     print("\n")
-    # if returning is None or returning == "on":
-    message = "Would you like to continue? Select a mode to continue or exit to end the session.   "
-    # else:
-    # message = "Would you like to continue?    "
+    if messages == "On":
+        message = "Would you like to continue? Select a mode to continue or exit to end the session.   "
+    elif messages == "Off":
+        message = "Would you like to continue?    "
     mode_choice = [
         inquirer.List(
             "next",
@@ -181,14 +181,14 @@ def run_practice(log, practice=False):
     return next_action, log
 
 
-def run_test():
+def run_test(messages="On"):
 
-    # if returning is None or returning == "on":
-    print(
-        "You have chosen test mode. You can choose to be tested on any of the available lessons. You will be given each word or phrase in English to translate first, then each in Dutch.\n\n"  # A report will be given at the end of the test."
-    )
-    # else:
-    # print("Starting test mode...\n\n")
+    if messages == "On":
+        print(
+            "You have chosen test mode. You can choose to be tested on any of the available lessons. You will be given each word or phrase in English to translate first, then each in Dutch.\n\n"  # A report will be given at the end of the test."
+        )
+    elif messages == "Off":
+        print("Starting test mode...\n\n")
     time.sleep(1.5)
     _ = input("\n\nPress Enter to continue")
     print("\n\n")
@@ -223,10 +223,10 @@ def run_test():
             time.sleep(1.0)
 
     print("\n")
-    # if returning is None or returning == "on":
-    message = "Would you like to continue? Select a mode to continue or exit to end the session.   "
-    # else:
-    # message = "Would you like to continue?    "
+    if messages == "On":
+        message = "Would you like to continue? Select a mode to continue or exit to end the session.   "
+    elif messages == "Off":
+        message = "Would you like to continue?    "
     mode_choice = [
         inquirer.List(
             "next",
