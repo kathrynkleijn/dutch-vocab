@@ -9,6 +9,7 @@ def main(init=False):
     plot_path = ""  # save to working Path
     output = "Yes"  # output reports after each session
     messages = "On"  # messages are on
+    language_choice = "Yes"  # language choice before each lesson
 
     if not init:
         print("Welcome to Settings")
@@ -20,9 +21,10 @@ def main(init=False):
             plot_path = settings[1].rstrip("/")
             output = settings[2]
             messages = settings[3]
+            language_choice = settings[4]
 
         print(
-            "\nOptional settings:\nPath to save learning reports\nPath to save temporary plots for building reports\nAutomatic output of weekly and monthly reports\nMessage suppression setting"
+            "\nOptional settings:\nPath to save learning reports\nPath to save temporary plots for building reports\nAutomatic output of weekly and monthly reports\nMessage suppression setting\nLanguage choice during lessons"
         )
 
         if not report_path:
@@ -36,7 +38,7 @@ def main(init=False):
             plot_path_out = plot_path
 
         print(
-            f"\nCurrent settings:\nReport Save Path      {report_path_out}\nPlots Save Path       {plot_path_out}\nReport Output         {output}\nMessages         {messages}"
+            f"\nCurrent settings:\nReport Save Path      {report_path_out}\nPlots Save Path       {plot_path_out}\nReport Output         {output}\nMessages         {messages}\nLanguage Choice         {language_choice}"
         )
 
         edit_settings = input("\nDo you want to edit any settings? (Y/N) ")
@@ -52,6 +54,7 @@ def main(init=False):
                 "Plots Save Path",
                 "Report Output",
                 "Messages",
+                "Language Choice",
             ]
             select_setting = [
                 inquirer.List(
@@ -97,6 +100,20 @@ def main(init=False):
                     print("Information messages will be printed.")
                 elif output == "Off":
                     print("Information messages will be supressed.")
+            elif selected["setting"] == "Language Choice":
+                select_output = [
+                    inquirer.List(
+                        "setting",
+                        message="Do you want a choice of language at each lesson?",
+                        choices=["Yes", "No"],
+                    )
+                ]
+                output = inquirer.prompt(select_output)
+                output = output["setting"]
+                if output == "Yes":
+                    print("Language choice is available for each lesson.")
+                elif output == "No":
+                    print("All lessons will be given as a mixture of languages.")
 
             continue_setting = input("\nChange other settings? (Y/N) ")
             if continue_setting.upper() != "Y":
@@ -111,6 +128,8 @@ def main(init=False):
         file.write(output)
         file.write("\n")
         file.write(messages)
+        file.write("\n")
+        file.write(language_choice)
 
     if not init:
         print("\nYour settings have been saved.")

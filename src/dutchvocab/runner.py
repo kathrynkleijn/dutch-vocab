@@ -26,7 +26,7 @@ def run_learning(messages="On"):
 
         lesson_obj = getattr(lo, topic)
 
-        lesson = vf.select_lesson(lesson_obj, mode="learning")
+        lesson = vf.select_lesson(lesson_obj, messages, mode="learning")
 
         if lesson:
 
@@ -56,7 +56,7 @@ def run_learning(messages="On"):
     return next_action
 
 
-def run_practice(log, practice=False, messages="On"):
+def run_practice(log, practice=False, messages="On", language_choice="Yes"):
 
     if not practice:
         if messages == "On":
@@ -90,24 +90,31 @@ def run_practice(log, practice=False, messages="On"):
             lesson = lo.all.all
         else:
             lesson_obj = getattr(lo, topic)
-            lesson = vf.select_lesson(lesson_obj, mode="practice")
+            lesson = vf.select_lesson(lesson_obj, messages, mode="practice")
 
         if lesson:
 
-            language_enquiry = [
-                inquirer.List(
-                    "language",
-                    message="Choose whether to have a questions in a single language or a mixture of both.",
-                    choices=["Dutch->English", "English->Dutch", "Both"],
-                )
-            ]  # "\nThis choice can be disabled in settings."
-            language_choice = inquirer.prompt(language_enquiry)["language"]
+            if language_choice == "Yes":
+                if messages == "On":
+                    message = "Choose whether to have a questions in a single language or a mixture of both.\nThis choice can be disabled in settings."
+                elif messages == "Off":
+                    message = "Language"
+                language_enquiry = [
+                    inquirer.List(
+                        "language",
+                        message=message,
+                        choices=["Dutch->English", "English->Dutch", "Both"],
+                    )
+                ]
+                language_choice = inquirer.prompt(language_enquiry)["language"]
 
-            if language_choice == "Dutch->English":
-                single = 1
-            elif language_choice == "English->Dutch":
-                single = 0
-            elif language_choice == "Both":
+                if language_choice == "Dutch->English":
+                    single = 1
+                elif language_choice == "English->Dutch":
+                    single = 0
+                elif language_choice == "Both":
+                    single = None
+            elif language_choice == "No":
                 single = None
 
             questions = vf.select_questions(lesson, ltype)
@@ -200,7 +207,7 @@ def run_test(messages="On"):
 
         lesson_obj = getattr(lo, topic)
 
-        lesson = vf.select_lesson(lesson_obj, mode="test")
+        lesson = vf.select_lesson(lesson_obj, messages, mode="test")
 
         if lesson:
             total = 2 * len(lesson.questions)

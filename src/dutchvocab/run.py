@@ -26,6 +26,7 @@ def main():
         report_path = settings[0]
         report_output = settings[2]
         messages = settings[3]
+        language_choice = settings[4]
 
     # check for trailing "/"
     if report_path and not report_path.endswith("/"):
@@ -87,7 +88,7 @@ The words are split into different categories based on their usage.\nThere is al
 
         elif mode == "Practice":
 
-            mode, log = rn.run_practice(log, practice, messages)
+            mode, log = rn.run_practice(log, practice, messages, language_choice)
 
             practice = True
 
